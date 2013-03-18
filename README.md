@@ -1,0 +1,1 @@
+# RockSolid Slider Contao Extension

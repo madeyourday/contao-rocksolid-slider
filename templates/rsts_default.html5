@@ -1,0 +1,59 @@
+<?php
+	$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider-0.0.0.min.js';
+	$GLOBALS['TL_CSS'][] = 'system/modules/rocksolid-slider/assets/css/rocksolid-slider.min.css';
+?>
+<div class="<?php echo $this->class ?> block"<?php echo $this->cssID ?><?php if ($this->style): ?> style="<?php echo $this->style ?>"<?php endif ?>>
+	<?php foreach ($this->images as $image): ?>
+		<div data-rsts-type="image">
+			<img src="<?php echo $image->src ?>"<?php echo $image->imgSize ?> alt="<?php echo $image->alt ?>">
+			<?php if ($image->href): ?>
+				<a href="<?php echo $image->href ?>">more...</a>
+			<?php endif ?>
+			<?php if ($image->caption): ?>
+				<p class="caption"><?php echo $image->caption ?></p>
+			<?php endif ?>
+		</div>
+	<?php endforeach ?>
+	<?php foreach ($this->slides as $slide): ?>
+		<?php if (! empty($slide['videoURL'])): ?>
+			<img<?php if (! empty($slide['title'])): ?> data-rsts-name="<?php echo $slide['title'] ?>"<?php endif ?> data-rsts-type="video" data-rsts-video="<?php echo $slide['videoURL'] ?>" src="<?php echo $slide['image']->src ?>">
+		<?php elseif (! empty($slide['image'])): ?>
+			<div data-rsts-type="image"<?php if (! empty($slide['title'])): ?> data-rsts-name="<?php echo $slide['title'] ?>"<?php endif ?>>
+				<img src="<?php echo $slide['image']->src ?>"<?php echo $slide['image']->imgSize ?> alt="<?php echo $slide['image']->alt ?>">
+				<?php if ($slide['image']->href): ?>
+					<a class="rsts-details" href="<?php echo $slide['image']->href ?>">more...</a>
+				<?php endif ?>
+				<?php if ($slide['image']->caption): ?>
+					<p class="rsts-text"><?php echo $slide['image']->caption ?></p>
+				<?php endif ?>
+			</div>
+		<?php else: ?>
+			<div<?php if (! empty($slide['title'])): ?> data-rsts-name="<?php echo $slide['title'] ?>"<?php endif ?>>
+				<?php echo $slide['text'] ?>
+			</div>
+		<?php endif ?>
+	<?php endforeach ?>
+</div>
+<script>
+	$('.mod_rocksolid_slider').last().rstSlider(<?php
+		$options = array();
+		// stings
+		foreach (array('type', 'direction', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode') as $key) {
+			if (! empty($this->options['rsts_' . $key])) {
+				$options[$key] = $this->options['rsts_' . $key];
+			}
+		}
+		// boolean
+		foreach (array('random', 'videoAutoplay') as $key) {
+			$options[$key] = (bool) $this->options['rsts_' . $key];
+		}
+		// positive numbers
+		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart') as $key) {
+			if (! empty($this->options['rsts_' . $key]) && $this->options['rsts_' . $key] > 0) {
+				$options[$key] = $this->options['rsts_' . $key] * 1;
+			}
+		}
+		$options['gapSize'] = $this->options['rsts_gapSize'] * 1;
+		echo json_encode($options)
+	?>);
+</script>

@@ -1,0 +1,181 @@
+/*
+ * Copyright MADE/YOUR/DAY OG <mail@madeyourday.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
+@import "mixins"
+@import "compass/css3/border-radius"
+@import "compass/css3/box-shadow"
+@import "compass/css3/text-shadow"
+@import "compass/css3/transition"
+@import "compass/css3/box-sizing"
+@import "compass/css3/transform"
+
+
+/* ===========================================
+ * Basic styles (shouldn't be modified)
+ * ========================================
+
+.rsts-main, .rsts-main *
+	+box-sizing(border-box)
+
+.rsts-view
+	position: relative
+	overflow: hidden
+
+.rsts-slides, .rsts-slide
+	position: absolute
+	left: 0
+	top: 0
+
+.rsts-slide
+	overflow: hidden
+
+.rsts-slide img
+	display: block
+
+.rsts-type-slide
+
+	.rsts-view
+		cursor: url("../img/openhand.cur"), default
+		+experimental-value(cursor, grab)
+
+	&.rsts-dragging .rsts-view
+		cursor: url("../img/closedhand.cur"), default
+		+experimental-value(cursor, grabbing)
+
+
+
+/* ===========================================
+ * Default Skin
+ * ========================================
+
+.rsts-skin-default
+
+	&.rsts-main
+		position: relative
+		background: black
+
+	.rsts-slide img
+		width: 100%
+		height: auto
+
+	.rsts-caption
+		position: absolute
+		top: 20px
+		left: 20px
+		padding: 5px 10px
+		color: white
+		background: black
+		background: rgba(black, .75)
+		opacity: 0
+		+transform(translate(0, -20px))
+		+transition(opacity .5s, transform .5s)
+	.rsts-active .rsts-caption
+		opacity: 1
+		+transform(translate(0, 0))
+
+	.rsts-nav-prev, .rsts-nav-next
+		position: absolute
+		top: 50%
+		left: 20px
+		font-size: 50px
+		text-decoration: none
+		color: black
+
+	.rsts-nav-next
+		left: auto
+		right: 20px
+
+	.rsts-nav
+		display: block
+		text-align: center
+		background: #222
+		+box-shadow(0 0 10px black inset)
+		+text-shadow(0 0 1px black)
+		ul
+			margin: 0
+			padding: 0
+		li
+			display: inline
+
+	.rsts-nav-numbers, .rsts-nav-tabs
+		a
+			display: inline-block
+			padding: .5em
+			color: white
+			text-decoration: none
+			&:hover, &.active
+				background: #333
+
+	.rsts-nav-bullets
+		line-height: 0
+		a
+			display: inline-block
+			width: 8px
+			height: 8px
+			overflow: hidden
+			margin: 12px 4px
+			+border-radius(100%)
+			text-indent: -999px
+			background-color: #999
+			&:hover, &.active
+				background-color: #fff
+
+	.rsts-video-play, .rsts-video-stop
+		position: absolute
+		top: 50%
+		left: 50%
+		width: 64px
+		height: 64px
+		overflow: hidden
+		margin: -32px 0 0 -32px
+		+border-radius(15px)
+		text:
+			indent: -999px
+			decoration: none
+		background: black
+		background: rgba(black, .8)
+		&:before
+			content: ""
+			position: absolute
+			top: 20px
+			left: 24px
+			display: block
+			border: 12px solid transparent
+				left-color: white
+				left-width: 23px
+				right-width: 0
+		&:hover, &:focus
+			background: white
+			background: rgba(white, .8)
+			+box-shadow(0 0 16px rgba(black, .3))
+			&:before
+				border-left-color: black
+
+	.rsts-video-stop
+		top: 10px
+		left: auto
+		right: 10px
+		margin: 0
+		+border-radius(5px)
+		width: 32px
+		height: 32px
+		&:before
+			content: "\d7"
+			top: 8px
+			left: 8px
+			width: 16px
+			height: 16px
+			border: 0
+			color: white
+			font:
+				size: 23px
+				weight: bold
+			line-height: 18px
+			text:
+				align: center
+				indent: 0
