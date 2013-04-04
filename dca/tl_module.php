@@ -12,7 +12,7 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_cssPrefix,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_autoplay,rsts_videoAutoplay,rsts_autoplayRestart,rsts_navType,rsts_scaleMode;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_cssPrefix,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_autoplay,rsts_videoAutoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_navType,rsts_scaleMode,rsts_deepLinkPrefix,rsts_keyboard;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},cssID,space';
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_id'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_id'],
@@ -76,7 +76,13 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_skin'] = array(
 	'eval' => array(),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
-// "auto", a css lenght value or "css" to get the size from the css
+// set width and height to one of the following values
+// - "css": get the size from the applied css (default)
+// - a css lenght value: e.g. "100%", "500px", "50em"
+// - "auto": get the size from the active slide dimensions at runtime
+//   height can be set to auto only if the direction is "x"
+// - a proportion: keep a fixed proportion for the slides, e.g. "480x270"
+//   this must not set to both dimensions
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_width'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_width'],
 	'exclude' => true,
@@ -84,7 +90,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_width'] = array(
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
-// "auto", a css lenght value or "css" to get the size from the css
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_height'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_height'],
 	'exclude' => true,
@@ -142,6 +147,22 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_autoplayRestart'] = array(
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "int(10) unsigned NOT NULL default '0'",
 );
+// displays a progress bar
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_autoplayProgress'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_autoplayProgress'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "char(1) NOT NULL default ''",
+);
+// true to pause the autoplay on hover
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_pauseAutoplayOnHover'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_pauseAutoplayOnHover'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "char(1) NOT NULL default ''",
+);
 // navigation type (bullets, numbers, tabs)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_navType'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_navType'],
@@ -168,4 +189,20 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_scaleMode'] = array(
 	),
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(64) NOT NULL default ''",
+);
+// URL hash prefix or false to disable deep linking, e.g. "slider-"
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_deepLinkPrefix'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_deepLinkPrefix'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "varchar(255) NOT NULL default ''",
+);
+// true to enable keyboard arrow navigation
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_keyboard'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_keyboard'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "char(1) NOT NULL default ''",
 );

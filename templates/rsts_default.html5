@@ -1,11 +1,16 @@
 <?php
 	$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider-0.0.0.min.js';
 	$GLOBALS['TL_CSS'][] = 'system/modules/rocksolid-slider/assets/css/rocksolid-slider.min.css';
+	$skinPath = 'system/modules/rocksolid-slider/assets/css/' . (empty($this->options['rsts_skin']) ? 'default' : $this->options['rsts_skin']) . '-skin.min.css';
+	if (file_exists(TL_ROOT . '/' . $skinPath)) {
+		$GLOBALS['TL_CSS'][] = $skinPath;
+	}
 ?>
 
 <div class="<?php echo $this->class ?> block"<?php echo $this->cssID ?><?php if ($this->style): ?> style="<?php echo $this->style ?>"<?php endif ?>>
 
 	<?php foreach ($this->images as $image): ?>
+
 		<div data-rsts-type="image">
 			<img src="<?php echo $image->src ?>"<?php echo $image->imgSize ?> alt="<?php echo $image->alt ?>">
 			<?php if ($image->href): ?>
@@ -15,6 +20,7 @@
 				<p class="caption"><?php echo $image->caption ?></p>
 			<?php endif ?>
 		</div>
+
 	<?php endforeach ?>
 
 	<?php foreach ($this->slides as $slide): ?>
@@ -53,14 +59,14 @@
 		$options = array();
 
 		// strings
-		foreach (array('type', 'direction', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode') as $key) {
+		foreach (array('type', 'direction', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode', 'deepLinkPrefix') as $key) {
 			if (! empty($this->options['rsts_' . $key])) {
 				$options[$key] = $this->options['rsts_' . $key];
 			}
 		}
 
 		// boolean
-		foreach (array('random', 'videoAutoplay') as $key) {
+		foreach (array('random', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard') as $key) {
 			$options[$key] = (bool) $this->options['rsts_' . $key];
 		}
 
