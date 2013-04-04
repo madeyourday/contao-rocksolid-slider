@@ -144,7 +144,10 @@ class Slider extends \Module
 	}
 
 	/**
-	 * Generate the module
+	 * Parse slides
+	 *
+	 * @param  \Model\Collection $objSlides slides retrieved from the database
+	 * @return array                        parsed slides
 	 */
 	protected function parseSlides($objSlides)
 	{

@@ -12,6 +12,9 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
+$GLOBALS['TL_MODELS']['tl_rocksolid_slider'] = 'MadeYourDay\\Contao\\Model\\SliderModel';
+$GLOBALS['TL_MODELS']['tl_rocksolid_slide'] = 'MadeYourDay\\Contao\\Model\\SlideModel';
+
 $GLOBALS['BE_MOD']['content']['rocksolid_slider'] = array(
 	'tables' => array('tl_rocksolid_slider', 'tl_rocksolid_slide', 'tl_content'),
 	'icon' => 'system/modules/rocksolid-slider/assets/img/icon.png',
