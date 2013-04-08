@@ -1,0 +1,388 @@
+/*
+ * Copyright MADE/YOUR/DAY OG <mail@madeyourday.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
+@import "mixins"
+@import "compass/css3/background-clip"
+@import "compass/css3/border-radius"
+@import "compass/css3/box-shadow"
+@import "compass/css3/box-sizing"
+@import "compass/css3/images"
+@import "compass/css3/text-shadow"
+@import "compass/css3/transition"
+@import "compass/css3/transform"
+@import "compass/css3/opacity"
+
+
+/* ===========================================
+ * Light Skin
+ * ========================================
+
+.rsts-skin-light
+
+	&.rsts-main
+		position: relative
+
+	&.rsts-type-fade .rsts-slide
+		background: white
+
+	.rsts-view
+		z-index: 10
+		border: 6px solid white
+		+border-radius(3px)
+		background-color: white
+		+box-shadow(0 0 2px rgba(black, 0.3))
+
+	.rsts-slide img
+		width: 100%
+		height: auto
+
+	.rsts-caption
+		position: absolute
+		top: 20px
+		left: 20px
+		padding: 5px 10px
+		+border-radius(3px)
+		color: #333
+		background: white
+		background: rgba(white, 0.75)
+		opacity: 0
+		+transform(translate(0, -20px))
+		+transition(opacity .5s, transform .5s)
+	.rsts-active .rsts-caption
+		opacity: 1
+		+transform(translate(0, 0))
+
+	.rsts-nav-prev, .rsts-nav-next
+		position: absolute
+		top: 50%
+		right: 20px
+		width: 36px
+		height: 36px
+		margin-top: -18px
+		overflow: hidden
+		+border-radius(100%)
+		outline: none
+		line-height: 0
+		text:
+			decoration: none
+			indent: -9999px
+		background: white
+		+background-image(linear-gradient(top, #eee 30%, white))
+		background-image: linear-gradient(to bottom, #eee 30%, white)
+		opacity: 0
+		+single-transition(opacity, 0.2s, ease-in)
+		+box-shadow(0 0 2px 1px rgba(black, 0.3), 0 0 0 1px #ccc, 0 0 4px 4px rgba(#6fb2eb, 0), 0 0 1px 2px rgba(#6fb2eb, 0), inset 0 0 0 2px white, inset 0 1px 4px 1px rgba(black, 0.15))
+		&:after
+			content: "\203a"
+			position: absolute
+			top: 6px
+			left: 9px
+			font: normal 24px/1 "Courier New", monospace
+			color: #444
+			text-indent: 0
+	.rsts-nav-prev
+		right: auto
+		left: 20px
+		&:after
+			content: "\2039"
+			left: 13px
+	&:hover
+		.rsts-nav-prev, .rsts-nav-next
+			opacity: 0.5
+			&:hover
+				+box-shadow(0 0 2px 1px rgba(black, 0.2), 0 0 0 1px #ccc, 0 0 6px 3px rgba(#6fb2eb, 0), 0 0 3px 2px rgba(#6fb2eb, 0.4), inset 0 0 0 2px white, inset 0 1px 4px 1px rgba(black, 0.15))
+				opacity: 1
+				+transition-duration(0.1s)
+				+animation('pulsate 3.5s')
+				+animation-property('iteration-count', 'infinite')
+			&:active
+				+box-shadow(0 0 2px 1px rgba(black, 0.2), 0 0 0 1px #ccc, 0 0 6px 3px rgba(#6fb2eb, 0), 0 0 3px 2px rgba(#6fb2eb, 0.4), inset 0 0 0 2px rgba(white, 0.8), inset 0 1px 4px 3px rgba(black, 0.3))
+				+animation(none)
+
+	&.rsts-direction-y
+		.rsts-nav-prev, .rsts-nav-next
+			top: 10px
+			left: 50%
+			margin:
+				top: 0
+				left: -18px
+			&:after
+				content: "\25b2"
+				position: absolute
+				top: 12px
+				left: 15px
+				font-size: 11px
+				color: #555
+		.rsts-nav-next
+			top: auto
+			bottom: 23px
+			&:after
+				content: "\25bc"
+				top: auto
+				bottom: 12px
+
+	&.rsts-video-playing
+		.rsts-nav-prev, .rsts-nav-next
+			+opacity(0)
+
+	.rsts-nav
+		position: relative
+		z-index: 10
+		margin: -19px 0 -12px
+		text-align: center
+		ul
+			display: inline-block
+			margin: 0
+			padding: 0 10px
+			+border-radius(18px)
+			background-color: white
+			+background-image(linear-gradient(bottom, rgba(black, 0.05), rgba(black, 0.05)))
+			background-image: linear-gradient(to top, rgba(black, 0.05), rgba(black, 0.05))
+			+box-shadow(0 2px 4px -1px rgba(black, 0.25))
+		li
+			display: inline
+
+	.rsts-nav-numbers
+		a
+			display: inline-block
+			width: 20px
+			height: 20px
+			margin: 5px 2px
+			padding: .45em .3em .2em
+			+border-radius(100%)
+			outline: none
+			font-size: 11px
+			line-height: 11px
+			color: #333
+			text-decoration: none
+			background-color: white
+			+background-clip
+			+box-shadow(inset 0 3px 2px -1px rgba(black, 0.15), inset 0 0 2px rgba(black, 0.1))
+			&:hover, &.active
+				background-color: #bec5ca
+				+background-image(linear-gradient(top, white, #bec5ca 90%))
+				background-image: linear-gradient(to bottom, white, #bec5ca 90%)
+				+text-shadow(0 0 1px white)
+				+box-shadow(0 0 0 1px rgba(black, 0.1), 0 2px 2px rgba(black, 0.1), inset 0 3px 1px -1px rgba(white, 0.7), inset 0 -1px 1px rgba(white, 0.8))
+			&:hover
+				background-color: #dde4e9
+				+background-image(linear-gradient(top, white, #dde4e9 90%))
+				background-image: linear-gradient(to bottom, white, #dde4e9 90%)
+				+box-shadow(0 0 0 1px rgba(black, 0.05), 0 2px 2px rgba(black, 0.1), inset 0 3px 1px -1px rgba(white, 0.7), inset 0 -1px 1px rgba(white, 0.8))
+
+	.rsts-nav-tabs
+		z-index: 5
+		top: -2px
+		margin: 0
+		&:before
+			content: ""
+			position: absolute
+			top: -27px
+			z-index: 5
+			width: 100%
+			height: 30px
+			+border-radius(100%)
+			background-color: #ccc
+			+box-shadow(0 0 10px rgba(black, 0.25))
+		ul
+			width: 100%
+			border-top: 1px solid #eee
+			+border-radius(0 0 3px 3px)
+			+background-image(linear-gradient(top, white, #e9e9e9 90%))
+			background-image: linear-gradient(to bottom, white, #e9e9e9 90%)
+			+box-shadow(0 2px 4px -2px rgba(black, 0.3), 1px 0 3px -1px rgba(black, 0.2), -1px 0 3px -1px rgba(black, 0.2), inset 0 0 0 1px rgba(white, 0.7))
+		a
+			position: relative
+			display: inline-block
+			padding: 10px 12px
+			outline: none
+			font-size: 0.75em
+			color: #333
+			text-decoration: none
+			&.active
+				background-color: #aaa
+				+background-image(linear-gradient(top, #e2e2e2, #aaa 90%))
+				background-image: linear-gradient(to bottom, #e2e2e2, #aaa 90%)
+				color: white
+				+text-shadow(0 0 1px rgba(black, 0.2))
+				+box-shadow(inset 0 -2px 0 -1px rgba(white, 0.6), inset 0 0 3px 0 rgba(black, 0.4))
+				&:before, &:after
+					content: ""
+					position: absolute
+					top: 1px
+					left: 50%
+					z-index: 15
+					width: 0
+					height: 0
+					margin-left: -6px
+				&:after
+					top: -4px
+					left: 0
+					width: 100%
+					height: 5px
+					margin: 0
+					border: none
+					+border-radius(100%)
+					+box-shadow(0 0 5px white)
+
+	.rsts-nav-bullets
+		line-height: 0
+		a
+			display: inline-block
+			width: 15px
+			height: 15px
+			overflow: hidden
+			margin: 8px 4px
+			border: 1px solid #c7c7c9
+			+border-radius(100%)
+			outline: none
+			text-indent: -999px
+			background-color: white
+			+background-clip
+			+box-shadow(inset 0 3px 2px -1px rgba(black, 0.15), inset 0 0 2px rgba(black, 0.1))
+			&.active
+				border: 1px solid #acb5ba
+				background-color: #d9dadd
+				+background-image(linear-gradient(top, white, #bec5ca 90%))
+				background-image: linear-gradient(to bottom, white, #bec5ca 90%)
+				+box-shadow(0 1px 2px 1px rgba(black, 0.1), inset 0 3px 1px -1px rgba(white, 0.7), inset 0 -1px 1px rgba(white, 0.8))
+			&:hover
+				border-color: #c1cacf
+				background-color: #e6e7e9
+				+background-image(linear-gradient(top, white, #e6e7e9 90%))
+				background-image: linear-gradient(to bottom, white, #e6e7e9 90%)
+				+box-shadow(0 1px 2px 1px rgba(black, 0.1), inset 0 3px 1px -1px rgba(white, 0.7), inset 0 -1px 1px rgba(white, 0.8))
+
+	.rsts-video-play, .rsts-video-stop
+		position: absolute
+		top: 50%
+		left: 50%
+		width: 64px
+		height: 64px
+		overflow: hidden
+		margin: -32px 0 0 -32px
+		border: 1px solid #ccc
+		+border-radius(5px)
+		outline: none
+		background-color: white
+		background-color: rgba(white, 0.5)
+		+background-image(linear-gradient(top, #eee, rgba(white, 0) 40%, rgba(white, 0) 60%, #ededed))
+		background-image: linear-gradient(to bottom, #eee, rgba(white, 0) 40%, rgba(white, 0) 60%, #ededed)
+		text:
+			indent: -999px
+			decoration: none
+		&:before
+			content: "\25ba"
+			position: absolute
+			top: 11px
+			left: 16px
+			font-size: 36px
+			color: #444
+			text-indent: 0
+	.rsts-video-play
+		+box-shadow(0 0 3px rgba(black, 0.2), inset 0 0 0 2px white, inset 0 1px 4px 1px rgba(black, 0.15))
+		&:hover, &:focus
+			+box-shadow(0 0 3px rgba(black, 0.2), 0 0 15px 3px rgba(#6fb2eb, 0), 0 0 8px 1px rgba(#6fb2eb, 0.4), inset 0 0 0 2px white, inset 0 1px 3px 1px rgba(black, 0.1))
+			+transition-duration(0.05s)
+			+animation('play-pulsate 3.5s')
+			+animation-property('iteration-count', 'infinite')
+			&:before
+				color: #333
+		&:active
+			+box-shadow(0 0 3px rgba(black, 0.2), 0 0 15px 3px rgba(#6fb2eb, 0), 0 0 8px 1px rgba(#6fb2eb, 0.4), inset 0 0 0 2px white, inset 0 1px 5px 3px rgba(black, 0.3))
+			+animation(none)
+	.rsts-video-stop
+		top: 20px
+		left: auto
+		right: 10px
+		width: 32px
+		height: 32px
+		margin: 0
+		border: 0
+		+border-radius(3px)
+		background: black
+		background: rgba(black, 0.8)
+		&:before
+			content: "\d7"
+			top: 8px
+			left: 8px
+			width: 16px
+			height: 16px
+			border: 0
+			font:
+				size: 23px
+				weight: bold
+			color: white
+			line-height: 18px
+			text:
+				align: center
+				indent: 0
+		&:hover,&:focus
+			background: white
+			opacity: 0.7
+			&:before
+				color: black
+	.rsts-video-youtube > .rsts-video-stop
+		top: 25px
+	.rsts-video-vimeo > .rsts-video-stop
+		top: 10px
+		right: auto
+		left: 10px
+	.rsts-video-ipad
+		> .rsts-video-iframe
+			padding-top: 34px
+			background-color: black
+		> .rsts-video-stop
+			top: 1px
+			right: 1px
+			left: auto
+
+	.rsts-progress
+		position: absolute
+		top: 0
+		right: 0
+		width: 100%
+		height: 2px
+		background-color: white
+		background-color: rgba(white, 0.5)
+		opacity: 0
+		+transition(opacity 0.2s linear)
+		div
+			position: relative
+			height: 100%
+			background-color: #55c5ef
+			+background-image(linear-gradient(left, rgba(#55c5ef, 0) 0%, #159dcf 100%))
+			background-image: linear-gradient(to right, rgba(#55c5ef, 0) 0%, #159dcf 100%)
+			+box-shadow(0 -2px 2px -1px rgba(#3792ce, 0.9), 0 2px 2px -1px rgba(#3792ce, 0.9))
+			&:after, &:before
+				content: ""
+				position: absolute
+				right: 0
+				top: 0
+				width: 3px
+				height: 2px
+				+border-radius(5px)
+				background-color: white
+				background-color: rgba(white, 0.9)
+				+box-shadow(0 0 3px 1px rgba(white, 0.5))
+			&:before
+				width: 50px
+				background-color: transparent
+				+background-image(linear-gradient(left, rgba(white, 0) 0%, rgba(white, 1) 100%))
+				background-image: linear-gradient(to right, rgba(white, 0) 0%, rgba(white, 1) 100%)
+				+box-shadow(0 0 3px -1px rgba(white, 0.5))
+		&.rsts-progress-active
+			opacity: 0.8
+
+@include keyframes('pulsate')
+	50%
+		+box-shadow(0 0 2px 1px rgba(black, 0.2), 0 0 0 1px #ccc, 0 0 6px 3px rgba(#6fb2eb, 0.5), 0 0 3px 2px rgba(#6fb2eb, 0.4), inset 0 0 0 2px white, inset 0 1px 4px 1px rgba(black, 0.15))
+
+@include keyframes('play-pulsate')
+	50%
+		+box-shadow(0 0 3px rgba(black, 0.2), 0 0 15px 3px rgba(#6fb2eb, 0.3), 0 0 8px 1px rgba(#6fb2eb, 0.4), inset 0 0 0 2px white, inset 0 1px 3px 1px rgba(black, 0.1))

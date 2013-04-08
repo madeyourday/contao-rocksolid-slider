@@ -1,0 +1,226 @@
+/*
+ * Copyright MADE/YOUR/DAY OG <mail@madeyourday.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+
+@import "mixins"
+@import "compass/css3/background-clip"
+@import "compass/css3/border-radius"
+@import "compass/css3/box-shadow"
+@import "compass/css3/box-sizing"
+@import "compass/css3/images"
+@import "compass/css3/text-shadow"
+@import "compass/css3/transform"
+@import "compass/css3/transition"
+@import "compass/css3/opacity"
+
+
+/* ===========================================
+ * Liquid Skin
+ * ========================================
+
+.rsts-skin-liquid
+
+	&.rsts-main
+		position: relative
+
+	&.rsts-type-fade .rsts-slide
+		background: white
+
+	.rsts-slide img
+		width: 100%
+		height: auto
+
+	.rsts-caption
+		position: absolute
+		top: 20px
+		left: 20px
+		padding: 5px 10px
+		+border-radius(3px)
+		color: white
+		+text-shadow(0 0 3px rgba(black, 0.6))
+		background: #ccc
+		background: rgba(white, 0.1)
+		+background-image(radial-gradient(rgba(white, 0), rgba(#d0e0e5, 0.2) 60%))
+		+box-shadow(0 0 2px rgba(black, 0.3), inset 0 2px 0 -1px rgba(white, 0.5), inset 0 -1px 0 rgba(black, 0.3), inset 0 0 1px rgba(white, 0.8))
+		opacity: 0
+		+transform(translate(0, -20px))
+		+transition(opacity .5s, transform .5s)
+	.rsts-active .rsts-caption
+		opacity: 1
+		+transform(translate(0, 0))
+
+	.rsts-nav-prev, .rsts-nav-next, .rsts-video-stop, .rsts-nav-numbers a, .rsts-nav-tabs a
+		position: absolute
+		right: 55px
+		bottom: 15px
+		overflow: hidden
+		width: 30px
+		height: 30px
+		+border-radius(3px)
+		outline: none
+		line-height: 0
+		text:
+			align: center
+			decoration: none
+			indent: -9999px
+		background: rgba(white, 0.2)
+		background-position: 50% 50%
+		+bg-image-hd("liquid/arrow-left")
+		+box-shadow(0 0 2px rgba(black, 0.3), inset 0 2px 0 -1px rgba(white, 0.5), inset 0 -1px 0 rgba(black, 0.3), inset 0 0 1px rgba(white, 0.8))
+		&:hover, &.active
+			background-color: #ddd
+			background-color: rgba(black, 0.2)
+	&.rsts-no-touch:hover
+		.rsts-nav-numbers, .rsts-nav-tabs
+			a.active
+				+opacity(0.6)
+	.rsts-nav-next
+		right: 20px
+		+bg-image-hd("liquid/arrow-right")
+
+	&.rsts-direction-y
+		.rsts-nav-prev
+			+bg-image-hd("liquid/arrow-top")
+		.rsts-nav-next
+			+bg-image-hd("liquid/arrow-bottom")
+
+	.rsts-nav
+		position: absolute
+		right: 95px
+		bottom: 12px
+		left: 10px
+		line-height: 1
+		text-align: right
+		ul
+			margin: 0
+			padding: 0
+		li
+			display: inline
+
+	&.rsts-video-playing
+		.rsts-nav, .rsts-nav-prev, .rsts-nav-next
+			opacity: 0
+		.rsts-nav
+			bottom: 47px
+		.rsts-nav-prev, .rsts-nav-next
+			bottom: 50px
+		&:hover
+			.rsts-nav, .rsts-nav-prev, .rsts-nav-next
+				opacity: 1
+	&.rsts-touch.rsts-video-playing
+		.rsts-nav-prev, .rsts-nav-next, .rsts-nav
+			display: none
+	&.rsts-touch
+		.rsts-nav-numbers, .rsts-nav-tabs
+			display: none
+
+	.rsts-nav-numbers, .rsts-nav-tabs
+		a
+			position: static
+			display: inline-block
+			min-width: 20px
+			margin: 0 2px
+			padding-top: 15px
+			font-size: 0.75em
+			color: white
+			text-indent: 0
+			+text-shadow(0 0 3px rgba(black, 0.6))
+			background: #ccc
+			background: rgba(white, 0.1)
+			+background-image(radial-gradient(rgba(white, 0), rgba(#d0e0e5, 0.2) 60%))
+			+opacity(0)
+			+single-transition(opacity, 0.2s, ease-in)
+			&.active
+				color: white
+	.rsts-nav-tabs
+		a
+			width: auto
+			padding: 15px 10px
+	&.rsts-no-touch:hover
+		.rsts-nav-numbers, .rsts-nav-tabs
+			a
+				+opacity(1)
+
+	.rsts-nav-bullets
+		line-height: 0
+		a
+			display: inline-block
+			width: 10px
+			height: 10px
+			overflow: hidden
+			margin: 12px 4px
+			border: 1px solid #bbb
+			border: 1px solid rgba(black, 0.3)
+			+border-radius(100%)
+			outline: none
+			text:
+				align: left
+				indent: -999px
+			background-color: #eee
+			background-color: rgba(white, 0.2)
+			+box-shadow(0 0 1px 1px rgba(black, 0.1), inset 0 2px 0 -1px rgba(white, 0.5), inset 0 0 1px rgba(white, 0.6))
+			&:hover, &.active
+				background-color: #51a5c0
+				background-color: rgba(#51a5c0, 0.5)
+
+	.rsts-video-play
+		position: absolute
+		left: 50%
+		top: 50%
+		width: 64px
+		height: 64px
+		overflow: hidden
+		margin: -32px 0 0 -32px
+		+border-radius(5px)
+		outline: none
+		text:
+			indent: -999px
+			decoration: none
+		+bg-image-hd("liquid/play")
+		background-position: 50% 50%
+		+box-shadow(0 0 3px 1px rgba(black, 0.2), inset 0 3px 0 -1px rgba(white, 0.5), inset 0 -1px 0 rgba(black, 0.3), inset 0 0 1px rgba(white, 0.9))
+		&:hover, &:focus
+			background-color: #ccc
+			background-color: rgba(black, 0.1)
+			opacity: 0.7
+		&:active
+			opacity: 1
+
+	.rsts-video-stop
+		top: 20px
+		right: 20px
+		left: auto
+		+bg-image-hd("liquid/close")
+	.rsts-video-youtube > .rsts-video-stop
+		top: 25px
+	.rsts-video-vimeo > .rsts-video-stop
+		top: 10px
+		right: auto
+		left: 10px
+	.rsts-video-ipad
+		> .rsts-video-iframe
+			padding-top: 34px
+			background-color: black
+		> .rsts-video-stop
+			top: 1px
+			right: 1px
+			left: auto
+
+	.rsts-progress
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		height: 2px
+		background-color: #51a5c0
+		opacity: 0
+		+transition(opacity 0.2s linear)
+		div
+			height: 100%
+			background-color: white
+		&.rsts-progress-active
+			opacity: 0.3
