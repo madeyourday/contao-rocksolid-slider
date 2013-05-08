@@ -57,7 +57,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_random'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_random'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => 'w50'),
+	'eval' => array('tl_class' => 'w50 m12'),
 	'sql' => "char(1) NOT NULL default ''",
 );
 // prefix for all RockSolid Slider specific css class names
@@ -135,7 +135,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_videoAutoplay'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_videoAutoplay'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => 'w50'),
+	'eval' => array('tl_class' => 'w50 m12'),
 	'sql' => "char(1) NOT NULL default ''",
 );
 // false or the duration between user interaction and autoplay
@@ -203,6 +203,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_keyboard'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_keyboard'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => 'w50'),
+	'eval' => array('tl_class' => 'w50 m12'),
 	'sql' => "char(1) NOT NULL default ''",
 );
