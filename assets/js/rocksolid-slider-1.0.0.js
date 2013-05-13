@@ -480,18 +480,16 @@ Rst.Slider = (function() {
 			.addClass(this.options.cssPrefix + 'type-' + this.options.type)
 			.addClass(this.options.cssPrefix + 'skin-' + this.options.skin);
 
-		if (
-			this.options.direction === 'x' &&
-			this.options.height === 'css' &&
-			this.elements.main.height() < 1
-		) {
+		if (this.options.direction === 'x' && (
+			this.options.height === 'auto' ||
+			(this.options.height === 'css' && this.elements.main.height() < 1)
+		)) {
 			this.autoSize = true;
 		}
-		else if (
-			this.options.direction === 'y' &&
-			this.options.width === 'css' &&
-			this.elements.main.width() < 1
-		) {
+		else if (this.options.direction === 'y' && (
+			this.options.width === 'auto' ||
+			(this.options.width === 'css' && this.elements.main.width() < 1)
+		)) {
 			this.autoSize = true;
 		}
 

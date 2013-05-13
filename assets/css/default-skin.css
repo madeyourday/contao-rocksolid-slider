@@ -118,10 +118,6 @@
   }
 }
 .rsts-skin-default.rsts-video-playing .rsts-nav, .rsts-skin-default.rsts-video-playing .rsts-nav-prev, .rsts-skin-default.rsts-video-playing .rsts-nav-next {
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
-  opacity: 0;
-}
-.rsts-skin-default.rsts-touch.rsts-video-playing .rsts-nav, .rsts-skin-default.rsts-touch.rsts-video-playing .rsts-nav-prev, .rsts-skin-default.rsts-touch.rsts-video-playing .rsts-nav-next {
   display: none;
 }
 .rsts-skin-default.rsts-touch .rsts-nav-numbers, .rsts-skin-default.rsts-touch .rsts-nav-tabs {
