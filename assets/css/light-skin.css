@@ -73,11 +73,10 @@
   text-decoration: none;
   text-indent: -9999px;
   background: white;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(30%, #eeeeee), color-stop(100%, #ffffff));
   background-image: -webkit-linear-gradient(top, #eeeeee 30%, #ffffff);
   background-image: -moz-linear-gradient(top, #eeeeee 30%, #ffffff);
   background-image: -o-linear-gradient(top, #eeeeee 30%, #ffffff);
-  background-image: linear-gradient(top, #eeeeee 30%, #ffffff);
+  background-image: linear-gradient(to bottom, #eeeeee 30%, #ffffff);
   background-image: linear-gradient(to bottom, #eeeeee 30%, #ffffff);
   opacity: 0;
   -webkit-transition: opacity 0.2s ease-in;
@@ -176,11 +175,10 @@
   -moz-border-radius: 18px;
   border-radius: 18px;
   background-color: white;
-  background-image: -webkit-gradient(linear, 50% 100%, 50% 0%, color-stop(0%, rgba(0, 0, 0, 0.05)), color-stop(100%, rgba(0, 0, 0, 0.05)));
   background-image: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
   background-image: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
   background-image: -o-linear-gradient(bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
-  background-image: linear-gradient(bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
   background-image: linear-gradient(to top, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.05));
   -webkit-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.25);
   -moz-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.25);
@@ -213,11 +211,10 @@
 }
 .rsts-skin-light .rsts-nav-numbers a:hover, .rsts-skin-light .rsts-nav-numbers a.active {
   background-color: #bec5ca;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(90%, #bec5ca));
   background-image: -webkit-linear-gradient(top, #ffffff, #bec5ca 90%);
   background-image: -moz-linear-gradient(top, #ffffff, #bec5ca 90%);
   background-image: -o-linear-gradient(top, #ffffff, #bec5ca 90%);
-  background-image: linear-gradient(top, #ffffff, #bec5ca 90%);
+  background-image: linear-gradient(to bottom, #ffffff, #bec5ca 90%);
   background-image: linear-gradient(to bottom, #ffffff, #bec5ca 90%);
   text-shadow: 0 0 1px white;
   -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.1), inset 0 3px 1px -1px rgba(255, 255, 255, 0.7), inset 0 -1px 1px rgba(255, 255, 255, 0.8);
@@ -226,11 +223,10 @@
 }
 .rsts-skin-light .rsts-nav-numbers a:hover {
   background-color: #dde4e9;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(90%, #dde4e9));
   background-image: -webkit-linear-gradient(top, #ffffff, #dde4e9 90%);
   background-image: -moz-linear-gradient(top, #ffffff, #dde4e9 90%);
   background-image: -o-linear-gradient(top, #ffffff, #dde4e9 90%);
-  background-image: linear-gradient(top, #ffffff, #dde4e9 90%);
+  background-image: linear-gradient(to bottom, #ffffff, #dde4e9 90%);
   background-image: linear-gradient(to bottom, #ffffff, #dde4e9 90%);
   -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 2px rgba(0, 0, 0, 0.1), inset 0 3px 1px -1px rgba(255, 255, 255, 0.7), inset 0 -1px 1px rgba(255, 255, 255, 0.8);
   -moz-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 2px rgba(0, 0, 0, 0.1), inset 0 3px 1px -1px rgba(255, 255, 255, 0.7), inset 0 -1px 1px rgba(255, 255, 255, 0.8);
@@ -262,11 +258,10 @@
   -webkit-border-radius: 0;
   -moz-border-radius: 0 0 3px 3px;
   border-radius: 0 0 3px 3px;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(90%, #e9e9e9));
   background-image: -webkit-linear-gradient(top, #ffffff, #e9e9e9 90%);
   background-image: -moz-linear-gradient(top, #ffffff, #e9e9e9 90%);
   background-image: -o-linear-gradient(top, #ffffff, #e9e9e9 90%);
-  background-image: linear-gradient(top, #ffffff, #e9e9e9 90%);
+  background-image: linear-gradient(to bottom, #ffffff, #e9e9e9 90%);
   background-image: linear-gradient(to bottom, #ffffff, #e9e9e9 90%);
   -webkit-box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.3), 1px 0 3px -1px rgba(0, 0, 0, 0.2), -1px 0 3px -1px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
   -moz-box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.3), 1px 0 3px -1px rgba(0, 0, 0, 0.2), -1px 0 3px -1px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
@@ -283,11 +278,10 @@
 }
 .rsts-skin-light .rsts-nav-tabs a.active {
   background-color: #aaaaaa;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e2e2e2), color-stop(90%, #aaaaaa));
   background-image: -webkit-linear-gradient(top, #e2e2e2, #aaaaaa 90%);
   background-image: -moz-linear-gradient(top, #e2e2e2, #aaaaaa 90%);
   background-image: -o-linear-gradient(top, #e2e2e2, #aaaaaa 90%);
-  background-image: linear-gradient(top, #e2e2e2, #aaaaaa 90%);
+  background-image: linear-gradient(to bottom, #e2e2e2, #aaaaaa 90%);
   background-image: linear-gradient(to bottom, #e2e2e2, #aaaaaa 90%);
   color: white;
   text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
@@ -345,11 +339,10 @@
 .rsts-skin-light .rsts-nav-bullets a.active {
   border: 1px solid #acb5ba;
   background-color: #d9dadd;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(90%, #bec5ca));
   background-image: -webkit-linear-gradient(top, #ffffff, #bec5ca 90%);
   background-image: -moz-linear-gradient(top, #ffffff, #bec5ca 90%);
   background-image: -o-linear-gradient(top, #ffffff, #bec5ca 90%);
-  background-image: linear-gradient(top, #ffffff, #bec5ca 90%);
+  background-image: linear-gradient(to bottom, #ffffff, #bec5ca 90%);
   background-image: linear-gradient(to bottom, #ffffff, #bec5ca 90%);
   -webkit-box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.1), inset 0 3px 1px -1px rgba(255, 255, 255, 0.7), inset 0 -1px 1px rgba(255, 255, 255, 0.8);
   -moz-box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.1), inset 0 3px 1px -1px rgba(255, 255, 255, 0.7), inset 0 -1px 1px rgba(255, 255, 255, 0.8);
@@ -358,11 +351,10 @@
 .rsts-skin-light .rsts-nav-bullets a:hover {
   border-color: #c1cacf;
   background-color: #e6e7e9;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(90%, #e6e7e9));
   background-image: -webkit-linear-gradient(top, #ffffff, #e6e7e9 90%);
   background-image: -moz-linear-gradient(top, #ffffff, #e6e7e9 90%);
   background-image: -o-linear-gradient(top, #ffffff, #e6e7e9 90%);
-  background-image: linear-gradient(top, #ffffff, #e6e7e9 90%);
+  background-image: linear-gradient(to bottom, #ffffff, #e6e7e9 90%);
   background-image: linear-gradient(to bottom, #ffffff, #e6e7e9 90%);
   -webkit-box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.1), inset 0 3px 1px -1px rgba(255, 255, 255, 0.7), inset 0 -1px 1px rgba(255, 255, 255, 0.8);
   -moz-box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.1), inset 0 3px 1px -1px rgba(255, 255, 255, 0.7), inset 0 -1px 1px rgba(255, 255, 255, 0.8);
@@ -383,11 +375,10 @@
   outline: none;
   background-color: white;
   background-color: rgba(255, 255, 255, 0.5);
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #eeeeee), color-stop(40%, rgba(255, 255, 255, 0)), color-stop(60%, rgba(255, 255, 255, 0)), color-stop(100%, #ededed));
   background-image: -webkit-linear-gradient(top, #eeeeee, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0) 60%, #ededed);
   background-image: -moz-linear-gradient(top, #eeeeee, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0) 60%, #ededed);
   background-image: -o-linear-gradient(top, #eeeeee, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0) 60%, #ededed);
-  background-image: linear-gradient(top, #eeeeee, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0) 60%, #ededed);
+  background-image: linear-gradient(to bottom, #eeeeee, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0) 60%, #ededed);
   background-image: linear-gradient(to bottom, #eeeeee, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0) 60%, #ededed);
   text-indent: -999px;
   text-decoration: none;
@@ -505,11 +496,10 @@
   position: relative;
   height: 100%;
   background-color: #55c5ef;
-  background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, rgba(85, 197, 239, 0)), color-stop(100%, #159dcf));
   background-image: -webkit-linear-gradient(left, rgba(85, 197, 239, 0) 0%, #159dcf 100%);
   background-image: -moz-linear-gradient(left, rgba(85, 197, 239, 0) 0%, #159dcf 100%);
   background-image: -o-linear-gradient(left, rgba(85, 197, 239, 0) 0%, #159dcf 100%);
-  background-image: linear-gradient(left, rgba(85, 197, 239, 0) 0%, #159dcf 100%);
+  background-image: linear-gradient(to right, rgba(85, 197, 239, 0) 0%, #159dcf 100%);
   background-image: linear-gradient(to right, rgba(85, 197, 239, 0) 0%, #159dcf 100%);
   -webkit-box-shadow: 0 -2px 2px -1px rgba(55, 146, 206, 0.9), 0 2px 2px -1px rgba(55, 146, 206, 0.9);
   -moz-box-shadow: 0 -2px 2px -1px rgba(55, 146, 206, 0.9), 0 2px 2px -1px rgba(55, 146, 206, 0.9);
@@ -534,11 +524,10 @@
 .rsts-skin-light .rsts-progress div:before {
   width: 50px;
   background-color: transparent;
-  background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(100%, #ffffff));
   background-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
   background-image: -moz-linear-gradient(left, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
   background-image: -o-linear-gradient(left, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
-  background-image: linear-gradient(left, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
   background-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
   -webkit-box-shadow: 0 0 3px -1px rgba(255, 255, 255, 0.5);
   -moz-box-shadow: 0 0 3px -1px rgba(255, 255, 255, 0.5);

@@ -60,5 +60,7 @@ $GLOBALS['TL_LANG']['tl_module']['rsts_deepLinkPrefix'][0] = 'Deep-Link-Prefix';
 $GLOBALS['TL_LANG']['tl_module']['rsts_deepLinkPrefix'][1] = 'Beispiel: "slide-". Lassen Sie dieses Feld leer um Deep-Linking zu deaktivieren.';
 $GLOBALS['TL_LANG']['tl_module']['rsts_keyboard'][0] = 'Tastatur-Navigation aktivieren';
 $GLOBALS['TL_LANG']['tl_module']['rsts_keyboard'][1] = 'Bei aktivierter Tastatur-Navigation kann der Slider mit den Pfeiltasten gesteuert werden';
+$GLOBALS['TL_LANG']['tl_module']['rsts_captions'][0] = 'Titel in Slides anzeigen';
+$GLOBALS['TL_LANG']['tl_module']['rsts_captions'][1] = 'Zeigt die Titel der Slides in den Slides als Überschrift an.';
 $GLOBALS['TL_LANG']['tl_module']['rsts_template'][0] = 'Template';
 $GLOBALS['TL_LANG']['tl_module']['rsts_template'][1] = 'Hier können Sie das Slider-Template auswählen.';

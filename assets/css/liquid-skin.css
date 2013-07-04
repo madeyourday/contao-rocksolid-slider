@@ -28,7 +28,6 @@
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
   background: #cccccc;
   background: rgba(255, 255, 255, 0.1);
-  background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 60, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(60%, rgba(208, 224, 229, 0.2)));
   background-image: -webkit-radial-gradient(rgba(255, 255, 255, 0), rgba(208, 224, 229, 0.2) 60%);
   background-image: -moz-radial-gradient(rgba(255, 255, 255, 0), rgba(208, 224, 229, 0.2) 60%);
   background-image: -o-radial-gradient(rgba(255, 255, 255, 0), rgba(208, 224, 229, 0.2) 60%);
@@ -164,7 +163,6 @@
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
   background: #cccccc;
   background: rgba(255, 255, 255, 0.1);
-  background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 60, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(60%, rgba(208, 224, 229, 0.2)));
   background-image: -webkit-radial-gradient(rgba(255, 255, 255, 0), rgba(208, 224, 229, 0.2) 60%);
   background-image: -moz-radial-gradient(rgba(255, 255, 255, 0), rgba(208, 224, 229, 0.2) 60%);
   background-image: -o-radial-gradient(rgba(255, 255, 255, 0), rgba(208, 224, 229, 0.2) 60%);

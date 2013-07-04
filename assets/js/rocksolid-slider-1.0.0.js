@@ -46,7 +46,7 @@ Rst.Slide = (function() {
 			this.data.name = this.data.name || this.element.find('img').attr('alt');
 		}
 
-		if (this.data.name) {
+		if (this.data.name && slider.options.captions) {
 			$(document.createElement('div'))
 				.addClass(slider.options.cssPrefix + 'caption')
 				.text(this.data.name)
@@ -648,7 +648,9 @@ Rst.Slider = (function() {
 		// URL hash prefix or false to disable deep linking, e.g. "slider-"
 		deepLinkPrefix: false,
 		// true to enable keyboard arrow navigation
-		keyboard: true
+		keyboard: true,
+		// true to enable caption elements inside slides
+		captions: true
 	};
 
 	/**
