@@ -12,7 +12,7 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_cssPrefix,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_autoplay,rsts_videoAutoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_navType,rsts_scaleMode,rsts_deepLinkPrefix,rsts_keyboard,rsts_captions;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_autoplay,rsts_videoAutoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_navType,rsts_scaleMode,rsts_deepLinkPrefix,rsts_keyboard,rsts_captions;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_cssPrefix,cssID,space';
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_id'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_id'],
@@ -60,20 +60,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_random'] = array(
 	'eval' => array('tl_class' => 'w50 m12'),
 	'sql' => "char(1) NOT NULL default ''",
 );
-// prefix for all RockSolid Slider specific css class names
-$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_cssPrefix'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_cssPrefix'],
-	'exclude' => true,
-	'inputType' => 'text',
-	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(64) NOT NULL default ''",
-);
 // slider skin (set this to "none" to disable the default skin)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_skin'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_skin'],
 	'exclude' => true,
 	'inputType' => 'text',
-	'eval' => array(),
+	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
 // set width and height to one of the following values
@@ -213,4 +205,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_captions'] = array(
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "char(1) NOT NULL default '1'",
+);
+// prefix for all RockSolid Slider specific css class names
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_cssPrefix'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_cssPrefix'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => ''),
+	'sql' => "varchar(64) NOT NULL default ''",
 );
