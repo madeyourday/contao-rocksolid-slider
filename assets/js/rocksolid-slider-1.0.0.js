@@ -814,10 +814,10 @@ Rst.Slider = (function() {
 		this.autoplayPaused = false;
 		if (! this.autoplayStopped) {
 			this.autoplay((
-				1 - (
+				1 - (this.options.autoplayProgress ?
 					this.elements.progressBar.outerWidth() /
 					this.elements.progress.width()
-				)
+				: 0)
 			) * this.options.autoplay);
 		}
 
