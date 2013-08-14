@@ -195,6 +195,13 @@ class Slider extends \Module
 					$slide['image']->imgSize = '';
 					$slide['image']->alt = '';
 				}
+				else {
+					$slide['image'] = new \stdClass;
+					// Grey dummy image
+					$slide['image']->src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAJCAMAAAAM9FwAAAAAA1BMVEXGxsbd/8BlAAAAFUlEQVR42s3BAQEAAACAkP6vdiO6AgCZAAG/wrlvAAAAAElFTkSuQmCC';
+					$slide['image']->imgSize = '';
+					$slide['image']->alt = '';
+				}
 			}
 
 			$slides[] = $slide;
