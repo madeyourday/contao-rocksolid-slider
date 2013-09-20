@@ -397,11 +397,11 @@
 .rsts-skin-dark .rsts-progress {
   position: absolute;
   right: 0;
-  top: 0;
+  top: -5px;
   width: 100%;
-  height: 1px;
-  background-color: white;
-  background-color: rgba(255, 255, 255, 0.5);
+  height: 11px;
+  overflow: hidden;
+  padding-top: 5px;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
   -webkit-transition: opacity 0.2s linear;
@@ -409,9 +409,19 @@
   -o-transition: opacity 0.2s linear;
   transition: opacity 0.2s linear;
 }
+.rsts-skin-dark .rsts-progress:after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: white;
+  background-color: rgba(255, 255, 255, 0.5);
+}
 .rsts-skin-dark .rsts-progress div {
   position: relative;
-  height: 100%;
+  height: 1px;
   background-color: #4683c2;
   background-image: -webkit-linear-gradient(left, rgba(147, 148, 186, 0), #3cc8d9);
   background-image: -moz-linear-gradient(left, rgba(147, 148, 186, 0), #3cc8d9);

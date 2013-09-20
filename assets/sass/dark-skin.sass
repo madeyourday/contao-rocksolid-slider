@@ -298,16 +298,25 @@
 	.rsts-progress
 		position: absolute
 		right: 0
-		top: 0
+		top: -5px
 		width: 100%
-		height: 1px
-		background-color: white
-		background-color: rgba(white, 0.5)
+		height: 11px
+		overflow: hidden
+		padding-top: 5px
 		+opacity(0)
 		+transition(opacity 0.2s linear)
+		&:after
+			content: ""
+			position: absolute
+			top: 5px
+			left: 0
+			width: 100%
+			height: 1px
+			background-color: white
+			background-color: rgba(white, 0.5)
 		div
 			position: relative
-			height: 100%
+			height: 1px
 			background-color: #4683c2
 			+background-image(linear-gradient(left, rgba(#9394ba, 0), #3cc8d9))
 			background-image: linear-gradient(to right, rgba(#9394ba, 0), #3cc8d9)
