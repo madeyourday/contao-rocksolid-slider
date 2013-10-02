@@ -26,10 +26,13 @@ class Slider extends \Backend
 	{
 		if (strlen(\Input::get('tid'))) {
 			$this->toggleVisibility(\Input::get('tid'), (\Input::get('state') == 1));
+			if (\Environment::get('isAjaxRequest')) {
+				exit;
+			}
 			$this->redirect($this->getReferer());
 		}
 
-		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
+		$href .= '&amp;id=' . \Input::get('id') . '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
 
 		if (! $row['published']) {
 			$icon = 'invisible.gif';
@@ -65,7 +68,7 @@ class Slider extends \Backend
 	 */
 	public function editSlideIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (! empty($row['videoURL']) || ! empty($row['singleSRC'])) {
+		if (trim($row['videoURL']) || trim($row['singleSRC'])) {
 			return '';
 		}
 		$href .= '&amp;id=' . $row['id'];

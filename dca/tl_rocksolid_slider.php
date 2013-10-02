@@ -109,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 		),
 		'orderSRC' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'],
-			'sql' => "text NULL",
+			'sql' => "blob NULL",
 		),
 	),
 

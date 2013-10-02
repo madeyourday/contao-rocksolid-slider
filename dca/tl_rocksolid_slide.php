@@ -132,7 +132,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'files' => true,
 				'filesOnly' => true,
 			),
-			'sql' => "varchar(255) NOT NULL default ''",
+			'sql' => "binary(16) NULL",
 		),
 		'published' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['published'],

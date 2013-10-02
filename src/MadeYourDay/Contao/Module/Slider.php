@@ -55,7 +55,12 @@ class Slider extends \Module
 		}
 
 		$this->multiSRC = deserialize($this->slider->multiSRC);
-		$this->files = \FilesModel::findMultipleByIds($this->multiSRC);
+		if (version_compare(VERSION, '3.2', '<')) {
+			$this->files = \FilesModel::findMultipleByIds($this->multiSRC);
+		}
+		else {
+			$this->files = \FilesModel::findMultipleByUuids($this->multiSRC);
+		}
 
 		if ($this->rsts_template) {
 			$this->strTemplate = $this->rsts_template;
@@ -97,6 +102,7 @@ class Slider extends \Module
 				$images[$files->path] = array
 				(
 					'id'        => $files->id,
+					'uuid'      => isset($files->uuid) ? $files->uuid : null,
 					'name'      => $file->basename,
 					'singleSRC' => $files->path,
 					'alt'       => $arrMeta['title'],
@@ -108,14 +114,24 @@ class Slider extends \Module
 
 			if ($this->slider->orderSRC) {
 				// Turn the order string into an array and remove all values
-				$order = explode(',', $this->slider->orderSRC);
-				$order = array_flip(array_map('intval', $order));
+				if (version_compare(VERSION, '3.2', '<')) {
+					$order = explode(',', $this->slider->orderSRC);
+					$order = array_map('intval', $order);
+				}
+				else {
+					$order = deserialize($this->slider->orderSRC);
+				}
+				if (!$order || !is_array($order)) {
+					$order = array();
+				}
+				$order = array_flip($order);
 				$order = array_map(function(){}, $order);
 
 				// Move the matching elements to their position in $order
+				$idKey = version_compare(VERSION, '3.2', '<') ? 'id' : 'uuid';
 				foreach ($images as $k => $v) {
-					if (array_key_exists($v['id'], $order)) {
-						$order[$v['id']] = $v;
+					if (array_key_exists($v[$idKey], $order)) {
+						$order[$v[$idKey]] = $v;
 						unset($images[$k]);
 					}
 				}
@@ -169,8 +185,11 @@ class Slider extends \Module
 			$idIndexes[(int)$slide['id']] = count($slides);
 
 			if (
-				$slide['singleSRC'] &&
-				($file = \FilesModel::findByPk($slide['singleSRC'])) &&
+				trim($slide['singleSRC']) &&
+				($file = version_compare(VERSION, '3.2', '<')
+					? \FilesModel::findByPk($slide['singleSRC'])
+					: \FilesModel::findByUuid($slide['singleSRC'])
+				) &&
 				($fileObject = new \File($file->path, true)) &&
 				$fileObject->isGdImage
 			) {
