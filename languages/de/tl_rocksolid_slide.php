@@ -12,6 +12,10 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['headerImages'] = 'Bilder';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['headerImagesSelected'][0] = 'Bilder ausgewählt';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['headerImagesSelected'][1] = 'Ja';
+
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['new'][0] = 'Neuen Slide';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['new'][1] = 'Einen neuen Slide erstellen';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['edit'][0] = 'Slide bearbeiten';

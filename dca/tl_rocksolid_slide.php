@@ -33,6 +33,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'fields' => array('sorting'),
 			'headerFields' => array('name'),
 			'panelLayout' => 'limit',
+			'header_callback' => array('MadeYourDay\\Contao\\Slider', 'headerCallback'),
 			'child_record_callback' => array('MadeYourDay\\Contao\\Slider', 'listSlides'),
 			'child_record_class' => 'no_padding',
 		),

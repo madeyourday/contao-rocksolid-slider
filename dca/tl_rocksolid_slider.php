@@ -104,6 +104,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'orderField' => 'orderSRC',
 				'files' => true,
 				'filesOnly' => true,
+				'isGallery' => true,
 			),
 			'sql' => "blob NULL",
 		),
