@@ -154,6 +154,11 @@ class Slider extends \Module
 
 		}
 
+		// use custom skin if specified
+		if (trim($this->arrData['rsts_customSkin'])) {
+			$this->arrData['rsts_skin'] = trim($this->arrData['rsts_customSkin']);
+		}
+
 		$this->Template->images = $images;
 		$this->Template->slides = $this->parseSlides(SlideModel::findPublishedByPid($this->rsts_id));
 		$this->Template->options = $this->arrData;
