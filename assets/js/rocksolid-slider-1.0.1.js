@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.0.0 */
+/*! rocksolid-slider v1.0.1 */
 (function($, window, document) {
 
 var Rst = {};
@@ -1024,7 +1024,9 @@ Rst.Slider = (function() {
 					this.options.duration * durationScale,
 				easing: timingFunction ? timingFunction :
 					fromDrag ? 'easeOutSine' : 'easeInOutSine',
-				complete: element === this.elements.slides ? function() {
+				complete: (
+					this.options.type === 'slide' ? element : element.parent()
+				)[0] === this.elements.slides[0] ? function() {
 					self.cleanupSlides();
 				} : null
 			});
