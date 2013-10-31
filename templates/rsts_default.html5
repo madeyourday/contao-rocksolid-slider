@@ -1,5 +1,5 @@
 <?php
-	$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider-1.0.2.min.js|static';
+	$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider-1.0.3.min.js|static';
 	$GLOBALS['TL_CSS'][] = 'system/modules/rocksolid-slider/assets/css/rocksolid-slider.min.css||static';
 	$skinPath = 'system/modules/rocksolid-slider/assets/css/' . (empty($this->options['rsts_skin']) ? 'default' : $this->options['rsts_skin']) . '-skin.min.css';
 	if (file_exists(TL_ROOT . '/' . $skinPath)) {

@@ -25,6 +25,7 @@ $GLOBALS['TL_LANG']['tl_module']['rsts_random'][1] = 'Wenn aktiviert werden die 
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin'][0] = 'Slider-Skin';
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin'][1] = 'Wählen Sie einen der mitgelieferten Skins oder verwenden Sie Ihren eigenen.';
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin_options'][''] = 'Standard';
+$GLOBALS['TL_LANG']['tl_module']['rsts_skin_options']['default-content'] = 'Standard Inhalt';
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin_options']['liquid'] = 'Liquid';
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin_options']['dark'] = 'Dark';
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin_options']['light'] = 'Light';

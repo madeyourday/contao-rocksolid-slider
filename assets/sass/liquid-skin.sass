@@ -46,14 +46,14 @@
 		background: rgba(white, 0.1)
 		+background-image(radial-gradient(rgba(white, 0), rgba(#d0e0e5, 0.2) 60%))
 		+box-shadow(0 0 2px rgba(black, 0.3), inset 0 2px 0 -1px rgba(white, 0.5), inset 0 -1px 0 rgba(black, 0.3), inset 0 0 1px rgba(white, 0.8))
-		opacity: 0
+		+opacity(0)
 		+transform(translate(0, -20px))
 		+transition(opacity .5s, transform .5s)
 	.rsts-active .rsts-caption
-		opacity: 1
+		+opacity(1)
 		+transform(translate(0, 0))
 
-	.rsts-nav-prev, .rsts-nav-next, .rsts-video-stop, .rsts-nav-numbers a, .rsts-nav-tabs a
+	.rsts-prev, .rsts-next, .rsts-video-stop, .rsts-nav-numbers a, .rsts-nav-tabs a
 		position: absolute
 		right: 55px
 		bottom: 15px
@@ -78,14 +78,14 @@
 		.rsts-nav-numbers, .rsts-nav-tabs
 			a.active
 				+opacity(0.6)
-	.rsts-nav-next
+	.rsts-next
 		right: 20px
 		+bg-image-hd("liquid/arrow-right")
 
 	&.rsts-direction-y
-		.rsts-nav-prev
+		.rsts-prev
 			+bg-image-hd("liquid/arrow-top")
-		.rsts-nav-next
+		.rsts-next
 			+bg-image-hd("liquid/arrow-bottom")
 
 	.rsts-nav
@@ -96,23 +96,24 @@
 		line-height: 1
 		text-align: right
 		ul
-			margin: 0
-			padding: 0
+			/* Forcing margin/padding, since '#content ul' is quite common */
+			margin: 0 !important
+			padding: 0 !important
 		li
 			display: inline
 
 	&.rsts-video-playing
-		.rsts-nav, .rsts-nav-prev, .rsts-nav-next
-			opacity: 0
+		.rsts-nav, .rsts-prev, .rsts-next
+			+opacity(0)
 		.rsts-nav
 			bottom: 47px
-		.rsts-nav-prev, .rsts-nav-next
+		.rsts-prev, .rsts-next
 			bottom: 50px
 		&:hover
-			.rsts-nav, .rsts-nav-prev, .rsts-nav-next
-				opacity: 1
+			.rsts-nav, .rsts-prev, .rsts-next
+				+opacity(1)
 	&.rsts-touch.rsts-video-playing
-		.rsts-nav-prev, .rsts-nav-next, .rsts-nav
+		.rsts-prev, .rsts-next, .rsts-nav
 			display: none
 	&.rsts-touch
 		.rsts-nav-numbers, .rsts-nav-tabs
@@ -167,6 +168,10 @@
 				background-color: #51a5c0
 				background-color: rgba(#51a5c0, 0.5)
 
+	.rsts-nav a
+		&.rsts-nav-prev, &.rsts-nav-next
+			display: none
+
 	.rsts-video-play
 		position: absolute
 		left: 50%
@@ -186,9 +191,9 @@
 		&:hover, &:focus
 			background-color: #ccc
 			background-color: rgba(black, 0.1)
-			opacity: 0.7
+			+opacity(0.7)
 		&:active
-			opacity: 1
+			+opacity(1)
 
 	.rsts-video-stop
 		top: 20px
@@ -217,10 +222,10 @@
 		width: 100%
 		height: 2px
 		background-color: #51a5c0
-		opacity: 0
+		+opacity(0)
 		+transition(opacity 0.2s linear)
 		div
 			height: 100%
 			background-color: white
 		&.rsts-progress-active
-			opacity: 0.3
+			+opacity(0.3)

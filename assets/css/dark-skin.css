@@ -46,6 +46,7 @@
   color: white;
   background-color: black;
   background-color: rgba(0, 0, 0, 0.6);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
   -webkit-transform: translate(0, -20px);
   -moz-transform: translate(0, -20px);
@@ -58,6 +59,7 @@
   transition: opacity 0.5s, transform 0.5s;
 }
 .rsts-skin-dark .rsts-active .rsts-caption {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
   -webkit-transform: translate(0, 0);
   -moz-transform: translate(0, 0);
@@ -65,7 +67,7 @@
   -o-transform: translate(0, 0);
   transform: translate(0, 0);
 }
-.rsts-skin-dark .rsts-nav-prev, .rsts-skin-dark .rsts-nav-next {
+.rsts-skin-dark .rsts-prev, .rsts-skin-dark .rsts-next {
   position: absolute;
   top: 50%;
   right: 20px;
@@ -91,6 +93,7 @@
   -webkit-background-clip: padding;
   -moz-background-clip: padding;
   background-clip: padding-box;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
   -webkit-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.3), inset 0 2px 2px -2px rgba(255, 255, 255, 0.5), inset 2px 0 2px -2px rgba(255, 255, 255, 0.3), inset -2px 0 2px -2px rgba(255, 255, 255, 0.3);
   -moz-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.3), inset 0 2px 2px -2px rgba(255, 255, 255, 0.5), inset 2px 0 2px -2px rgba(255, 255, 255, 0.3), inset -2px 0 2px -2px rgba(255, 255, 255, 0.3);
@@ -100,7 +103,7 @@
   -o-transition: opacity 0.2s ease-in;
   transition: opacity 0.2s ease-in;
 }
-.rsts-skin-dark .rsts-nav-prev:after, .rsts-skin-dark .rsts-nav-next:after {
+.rsts-skin-dark .rsts-prev:after, .rsts-skin-dark .rsts-next:after {
   content: "\203a";
   position: absolute;
   left: 8px;
@@ -109,36 +112,38 @@
   text-indent: 0;
   color: white;
 }
-.rsts-skin-dark .rsts-nav-prev {
+.rsts-skin-dark .rsts-prev {
   right: auto;
   left: 20px;
 }
-.rsts-skin-dark .rsts-nav-prev:after {
+.rsts-skin-dark .rsts-prev:after {
   content: "\2039";
   left: 12px;
 }
-.rsts-skin-dark:hover .rsts-nav-prev, .rsts-skin-dark:hover .rsts-nav-next {
+.rsts-skin-dark:hover .rsts-prev, .rsts-skin-dark:hover .rsts-next {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
 }
-.rsts-skin-dark:hover .rsts-nav-prev:hover, .rsts-skin-dark:hover .rsts-nav-next:hover {
+.rsts-skin-dark:hover .rsts-prev:hover, .rsts-skin-dark:hover .rsts-next:hover {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
   -webkit-transition-duration: 0.05s;
   -moz-transition-duration: 0.05s;
   -o-transition-duration: 0.05s;
   transition-duration: 0.05s;
 }
-.rsts-skin-dark:hover .rsts-nav-prev:active, .rsts-skin-dark:hover .rsts-nav-next:active {
+.rsts-skin-dark:hover .rsts-prev:active, .rsts-skin-dark:hover .rsts-next:active {
   -webkit-box-shadow: inset 0 0 2px 1px black;
   -moz-box-shadow: inset 0 0 2px 1px black;
   box-shadow: inset 0 0 2px 1px black;
 }
-.rsts-skin-dark.rsts-direction-y .rsts-nav-prev, .rsts-skin-dark.rsts-direction-y .rsts-nav-next {
+.rsts-skin-dark.rsts-direction-y .rsts-prev, .rsts-skin-dark.rsts-direction-y .rsts-next {
   top: 15px;
   left: 50%;
   margin-top: 0;
   margin-left: -18px;
 }
-.rsts-skin-dark.rsts-direction-y .rsts-nav-prev:after, .rsts-skin-dark.rsts-direction-y .rsts-nav-next:after {
+.rsts-skin-dark.rsts-direction-y .rsts-prev:after, .rsts-skin-dark.rsts-direction-y .rsts-next:after {
   content: "\25b2";
   position: absolute;
   top: 12px;
@@ -146,11 +151,11 @@
   font-size: 11px;
   color: white;
 }
-.rsts-skin-dark.rsts-direction-y .rsts-nav-next {
+.rsts-skin-dark.rsts-direction-y .rsts-next {
   top: auto;
   bottom: 10px;
 }
-.rsts-skin-dark.rsts-direction-y .rsts-nav-next:after {
+.rsts-skin-dark.rsts-direction-y .rsts-next:after {
   content: "\25bc";
   top: 13px;
 }
@@ -160,8 +165,9 @@
   text-align: center;
 }
 .rsts-skin-dark .rsts-nav ul {
-  margin: 0;
-  padding: 0 10px;
+  /* Forcing margin/padding, since '#content ul' is quite common */
+  margin: 0 !important;
+  padding: 0 10px !important;
   border-top: 1px solid black;
   background-color: black;
   background-image: -webkit-linear-gradient(left, #000000, #333333 50%, #000000);
@@ -183,7 +189,7 @@
   display: inline-block;
   min-width: 24px;
   margin: 5px 2px;
-  padding: 0.2em 0.3em;
+  padding: 0.3em 0.3em 0.2em;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
@@ -288,6 +294,9 @@
   -moz-box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.4), inset 0 0 1px 1px rgba(255, 255, 255, 0.8);
   box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.4), inset 0 0 1px 1px rgba(255, 255, 255, 0.8);
 }
+.rsts-skin-dark .rsts-nav a.rsts-nav-prev, .rsts-skin-dark .rsts-nav a.rsts-nav-next {
+  display: none;
+}
 .rsts-skin-dark .rsts-video-play, .rsts-skin-dark .rsts-video-stop {
   position: absolute;
   top: 50%;
@@ -311,6 +320,7 @@
   -webkit-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.3), inset 0 2px 2px -2px rgba(255, 255, 255, 0.5), inset 2px 0 2px -2px rgba(255, 255, 255, 0.2), inset -2px 0 2px -2px rgba(255, 255, 255, 0.2);
   -moz-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.3), inset 0 2px 2px -2px rgba(255, 255, 255, 0.5), inset 2px 0 2px -2px rgba(255, 255, 255, 0.2), inset -2px 0 2px -2px rgba(255, 255, 255, 0.2);
   box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.3), inset 0 2px 2px -2px rgba(255, 255, 255, 0.5), inset 2px 0 2px -2px rgba(255, 255, 255, 0.2), inset -2px 0 2px -2px rgba(255, 255, 255, 0.2);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
   opacity: 0.9;
   text-indent: -999px;
   text-decoration: none;
@@ -328,6 +338,7 @@
   -webkit-box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.3), inset 0 2px 2px -2px rgba(255, 255, 255, 0.5), inset 2px 0 2px -2px rgba(255, 255, 255, 0.2), inset -2px 0 2px -2px rgba(255, 255, 255, 0.2);
   -moz-box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.3), inset 0 2px 2px -2px rgba(255, 255, 255, 0.5), inset 2px 0 2px -2px rgba(255, 255, 255, 0.2), inset -2px 0 2px -2px rgba(255, 255, 255, 0.2);
   box-shadow: 0 0 3px 2px rgba(0, 0, 0, 0.3), inset 0 2px 2px -2px rgba(255, 255, 255, 0.5), inset 2px 0 2px -2px rgba(255, 255, 255, 0.2), inset -2px 0 2px -2px rgba(255, 255, 255, 0.2);
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
   -webkit-transition-duration: 0.05s;
   -moz-transition-duration: 0.05s;
@@ -372,6 +383,7 @@
 }
 .rsts-skin-dark .rsts-video-stop:hover {
   background: white;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70);
   opacity: 0.7;
 }
 .rsts-skin-dark .rsts-video-stop:hover:before {

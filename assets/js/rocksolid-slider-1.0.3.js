@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.0.2 */
+/*! rocksolid-slider v1.0.3 */
 (function($, window, document) {
 
 var Rst = {};
@@ -1617,7 +1617,7 @@ Rst.SliderNav = (function() {
 			prev: $(document.createElement('a'))
 				.attr('href', '')
 				.text('prev')
-				.addClass(slider.options.cssPrefix + 'nav-prev')
+				.addClass(slider.options.cssPrefix + 'prev')
 				.on('click', function(event){
 					event.preventDefault();
 					self.slider.prev();
@@ -1629,18 +1629,37 @@ Rst.SliderNav = (function() {
 					event.preventDefault();
 					self.slider.next();
 				})
-				.addClass(slider.options.cssPrefix + 'nav-next'),
+				.addClass(slider.options.cssPrefix + 'next'),
 			main: $(document.createElement('div'))
 				.addClass(
 					slider.options.cssPrefix + 'nav ' +
 					slider.options.cssPrefix + 'nav-' + slider.options.navType
 				)
 		};
+		this.elements.mainPrev = $(document.createElement('a'))
+			.attr('href', '')
+			.text('prev')
+			.addClass(slider.options.cssPrefix + 'nav-prev')
+			.on('click', function(event){
+				event.preventDefault();
+				self.slider.prev();
+			});
+		this.elements.mainNext = $(document.createElement('a'))
+			.attr('href', '')
+			.text('next')
+			.addClass(slider.options.cssPrefix + 'nav-next')
+			.on('click', function(event){
+				event.preventDefault();
+				self.slider.next();
+			});
 
 		var navUl = document.createElement('ul');
 		$.each(this.slider.getSlides(), function(i, slide){
 			self.elements[i] = self.createNavItem(i, slide.getData()).appendTo(navUl);
 		});
+
+		this.elements.mainPrev.prependTo(navUl);
+		this.elements.mainNext.appendTo(navUl);
 
 		this.elements.main.append(navUl);
 		slider.elements.main.append(this.elements.main);

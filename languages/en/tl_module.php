@@ -25,6 +25,7 @@ $GLOBALS['TL_LANG']['tl_module']['rsts_random'][1] = 'If activated slider elemen
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin'][0] = 'Slider skin';
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin'][1] = 'Choose a preconfigured slider style or use your own.';
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin_options'][''] = 'Default';
+$GLOBALS['TL_LANG']['tl_module']['rsts_skin_options']['default-content'] = 'Default Content';
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin_options']['liquid'] = 'Liquid';
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin_options']['dark'] = 'Dark';
 $GLOBALS['TL_LANG']['tl_module']['rsts_skin_options']['light'] = 'Light';

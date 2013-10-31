@@ -67,6 +67,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_skin'] = array(
 	'inputType' => 'select',
 	'options' => array(
 		'',
+		'default-content',
 		'liquid',
 		'dark',
 		'light',
