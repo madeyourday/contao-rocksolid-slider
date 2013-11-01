@@ -236,7 +236,7 @@ class Slider extends \Module
 
 		if ($slideContents) {
 			while ($slideContents->next()) {
-				$slides[$idIndexes[(int)$slideContents->pid]]['text'] .= $this->getContentElement($slideContents);
+				$slides[$idIndexes[(int)$slideContents->pid]]['text'] .= $this->getContentElement($slideContents->current());
 			}
 		}
 
