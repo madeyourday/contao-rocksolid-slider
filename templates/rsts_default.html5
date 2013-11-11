@@ -54,7 +54,7 @@
 </div>
 
 <script>
-	$('.mod_rocksolid_slider').last().rstSlider(<?php
+	jQuery('.mod_rocksolid_slider').last().rstSlider(<?php
 
 		$options = array();
 
