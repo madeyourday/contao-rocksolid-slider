@@ -12,6 +12,11 @@
   box-sizing: border-box;
 }
 
+.rsts-header, .rsts-footer {
+  /* prevent collapsing margins */
+  overflow: hidden;
+}
+
 .rsts-view {
   position: relative;
 }
