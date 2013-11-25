@@ -14,6 +14,7 @@
 
 ClassLoader::addClasses(array(
 	'MadeYourDay\\Contao\\Slider' => 'system/modules/rocksolid-slider/src/MadeYourDay/Contao/Slider.php',
+	'MadeYourDay\\Contao\\SliderRunonce' => 'system/modules/rocksolid-slider/src/MadeYourDay/Contao/SliderRunonce.php',
 	'MadeYourDay\\Contao\\Module\\Slider' => 'system/modules/rocksolid-slider/src/MadeYourDay/Contao/Module/Slider.php',
 	'MadeYourDay\\Contao\\Model\\SlideModel' => 'system/modules/rocksolid-slider/src/MadeYourDay/Contao/Model/SlideModel.php',
 	'MadeYourDay\\Contao\\Model\\SliderModel' => 'system/modules/rocksolid-slider/src/MadeYourDay/Contao/Model/SliderModel.php',
