@@ -226,7 +226,7 @@ class Slider extends \Module
 				) {
 					$video = $matches[1];
 					$slide['image'] = new \stdClass;
-					$slide['image']->src = 'http://img.youtube.com/vi/' . $video . '/0.jpg';
+					$slide['image']->src = '//img.youtube.com/vi/' . $video . '/0.jpg';
 					$slide['image']->imgSize = '';
 					$slide['image']->alt = '';
 				}
