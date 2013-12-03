@@ -212,8 +212,19 @@ class Slider extends \Module
 			}
 
 			if ($slide['videoURL'] && empty($slide['image'])) {
-				if (substr(html_entity_decode($slide['videoURL']), 0, 31) === 'http://www.youtube.com/watch?v=') {
-					$video = substr(html_entity_decode($slide['videoURL']), 31, 11);
+				if (preg_match(
+					'(^
+						https?://  # http or https
+						(?:
+							www\\.youtube\\.com/(?:watch\\?v=|v/|embed/)  # Different URL formats
+							| youtu\\.be/  # Short YouTube domain
+						)
+						([0-9a-z_\\-]{11})  # YouTube ID
+						(?:$|&|/)  # End or separator
+					)ix',
+					html_entity_decode($slide['videoURL']), $matches)
+				) {
+					$video = $matches[1];
 					$slide['image'] = new \stdClass;
 					$slide['image']->src = 'http://img.youtube.com/vi/' . $video . '/0.jpg';
 					$slide['image']->imgSize = '';
