@@ -15,6 +15,8 @@
 $GLOBALS['TL_MODELS']['tl_rocksolid_slider'] = 'MadeYourDay\\Contao\\Model\\SliderModel';
 $GLOBALS['TL_MODELS']['tl_rocksolid_slide'] = 'MadeYourDay\\Contao\\Model\\SlideModel';
 
+$GLOBALS['TL_CTE']['includes']['rocksolid_slider'] = 'MadeYourDay\\Contao\\Module\\Slider';
+
 $GLOBALS['BE_MOD']['content']['rocksolid_slider'] = array(
 	'tables' => array('tl_rocksolid_slider', 'tl_rocksolid_slide', 'tl_content'),
 	'icon' => 'system/modules/rocksolid-slider/assets/img/icon.png',
