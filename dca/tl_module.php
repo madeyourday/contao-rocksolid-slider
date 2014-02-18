@@ -12,7 +12,7 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,headline,type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_autoplay,rsts_videoAutoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_navType,rsts_scaleMode,rsts_deepLinkPrefix,rsts_keyboard,rsts_captions;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,headline,type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_autoplay,rsts_videoAutoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_navType,rsts_controls,rsts_scaleMode,rsts_deepLinkPrefix,rsts_keyboard,rsts_captions;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_id'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_id'],
@@ -173,9 +173,18 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_navType'] = array(
 		'bullets' => $GLOBALS['TL_LANG']['tl_module']['rsts_navType_bullets'],
 		'numbers' => $GLOBALS['TL_LANG']['tl_module']['rsts_navType_numbers'],
 		'tabs' => $GLOBALS['TL_LANG']['tl_module']['rsts_navType_tabs'],
+		'none' => $GLOBALS['TL_LANG']['tl_module']['rsts_navType_none'],
 	),
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(64) NOT NULL default ''",
+);
+// false to hide the prev and next controls
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_controls'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_controls'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array('tl_class' => 'w50 m12'),
+	'sql' => "char(1) NOT NULL default '1'",
 );
 // image scale mode (fit, crop, scale)
 // only works if width and height are not set to "auto"
@@ -204,7 +213,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_keyboard'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_keyboard'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => 'w50 m12'),
+	'eval' => array('tl_class' => 'w50'),
 	'sql' => "char(1) NOT NULL default '1'",
 );
 // true to enable keyboard arrow navigation

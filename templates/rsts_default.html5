@@ -61,7 +61,7 @@
 		}
 
 		// boolean
-		foreach (array('random', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions') as $key) {
+		foreach (array('random', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions', 'controls') as $key) {
 			$options[$key] = (bool) $this->options['rsts_' . $key];
 		}
 
