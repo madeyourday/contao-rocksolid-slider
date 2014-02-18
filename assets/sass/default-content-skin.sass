@@ -52,7 +52,7 @@
 	.rsts-prev, .rsts-next
 		display: none
 
-	.rsts-nav-prev, .rsts-nav-next, .rsts-video-play, .rsts-video-stop
+	.rsts-nav-prev a, .rsts-nav-next a, .rsts-video-play, .rsts-video-stop
 		overflow: hidden
 		width: 30px
 		height: 30px
@@ -73,21 +73,21 @@
 			background-color: #eee
 			background-color: rgba(#eee, 0.7)
 
-	.rsts-nav-prev, .rsts-nav-next
+	.rsts-nav-prev a, .rsts-nav-next a
 		display: inline-block
 		vertical-align: top
 
-	.rsts-nav-prev
+	.rsts-nav-prev a
 		margin-right: 10px
 		+bg-image-hd("default/arrow-left")
-	.rsts-nav-next
+	.rsts-nav-next a
 		margin-left: 10px
 		+bg-image-hd("default/arrow-right")
 
 	&.rsts-direction-y
-		.rsts-nav-prev
+		.rsts-nav-prev a
 			+bg-image-hd("default/arrow-top")
-		.rsts-nav-next
+		.rsts-nav-next a
 			+bg-image-hd("default/arrow-bottom")
 
 	.rsts-nav
@@ -101,7 +101,7 @@
 			display: inline
 
 	.rsts-nav-numbers, .rsts-nav-tabs
-		li > a
+		.rsts-nav-item a
 			display: inline-block
 			height: 30px
 			min-width: 30px
@@ -125,7 +125,7 @@
 
 	.rsts-nav-bullets
 		line-height: 0
-		li > a
+		.rsts-nav-item a
 			display: inline-block
 			width: 9px
 			height: 9px

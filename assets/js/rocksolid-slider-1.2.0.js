@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.1.1 */
+/*! rocksolid-slider v1.2.0 */
 (function($, window, document) {
 
 var Rst = {};
@@ -53,8 +53,20 @@ Rst.Slide = (function() {
 				.appendTo(this.element);
 		}
 
-		this.element.find('img').on('load', function(){
+		this.element.find('img').on('load', function() {
+
 			slider.resize();
+
+			// Fix safari bug with invisible images, see #9
+			if (slider.css3Supported) {
+				// Remove 3d transforms
+				slider.elements.crop.css('transform', '');
+				// Get the css value to ensure the engine applies the styles
+				slider.elements.crop.css('transform');
+				// Restore the original value
+				slider.elements.crop.css('transform', 'translateZ(0)');
+			}
+
 		});
 
 		var headlines = this.element.find('h1,h2,h3,h4,h5,h6');
@@ -672,8 +684,10 @@ Rst.Slider = (function() {
 		autoplayProgress: false,
 		// true to pause the autoplay on hover
 		pauseAutoplayOnHover: false,
-		// navigation type (bullets, numbers, tabs)
+		// navigation type (bullets, numbers, tabs, none)
 		navType: 'bullets',
+		// false to hide the prev and next controls
+		controls: true,
 		// image scale mode (fit, crop, scale)
 		// only works if width and height are not set to "auto"
 		scaleMode: 'fit',
@@ -1333,7 +1347,9 @@ Rst.Slider = (function() {
 		// Check if the CSS height value has changed to "auto" or vice versa
 		if (this.options.direction === 'x' && this.options.height === 'css') {
 			this.elements.view.css({display: 'none'});
-			this.nav.elements.main.css({display: 'none'});
+			if (this.nav.elements.main) {
+				this.nav.elements.main.css({display: 'none'});
+			}
 			if (this.elements.header) {
 				this.elements.header.css({display: 'none'});
 			}
@@ -1342,7 +1358,9 @@ Rst.Slider = (function() {
 			}
 			this.autoSize = this.elements.main.height() < 1;
 			this.elements.view.css({display: ''});
-			this.nav.elements.main.css({display: ''});
+			if (this.nav.elements.main) {
+				this.nav.elements.main.css({display: ''});
+			}
 			if (this.elements.header) {
 				this.elements.header.css({display: ''});
 			}
@@ -1686,59 +1704,79 @@ Rst.SliderNav = (function() {
 
 		this.slider = slider;
 		this.activeIndex = null;
-		this.elements = {
-			prev: $(document.createElement('a'))
+		this.elements = {};
+
+		if (slider.options.controls) {
+
+			this.elements.prev = $(document.createElement('a'))
 				.attr('href', '')
 				.text('prev')
 				.addClass(slider.options.cssPrefix + 'prev')
 				.on('click', function(event){
 					event.preventDefault();
 					self.slider.prev();
-				}),
-			next: $(document.createElement('a'))
+				});
+
+			this.elements.next = $(document.createElement('a'))
 				.attr('href', '')
 				.text('next')
 				.on('click', function(event){
 					event.preventDefault();
 					self.slider.next();
 				})
-				.addClass(slider.options.cssPrefix + 'next'),
-			main: $(document.createElement('div'))
+				.addClass(slider.options.cssPrefix + 'next');
+
+			slider.elements.view
+				.append(this.elements.prev)
+				.append(this.elements.next);
+
+		}
+
+		if (slider.options.navType !== 'none') {
+
+			this.elements.main = $(document.createElement('div'))
 				.addClass(
 					slider.options.cssPrefix + 'nav ' +
 					slider.options.cssPrefix + 'nav-' + slider.options.navType
-				)
-		};
-		this.elements.mainPrev = $(document.createElement('a'))
-			.attr('href', '')
-			.text('prev')
-			.addClass(slider.options.cssPrefix + 'nav-prev')
-			.on('click', function(event){
-				event.preventDefault();
-				self.slider.prev();
+				);
+
+			this.elements.mainPrev = $(document.createElement('a'))
+				.attr('href', '')
+				.text('prev')
+				.on('click', function(event){
+					event.preventDefault();
+					self.slider.prev();
+				})
+				.appendTo(
+					$(document.createElement('li'))
+						.addClass(slider.options.cssPrefix + 'nav-prev')
+				);
+
+			this.elements.mainNext = $(document.createElement('a'))
+				.attr('href', '')
+				.text('next')
+				.on('click', function(event){
+					event.preventDefault();
+					self.slider.next();
+				})
+				.appendTo(
+					$(document.createElement('li'))
+						.addClass(slider.options.cssPrefix + 'nav-next')
+				);
+
+			var navUl = document.createElement('ul');
+			$.each(this.slider.getSlides(), function(i, slide){
+				self.elements[i] = self.createNavItem(i, slide.getData())
+					.appendTo(navUl);
 			});
-		this.elements.mainNext = $(document.createElement('a'))
-			.attr('href', '')
-			.text('next')
-			.addClass(slider.options.cssPrefix + 'nav-next')
-			.on('click', function(event){
-				event.preventDefault();
-				self.slider.next();
-			});
 
-		var navUl = document.createElement('ul');
-		$.each(this.slider.getSlides(), function(i, slide){
-			self.elements[i] = self.createNavItem(i, slide.getData()).appendTo(navUl);
-		});
+			this.elements.mainPrev.parent().prependTo(navUl);
+			this.elements.mainNext.parent().appendTo(navUl);
 
-		this.elements.mainPrev.prependTo(navUl);
-		this.elements.mainNext.appendTo(navUl);
+			this.elements.main.append(navUl);
+			slider.elements.main.append(this.elements.main);
 
-		this.elements.main.append(navUl);
-		slider.elements.main.append(this.elements.main);
-		slider.elements.view
-			.append(this.elements.prev)
-			.append(this.elements.next);
+		}
 
 	}
 
@@ -1747,12 +1785,17 @@ Rst.SliderNav = (function() {
 	 */
 	SliderNav.prototype.setActive = function(index) {
 
-		if (typeof this.activeIndex === 'number') {
+		if (
+			typeof this.activeIndex === 'number'
+			&& this.elements[this.activeIndex]
+		) {
 			this.elements[this.activeIndex].children('a').removeClass('active');
 		}
 
 		this.activeIndex = index;
-		this.elements[this.activeIndex].children('a').addClass('active');
+		if (this.elements[this.activeIndex]) {
+			this.elements[this.activeIndex].children('a').addClass('active');
+		}
 
 	};
 
@@ -1764,8 +1807,9 @@ Rst.SliderNav = (function() {
 
 		var self = this;
 
-		return $(document.createElement('li')).append(
-			$(document.createElement('a'))
+		return $(document.createElement('li'))
+			.addClass(self.slider.options.cssPrefix + 'nav-item')
+			.append($(document.createElement('a'))
 				.attr('href', '')
 				.text((self.slider.options.navType !== 'numbers' && data.name) ?
 					data.name :
@@ -1775,7 +1819,7 @@ Rst.SliderNav = (function() {
 					event.preventDefault();
 					self.slider.goTo(index);
 				})
-		);
+			);
 
 	};
 
@@ -1785,7 +1829,10 @@ Rst.SliderNav = (function() {
 	 */
 	SliderNav.prototype.getSize = function() {
 
-		if (this.elements.main.css('position') === 'absolute') {
+		if (
+			!this.elements.main
+			|| this.elements.main.css('position') === 'absolute'
+		) {
 			return {x: 0, y: 0};
 		}
 

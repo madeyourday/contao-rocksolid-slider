@@ -315,7 +315,7 @@
   -moz-box-shadow: 0 0 5px white;
   box-shadow: 0 0 5px white;
 }
-.rsts-skin-light .rsts-nav a.rsts-nav-prev, .rsts-skin-light .rsts-nav a.rsts-nav-next {
+.rsts-skin-light .rsts-nav .rsts-nav-prev, .rsts-skin-light .rsts-nav .rsts-nav-next {
   display: none;
 }
 .rsts-skin-light .rsts-nav-bullets {

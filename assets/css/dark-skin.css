@@ -16,7 +16,6 @@
   background-image: linear-gradient(to bottom, #222222 33%, #000000);
   background-image: linear-gradient(to bottom, #222222 33%, #000000);
   padding: 8px;
-  padding-bottom: 0;
   border: 1px solid black;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -161,7 +160,7 @@
 }
 .rsts-skin-dark .rsts-nav {
   position: relative;
-  margin-top: 0;
+  margin: 0 0 -8px;
   text-align: center;
 }
 .rsts-skin-dark .rsts-nav ul {
@@ -294,7 +293,7 @@
   -moz-box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.4), inset 0 0 1px 1px rgba(255, 255, 255, 0.8);
   box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.4), inset 0 0 1px 1px rgba(255, 255, 255, 0.8);
 }
-.rsts-skin-dark .rsts-nav a.rsts-nav-prev, .rsts-skin-dark .rsts-nav a.rsts-nav-next {
+.rsts-skin-dark .rsts-nav .rsts-nav-prev, .rsts-skin-dark .rsts-nav .rsts-nav-next {
   display: none;
 }
 .rsts-skin-dark .rsts-video-play, .rsts-skin-dark .rsts-video-stop {

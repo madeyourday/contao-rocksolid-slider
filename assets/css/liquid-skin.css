@@ -217,7 +217,7 @@
   background-color: #51a5c0;
   background-color: rgba(81, 165, 192, 0.5);
 }
-.rsts-skin-liquid .rsts-nav a.rsts-nav-prev, .rsts-skin-liquid .rsts-nav a.rsts-nav-next {
+.rsts-skin-liquid .rsts-nav .rsts-nav-prev, .rsts-skin-liquid .rsts-nav .rsts-nav-next {
   display: none;
 }
 .rsts-skin-liquid .rsts-video-play {
