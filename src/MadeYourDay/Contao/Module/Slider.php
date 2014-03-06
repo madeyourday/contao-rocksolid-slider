@@ -161,7 +161,39 @@ class Slider extends \Module
 
 		$this->Template->images = $images;
 		$this->Template->slides = $this->parseSlides(SlideModel::findPublishedByPid($this->rsts_id));
-		$this->Template->options = $this->arrData;
+
+		$options = array();
+
+		// strings
+		foreach (array('type', 'direction', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode', 'deepLinkPrefix') as $key) {
+			if (! empty($this->arrData['rsts_' . $key])) {
+				$options[$key] = $this->arrData['rsts_' . $key];
+			}
+		}
+
+		// boolean
+		foreach (array('random', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions', 'controls') as $key) {
+			$options[$key] = (bool) $this->arrData['rsts_' . $key];
+		}
+
+		// positive numbers
+		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart') as $key) {
+			if (! empty($this->arrData['rsts_' . $key]) && $this->arrData['rsts_' . $key] > 0) {
+				$options[$key] = $this->arrData['rsts_' . $key] * 1;
+			}
+		}
+
+		// gap size
+		if (isset($this->arrData['rsts_gapSize']) && $this->arrData['rsts_gapSize'] !== '') {
+			if (substr($this->arrData['rsts_gapSize'], -1) === '%') {
+				$options['gapSize'] = $this->arrData['rsts_gapSize'];
+			}
+			else {
+				$options['gapSize'] = $this->arrData['rsts_gapSize'] * 1;
+			}
+		}
+
+		$this->Template->options = $options;
 
 		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider-1.3.0.min.js|static';
 		$GLOBALS['TL_CSS'][] = 'system/modules/rocksolid-slider/assets/css/rocksolid-slider.min.css||static';

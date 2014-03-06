@@ -49,31 +49,5 @@
 </div>
 
 <script>
-	jQuery('.mod_rocksolid_slider').last().rstSlider(<?php
-
-		$options = array();
-
-		// strings
-		foreach (array('type', 'direction', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode', 'deepLinkPrefix') as $key) {
-			if (! empty($this->options['rsts_' . $key])) {
-				$options[$key] = $this->options['rsts_' . $key];
-			}
-		}
-
-		// boolean
-		foreach (array('random', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions', 'controls') as $key) {
-			$options[$key] = (bool) $this->options['rsts_' . $key];
-		}
-
-		// positive numbers
-		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart') as $key) {
-			if (! empty($this->options['rsts_' . $key]) && $this->options['rsts_' . $key] > 0) {
-				$options[$key] = $this->options['rsts_' . $key] * 1;
-			}
-		}
-
-		$options['gapSize'] = $this->options['rsts_gapSize'] * 1;
-
-		echo json_encode($options);
-	?>);
+	jQuery('.mod_rocksolid_slider').last().rstSlider(<?php echo json_encode($this->options); ?>);
 </script>
