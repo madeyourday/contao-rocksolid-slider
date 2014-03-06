@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.2.0 */
+/*! rocksolid-slider v1.3.0 */
 (function($, window, document) {
 
 var Rst = {};
@@ -26,24 +26,82 @@ Rst.Slide = (function() {
 
 		this.slider = slider;
 
-		var $element = $(element);
+		this.content = $(element);
 
 		this.data = {
-			name: $element.attr('data-rsts-name') || $(element).attr('title')
+			name: this.content.attr('data-rsts-name') || this.content.attr('title')
 		};
 
-		if (element.tagName.toLowerCase() === 'img') {
+		if (element.nodeName === 'IMG') {
 			this.type = 'image';
 		}
-		this.type = $element.attr('data-rsts-type') || this.type || 'default';
+		this.type = this.content.attr('data-rsts-type') || this.type || 'default';
+
+		this.centerContent =
+			this.content.attr('data-rsts-center') !== undefined
+			? this.content.attr('data-rsts-center')
+			: slider.options.centerContent;
+
+		if (this.centerContent !== 'x' && this.centerContent !== 'y') {
+			this.centerContent = !!this.centerContent;
+		}
+
+		if (this.type === 'image' || this.type === 'video') {
+			this.centerContent = false;
+		}
 
 		this.element = $(document.createElement('div'))
 			.addClass(slider.options.cssPrefix + 'slide')
 			.addClass(slider.options.cssPrefix + 'slide-' + this.type)
 			.append(element);
 
+		if (
+			// Check if video element is supported
+			!document.createElement('video').canPlayType
+			// iPhone doesn't support background videos
+			|| this.slider.device === 'iPhone'
+			|| this.slider.device === 'iPod'
+		) {
+			this.element.find('[data-rsts-background]').each(function() {
+				if (this.nodeName !== 'VIDEO') {
+					return;
+				}
+				var $this = $(this);
+				if ($this.attr('poster')) {
+					$(document.createElement('img'))
+						.attr('src', $this.attr('poster'))
+						.attr('data-rsts-background', '')
+						.attr('data-rsts-scale-mode', $this.attr('data-rsts-scale-mode'))
+						.insertBefore($this);
+				}
+				$this.detach();
+			});
+		}
+
+		this.backgrounds = this.element.find('[data-rsts-background]')
+			.attr('autoplay', true)
+			.attr('loop', true)
+			.css({
+				position: 'absolute',
+				top: 0,
+				left: 0
+			})
+			.prependTo(this.element);
+
+		if (this.backgrounds.length) {
+			this.element.children().last().css({
+				position: 'relative'
+			});
+		}
+
+		this.element.find('video[autoplay]').each(function() {
+			if (this.pause) {
+				this.pause();
+			}
+		});
+
 		if (this.type === 'image') {
-			this.data.name = this.data.name || this.element.find('img').attr('alt');
+			this.data.name = this.data.name || this.element.find('img').last().attr('alt');
 		}
 
 		if (this.data.name && slider.options.captions) {
@@ -53,7 +111,7 @@ Rst.Slide = (function() {
 				.appendTo(this.element);
 		}
 
-		this.element.find('img').on('load', function() {
+		var mediaLoadEvent = function() {
 
 			slider.resize();
 
@@ -67,7 +125,10 @@ Rst.Slide = (function() {
 				slider.elements.crop.css('transform', 'translateZ(0)');
 			}
 
-		});
+		};
+
+		this.element.find('img').on('load', mediaLoadEvent);
+		this.element.find('video').on('loadedmetadata', mediaLoadEvent);
 
 		var headlines = this.element.find('h1,h2,h3,h4,h5,h6');
 		if (! this.data.name && headlines.length) {
@@ -76,7 +137,7 @@ Rst.Slide = (function() {
 
 		if (this.type === 'video') {
 
-			this.data.video = $element.attr('data-rsts-video');
+			this.data.video = this.content.attr('data-rsts-video');
 			$(document.createElement('a'))
 				.attr('href', this.data.video)
 				.text('play')
@@ -102,33 +163,48 @@ Rst.Slide = (function() {
 	};
 
 	/**
+	 * @return boolean true if the slide is injected to the DOM
+	 */
+	Slide.prototype.isInjected = function() {
+		return !!(
+			this.element.get(0).parentNode
+			&& this.element.get(0).parentNode.tagName
+		);
+	};
+
+	/**
 	 * get width and height based on width or height
 	 * @return object {x: ..., y: ...}
 	 */
 	Slide.prototype.size = function(x, y, ret) {
 
+		var autoSize = !x || !y;
+
 		if (x && ! y) {
 			this.slider.modify(this.element, {width: x, height: ''});
 			this.resetScaledContent();
-			if (ret) {
-				y = this.element.height();
+			if (ret || this.backgrounds.length) {
+				y = this.element.outerHeight();
 			}
 		}
 		else if (y && ! x) {
 			this.slider.modify(this.element, {height: y, width: ''});
 			this.resetScaledContent();
-			if (ret) {
-				x = this.element.width();
+			if (ret || this.backgrounds.length) {
+				x = this.element.outerWidth();
 			}
 		}
 		else if (x && y) {
 			this.slider.modify(this.element, {width: x, height: y});
-			this.scaleContent(x, y);
 		}
-		else if(ret) {
-			x = this.element.width();
-			y = this.element.height();
+		else {
+			this.resetScaledContent();
+			x = this.element.outerWidth();
+			y = this.element.outerHeight();
 		}
+
+		this.scaleContent(x, y, autoSize);
+		this.scaleBackground(x, y);
 
 		return {
 			x: x,
@@ -140,61 +216,128 @@ Rst.Slide = (function() {
 	/**
 	 * scale slide contents based on width and height
 	 */
-	Slide.prototype.scaleContent = function(x, y) {
+	Slide.prototype.scaleContent = function(x, y, autoSize) {
 
-		var originalSize, originalProp, newProp, css;
-		var image = this.element.find('img').first();
-		var scaleMode = this.slider.options.scaleMode;
-
-		if (this.type === 'image' || this.type === 'video') {
-
-			image.css(css = {
-				width: 'auto',
-				'max-width': 'none',
-				'min-width': 0,
-				height: 'auto',
-				'max-height': 'none',
-				'min-height': 0,
-				'margin-left': 0,
-				'margin-top': 0
-			});
-			css['max-width'] = css['min-width'] = '';
-			css['max-height'] = css['min-height'] = '';
-
-			originalSize = {
-				x: image.width(),
-				y: image.height()
-			};
-			originalProp = originalSize.x / originalSize.y;
-			newProp = x / y;
-
-			if (scaleMode === 'fit' || scaleMode === 'crop') {
-
-				if (
-					(originalProp >= newProp && scaleMode === 'fit') ||
-					(originalProp <= newProp && scaleMode === 'crop')
-				) {
-					css.width = x;
-					css.height = x / originalProp;
-					css['margin-top'] = (y - css.height) / 2;
-				}
-				else {
-					css.width = y * originalProp;
-					css.height = y;
-					css['margin-left'] = (x - css.width) / 2;
-				}
-
+		if (this.centerContent) {
+			if (this.content.css('display') === 'inline') {
+				this.content.css('display', 'inline-block');
 			}
-			else if (scaleMode === 'scale') {
+			if (this.centerContent !== 'y' && x) {
+				this.content.css(
+					'margin-left',
+					Math.round((x - this.content.outerWidth()) / 2)
+				);
+			}
+			if (this.centerContent !== 'x' && y) {
+				this.content.css(
+					'margin-top',
+					Math.round((y - this.content.outerHeight()) / 2)
+				);
+			}
+		}
 
+		if (!autoSize && (this.type === 'image' || this.type === 'video')) {
+			this.scaleImage(this.element.find('img').last(), x, y);
+		}
+
+	};
+
+	/**
+	 * scale slide backgrounds based on width and height
+	 */
+	Slide.prototype.scaleBackground = function(x, y) {
+
+		var self = this;
+
+		this.backgrounds.each(function() {
+			self.scaleImage($(this), x, y);
+		});
+
+	};
+
+
+	/**
+	 * scale an image element based on width, height and scaleMode
+	 */
+	Slide.prototype.scaleImage = function(image, x, y) {
+
+		var scaleMode = image.attr('data-rsts-scale-mode')
+			|| this.slider.options.scaleMode;
+		var originalSize = this.getOriginalSize(image);
+		var originalProp = originalSize.x / originalSize.y;
+		var newProp = x / y;
+
+		var css = {
+			width: originalSize.x,
+			height: originalSize.y,
+			'margin-left': 0,
+			'margin-top': 0
+		};
+
+		if (scaleMode === 'fit' || scaleMode === 'crop') {
+
+			if (
+				(originalProp >= newProp && scaleMode === 'fit') ||
+				(originalProp <= newProp && scaleMode === 'crop')
+			) {
 				css.width = x;
-				css.height = y;
-
+				css.height = x / originalProp;
+				css['margin-top'] = (y - css.height) / 2;
 			}
-
-			image.css(css);
+			else {
+				css.width = y * originalProp;
+				css.height = y;
+				css['margin-left'] = (x - css.width) / 2;
+			}
 
 		}
+		else if (scaleMode === 'scale') {
+
+			css.width = x;
+			css.height = y;
+
+		}
+		else {
+
+			css['margin-top'] = (y - originalSize.y) / 2;
+			css['margin-left'] = (x - originalSize.x) / 2;
+
+		}
+
+		image.css(css);
+
+	};
+
+	Slide.prototype.getOriginalSize = function(element) {
+
+		element = $(element);
+		var size = {};
+
+		if (element[0].nodeName === 'IMG') {
+
+			if ('naturalWidth' in new Image()) {
+				size.x = element[0].naturalWidth;
+				size.y = element[0].naturalHeight;
+			}
+			else {
+				var img = new Image();
+				img.src = element[0].src;
+				size.x = img.width;
+				size.y = img.height;
+			}
+
+		}
+		else if (element[0].nodeName === 'VIDEO') {
+
+			size.x = element[0].videoWidth;
+			size.y = element[0].videoHeight;
+
+		}
+
+		return {
+			x: size.x || 10,
+			y: size.y || 10
+		};
 
 	};
 
@@ -203,16 +346,19 @@ Rst.Slide = (function() {
 	 */
 	Slide.prototype.resetScaledContent = function(x, y) {
 
-		var image = this.element.find('img').first();
+		var image = this.element.find('img').last();
 
 		if (this.type === 'image' || this.type === 'video') {
 			image.css({
 				width: '',
-				'max-width': '',
-				'min-width': '',
 				height: '',
-				'max-height': '',
-				'min-height': '',
+				'margin-left': '',
+				'margin-top': ''
+			});
+		}
+
+		if (this.centerContent) {
+			this.content.css({
 				'margin-left': '',
 				'margin-top': ''
 			});
@@ -241,6 +387,29 @@ Rst.Slide = (function() {
 			this.slider.options.videoAutoplay
 		) {
 			this.startVideo();
+		}
+
+		// Preactive is needed for iOS because it requires user interaction
+		if (
+			(state === 'preactive' || state === 'active')
+			&& state !== this.state
+		) {
+			this.element.find('video[autoplay]').each(function() {
+				if (this.play) {
+					this.play();
+				}
+			});
+		}
+		else if (
+			state !== 'active'
+			&& state !== 'preactive'
+			&& (this.state === 'active' || this.state === 'preactive')
+		) {
+			this.element.find('video').each(function() {
+				if (this.pause) {
+					this.pause();
+				}
+			});
 		}
 
 		this.state = state;
@@ -273,17 +442,6 @@ Rst.Slide = (function() {
 		if (this.videoStopButton) {
 			this.videoStopButton.remove();
 			delete this.videoStopButton;
-		}
-
-		// mozilla has problems with iframes/flash and 3D transforms
-		if (
-			this.slider.engine === 'moz' &&
-			this.slider.css3Supported &&
-			this.slider.options.type === 'slide'
-		) {
-			this.slider.elements.crop.css({
-				transform: 'translateZ(0)'
-			});
 		}
 
 		this.slider.elements.main.removeClass(
@@ -400,28 +558,6 @@ Rst.Slide = (function() {
 
 		}
 
-		// mozilla has problems with iframes/flash and 3D transforms
-		if (
-			this.videoElement &&
-			this.slider.engine === 'moz' &&
-			this.slider.css3Supported &&
-			this.slider.options.type === 'slide'
-		) {
-			this.slider.css3Supported = false;
-			this.slider.modify(this.element, {
-				offset: this.slider.slideIndex *
-					(this.slider.slideSize + this.slider.options.gapSize)
-			});
-			this.slider.modify(this.slider.elements.slides, {
-				offset: - this.slider.slideIndex *
-					(this.slider.slideSize + this.slider.options.gapSize)
-			});
-			this.slider.elements.crop.css({
-				transform: ''
-			});
-			this.slider.css3Supported = true;
-		}
-
 		// iPad needs a close button outside of the video
 		if (this.slider.device === 'iPad') {
 			this.element.addClass(this.slider.options.cssPrefix + 'video-ipad');
@@ -441,6 +577,13 @@ Rst.Slide = (function() {
 			this.slider.options.cssPrefix + 'video-playing'
 		);
 
+	};
+
+	/**
+	 * Set index
+	 */
+	Slide.prototype.setIndex = function(index) {
+		this.data.index = index;
 	};
 
 	/**
@@ -484,6 +627,12 @@ Rst.Slider = (function() {
 			throw new Error('height "auto" with direction "y" ist not possible');
 		}
 
+		if (this.options.type !== 'slide') {
+			this.options.visibleArea = 1;
+			this.options.slideMaxCount = 0;
+			this.options.slideMinSize = 0;
+		}
+
 		this.checkCss3Support();
 
 		this.readSlides();
@@ -493,18 +642,21 @@ Rst.Slider = (function() {
 			});
 		}
 
+		$.each(this.slides, function(index) {
+			this.setIndex(index);
+		});
+
 		this.slideIndex = this.getIndexFromUrl();
 		if (this.slideIndex === false) {
 			this.slideIndex = 0;
 		}
+		this.activeSlideOffset = 0;
 		$(window).on('hashchange.rsts', function(){
 			var index = self.getIndexFromUrl();
 			if (index !== false && index !== self.slideIndex) {
 				self.goTo(index);
 			}
 		});
-
-		this.slides[this.slideIndex].setState('active');
 
 		this.elements.main
 			.addClass(this.options.cssPrefix + 'main')
@@ -576,8 +728,16 @@ Rst.Slider = (function() {
 				.appendTo(this.elements.progress);
 		}
 
+		if (this.options.visibleArea < 1) {
+			this.elements.overlayPrev = $(document.createElement('div'))
+				.addClass(this.options.cssPrefix + 'overlay-prev')
+				.appendTo(this.elements.view);
+			this.elements.overlayNext = $(document.createElement('div'))
+				.addClass(this.options.cssPrefix + 'overlay-next')
+				.appendTo(this.elements.view);
+		}
+
 		this.nav = new Rst.SliderNav(this);
-		this.nav.setActive(this.slideIndex);
 
 		if (this.elements.footer) {
 			this.elements.footer
@@ -586,10 +746,14 @@ Rst.Slider = (function() {
 		}
 
 		this.preloadSlides(this.slideIndex);
+		// Sets active states
+		this.cleanupSlides();
 		$(window).on('resize.rsts', function(){
 			self.resize();
 		});
 		this.resize();
+
+		this.nav.combineItems();
 
 		if (this.options.type === 'slide') {
 			this.setDragEvents();
@@ -606,7 +770,7 @@ Rst.Slider = (function() {
 						self.options.type === 'slide' &&
 						event.target === self.elements.slides.get(0)
 					) || (
-						self.options.type === 'fade' &&
+						self.options.type !== 'slide' &&
 						event.target.parentNode === self.elements.slides.get(0)
 					)) {
 						self.cleanupSlides();
@@ -622,12 +786,27 @@ Rst.Slider = (function() {
 
 		if (this.options.pauseAutoplayOnHover) {
 			this.elements.view.on('mouseenter', function() {
-				self.pauseAutoplay();
+				if (!self.isTouch) {
+					self.pauseAutoplay();
+				}
 			});
 			this.elements.view.on('mouseleave', function() {
 				self.playAutoplay();
 			});
 		}
+
+		this.isVisible = true;
+		$(document).on('visibilitychange webkitvisibilitychange', function(event) {
+			self.checkVisibility();
+		});
+		var scrollEventTimeout;
+		$(window).on('scroll', function(event) {
+			clearTimeout(scrollEventTimeout);
+			scrollEventTimeout = setTimeout(function() {
+				self.checkVisibility();
+			}, 100);
+		});
+		this.checkVisibility();
 
 		if (this.options.keyboard) {
 			$(document.body).on('keydown.rsts', function(event){
@@ -637,7 +816,12 @@ Rst.Slider = (function() {
 					event.target === document.body ||
 					$(event.target).closest(self.elements.main).length
 				)) {
-					self.goTo(self.slideIndex + (event.which === codePrev ? -1 : 1));
+					if (event.which === codePrev) {
+						self.prev();
+					}
+					else {
+						self.next();
+					}
 				}
 			});
 		}
@@ -648,19 +832,23 @@ Rst.Slider = (function() {
 	 * @var object default options
 	 */
 	Slider.prototype.defaultOptions = {
-		// slider type (slide or fade)
+		// slider type (slide, side-slide, fade or none)
 		type: 'slide',
 		// "x" for horizontal or "y" for vertical
 		direction: 'x',
+		// the size of the area for the visible slide (0 = 0%, 1 = 100%)
+		visibleArea: 1,
 		// if true the slides get shuffled once on initialization
 		random: false,
+		// if true the slider loops infinitely
+		loop: false,
 		// prefix for all RockSolid Slider specific css class names
 		cssPrefix: 'rsts-',
 		// slider skin (set this to "none" to disable the default skin)
 		skin: 'default',
 		// set width and height to one of the following values
 		// - "css": get the size from the applied css (default)
-		// - a css lenght value: e.g. "100%", "500px", "50em"
+		// - a css length value: e.g. "100%", "500px", "50em"
 		// - "auto": get the size from the active slide dimensions at runtime
 		//   height can be set to auto only if the direction is "x"
 		// - a proportion: keep a fixed proportion for the slides, e.g. "480x270"
@@ -668,8 +856,19 @@ Rst.Slider = (function() {
 		width: 'css',
 		height: 'css',
 		// number of slides to preload (to the left/right or top/bottom)
-		preloadSlides: 3,
-		// gap between the slides in pixels
+		preloadSlides: 2,
+		// maximum number of visible slides
+		slideMaxCount: 0,
+		// minimal size of one slide in px
+		slideMinSize: 0,
+		// combine navigation items if multiple slides are visible (default true)
+		combineNavItems: true,
+		// number of slides to navigate by clicking prev or next
+		prevNextSteps: 0,
+		// true, "x" or "y" to center the the slides content
+		// use the attribute data-rsts-center to set the mode per slide
+		centerContent: false,
+		// gap between the slides in pixels or as string in percent
 		gapSize: 20,
 		// duration of the slide animation in milliseconds
 		duration: 400,
@@ -688,7 +887,8 @@ Rst.Slider = (function() {
 		navType: 'bullets',
 		// false to hide the prev and next controls
 		controls: true,
-		// image scale mode (fit, crop, scale)
+		// image scale mode (fit, crop, scale or none)
+		// use the attribute data-rsts-scale-mode to set the mode per slide
 		// only works if width and height are not set to "auto"
 		scaleMode: 'fit',
 		// URL hash prefix or false to disable deep linking, e.g. "slider-"
@@ -705,50 +905,138 @@ Rst.Slider = (function() {
 	 */
 	Slider.prototype.goTo = function(index, fromDrag, fromAutoplay) {
 
+		var self = this;
+
 		if (! fromAutoplay) {
 			this.stopAutoplay();
 		}
 
-		var overflow = false;
+		var visibleCount = this.getVisibleSlidesCount();
 
-		if (index < 0 || index > this.slides.length - 1) {
-			if (this.options.type === 'fade') {
+		var overflow = false;
+		var loop = 0;
+		var oldIndex = this.slideIndex;
+		var direction = index - this.slideIndex < 0 ? -1
+			: index === this.slideIndex ? 0 : 1;
+
+		if (
+			(index < 0 || index > this.slides.length - 1)
+			&& this.options.loop
+		) {
+			loop = index - this.slideIndex;
+			while (index < 0) {
+				index += this.slides.length;
+			}
+			while (index > this.slides.length - 1) {
+				index -= this.slides.length;
+			}
+		}
+		else if (
+			(index < 0 || index > this.slides.length - visibleCount)
+			&& !this.options.loop
+		) {
+			if (this.options.type !== 'slide') {
 				return;
 			}
-			overflow = true;
-			index = index < 0 ? 0 : this.slides.length - 1;
+			overflow = index < 0 ? -1 : 1;
+			index = index < 0 ? 0 : this.slides.length - visibleCount;
 		}
 
 		if (! overflow && this.slideIndex === index && ! fromDrag) {
 			return;
 		}
 
-		if (this.slideIndex !== index) {
-			this.slides[this.slideIndex].setState('postactive');
-			this.slides[index].setState('preactive');
+		var activeSlidesBefore = [];
+		for (var i = this.slideIndex; i <= this.slideIndex + visibleCount - 1; i++) {
+			activeSlidesBefore.push(i >= this.slides.length
+				? i - this.slides.length
+				: i
+			);
+		}
+
+		var activeSlides = [];
+		for (i = index; i <= index + visibleCount - 1; i++) {
+			activeSlides.push(i >= this.slides.length
+				? i - this.slides.length
+				: i
+			);
+		}
+
+		$.each(activeSlidesBefore, function(i, slideIndex) {
+			if ($.inArray(slideIndex, activeSlides) === -1) {
+				self.slides[slideIndex].setState('postactive');
+			}
+		});
+		$.each(activeSlides, function(i, slideIndex) {
+			if ($.inArray(slideIndex, activeSlidesBefore) === -1) {
+				self.slides[slideIndex].setState('preactive');
+			}
+		});
+
+		var slideWidth = this.slideSize + this.getGapSize();
+
+		if (loop) {
+			this.activeSlideOffset += slideWidth * loop;
+		}
+		else {
+			if (
+				index > this.slideIndex
+				&& index - this.slideIndex - visibleCount > this.options.preloadSlides * 2
+			) {
+				this.activeSlideOffset += (this.options.preloadSlides * 2 + visibleCount)
+					* slideWidth;
+			}
+			else if (
+				index < this.slideIndex
+				&& this.slideIndex - index - visibleCount > this.options.preloadSlides * 2
+			) {
+				this.activeSlideOffset -= (this.options.preloadSlides * 2 + visibleCount)
+					* slideWidth;
+			}
+			else {
+				this.activeSlideOffset += (index - this.slideIndex) * slideWidth;
+			}
 		}
 
 		this.slideIndex = index;
-		if (
-			fromDrag &&
-			this.slides[index].element.get(0).parentNode &&
-			this.slides[index].element.get(0).parentNode.tagName
-		) {
+
+		var preloadOnCleanup = true;
+		if (!fromDrag) {
+			preloadOnCleanup = false;
+		}
+		else {
+			$.each(activeSlides, function(i, slideIndex) {
+				if (
+					!self.slides[slideIndex].isInjected()
+					|| Math.round(self.slides[slideIndex].element.position()[
+						{x: 'left', y: 'top'}[self.options.direction]
+					]) !== Math.round(self.getSlideOffset(self.slideIndex + i))
+				) {
+					preloadOnCleanup = false;
+					return false;
+				}
+			});
+		}
+		if (preloadOnCleanup) {
 			// performance optimization
 			this.preloadOnCleanup = true;
 		}
 		else {
-			this.preloadSlides(index);
+			this.preloadSlides(index, oldIndex);
 		}
 
 		var size = this.getViewSize(index);
 		var durationScale;
+		var targetPos = - this.getSlideOffset(index)
+			+ Math.round(
+				size[this.options.direction]
+				* (1 - this.options.visibleArea) / 2
+			);
 
 		if (fromDrag && !overflow) {
 			durationScale = Math.abs((
-				this.getOffset(this.elements.slides) -
-				((size[this.options.direction] + this.options.gapSize) * -index)
-			) / (size[this.options.direction] + this.options.gapSize));
+				this.getOffset(this.elements.slides) - targetPos
+			) / slideWidth);
 		}
 		else if (fromDrag && overflow) {
 			durationScale = 0.7;
@@ -756,11 +1044,22 @@ Rst.Slider = (function() {
 
 		if (this.options.type === 'slide') {
 			this.modify(this.elements.slides, {
-				offset: (size[this.options.direction] + this.options.gapSize) * -index
-			}, true, durationScale, fromDrag, overflow && !fromDrag);
+				offset: targetPos
+			}, true, durationScale, fromDrag, !fromDrag && overflow);
 		}
 		else if (this.options.type === 'fade') {
 			this.modify(this.slides[this.slideIndex].element, {opacity: 1}, true);
+		}
+		else if (this.options.type === 'side-slide') {
+			this.modify(this.slides[this.slideIndex].element, {
+				offset: direction * this.slideSize
+			});
+			// get the position to ensure the engine applies the style
+			this.slides[this.slideIndex].element.position();
+			this.modify(this.slides[this.slideIndex].element, {offset: 0}, true);
+		}
+		else {
+			this.modify(this.slides[this.slideIndex].element, {}, true);
 		}
 
 		if (this.autoSize) {
@@ -769,6 +1068,11 @@ Rst.Slider = (function() {
 				height: size.y
 			}, true, durationScale, fromDrag);
 		}
+
+		this.elements.main.trigger({
+			type: 'rsts-slidestart',
+			rstSlider: this
+		});
 
 	};
 
@@ -827,7 +1131,7 @@ Rst.Slider = (function() {
 	 */
 	Slider.prototype.pauseAutoplay = function() {
 
-		if (! this.options.autoplay || this.autoplayPaused || this.isTouch) {
+		if (! this.options.autoplay || this.autoplayPaused) {
 			return;
 		}
 
@@ -896,9 +1200,18 @@ Rst.Slider = (function() {
 		this.startAutoplayProgressBar(duration);
 
 		var intervalFunction = function() {
-			var index = self.slideIndex + 1;
-			if (index > self.slides.length - 1) {
-				index = 0;
+			var visibleCount = self.getVisibleSlidesCount();
+			var index = self.slideIndex + (
+				Math.min(self.options.prevNextSteps, visibleCount)
+				|| visibleCount
+			);
+			if (index > self.slides.length - visibleCount && !self.options.loop) {
+				if (self.slideIndex < self.slides.length - visibleCount) {
+					index = self.slides.length - visibleCount;
+				}
+				else {
+					index = 0;
+				}
 			}
 			self.goTo(index, false, true);
 			self.startAutoplayProgressBar();
@@ -968,6 +1281,15 @@ Rst.Slider = (function() {
 		// currently only detecting mozilla is needed
 		this.engine = 'mozInnerScreenX' in window ? 'moz' : 'unknown';
 		this.device = navigator.platform;
+		if (this.device && this.device.indexOf('iPad') === 0) {
+			this.device = 'iPad';
+		}
+		if (this.device && this.device.indexOf('iPhone') === 0) {
+			this.device = 'iPhone';
+		}
+		if (this.device && this.device.indexOf('iPod') === 0) {
+			this.device = 'iPod';
+		}
 
 		var el = document.createElement('div');
 		document.body.appendChild(el);
@@ -1027,7 +1349,8 @@ Rst.Slider = (function() {
 
 			if (animate && bounce) {
 				origOffset = css.offset;
-				css.offset += this.slideSize * 0.075 * (css.offset ? -1 : 1);
+				css.offset += this.getViewSizeFixed(true)[this.options.direction]
+					* 0.075 * - bounce;
 				durationScale *= 0.5;
 			}
 
@@ -1082,6 +1405,17 @@ Rst.Slider = (function() {
 			element.css(css);
 		}
 
+		if (animate) {
+			if ((
+				this.options.type === 'slide' ? element : element.parent()
+			)[0] === this.elements.slides[0]) {
+				clearTimeout(this.cleanupSlidesTimeout);
+				this.cleanupSlidesTimeout = setTimeout(function() {
+					self.cleanupSlides();
+				}, parseFloat(css['transition-duration']) + 100);
+			}
+		}
+
 		if (element.bounceTimeout) {
 			clearTimeout(element.bounceTimeout);
 		}
@@ -1109,14 +1443,38 @@ Rst.Slider = (function() {
 	 * slides to the next slide
 	 */
 	Slider.prototype.next = function() {
-		this.goTo(this.slideIndex + 1);
+		var visibleCount = this.getVisibleSlidesCount();
+		var newIndex = this.slideIndex + (
+			Math.min(this.options.prevNextSteps, visibleCount)
+			|| visibleCount
+		);
+		if (
+			!this.options.loop
+			&& newIndex > this.slides.length - visibleCount
+			&& this.slideIndex < this.slides.length - visibleCount
+		) {
+			newIndex = this.slides.length - visibleCount;
+		}
+		this.goTo(newIndex);
 	};
 
 	/**
 	 * slides to the previous slide
 	 */
 	Slider.prototype.prev = function() {
-		this.goTo(this.slideIndex - 1);
+		var visibleCount = this.getVisibleSlidesCount();
+		var newIndex = this.slideIndex - (
+			Math.min(this.options.prevNextSteps, visibleCount)
+			|| visibleCount
+		);
+		if (
+			!this.options.loop
+			&& newIndex < 0
+			&& this.slideIndex > 0
+		) {
+			newIndex = 0;
+		}
+		this.goTo(newIndex);
 	};
 
 	/**
@@ -1148,41 +1506,82 @@ Rst.Slider = (function() {
 
 		this.elements.main.empty();
 
+		if (this.slides.length === 0) {
+			throw new Error('No slides found');
+		}
+
 	};
 
 	/**
 	 * injects Slide objects to the DOM
 	 */
-	Slider.prototype.preloadSlides = function(slideIndex) {
+	Slider.prototype.preloadSlides = function(slideIndex, oldIndex) {
 
 		var self = this;
-		var preloadCount = this.options.type === 'slide' ?
-			this.options.preloadSlides :
-			0;
-		var size = this.getViewSizeFixed();
 
-		$.each(this.slides, function(i, slide) {
-			if (i >= slideIndex - preloadCount && i <= slideIndex + preloadCount) {
-				if (! slide.element.get(0).parentNode || ! slide.element.get(0).parentNode.tagName) {
-					if (self.options.type === 'fade') {
-						self.modify(slide.element, {opacity: 0});
-					}
-					else if (self.options.type === 'slide') {
-						self.modify(slide.element, {
-							offset: i * (
-								(self.options.direction === 'x' ? size.x : size.y) +
-								self.options.gapSize
-							)
-						});
-					}
-					self.elements.slides.append(slide.element);
-					slide.size(size.x, size.y);
+		var size = this.getViewSizeFixed();
+		size[this.options.direction] = this.slideSize;
+
+		var visibleCount = this.getVisibleSlidesCount();
+		var preloadCount = 0;
+		if (this.options.type === 'slide') {
+			preloadCount = Math.min(
+				Math.floor((this.slides.length - visibleCount) / 2),
+				this.options.preloadSlides
+			);
+		}
+
+		var activeSlides = [];
+		for (var i = slideIndex; i <= slideIndex + visibleCount - 1; i++) {
+			activeSlides.push(i >= this.slides.length
+				? i - this.slides.length
+				: i
+			);
+		}
+
+		var slide, key;
+		for (i = slideIndex - preloadCount; i <= slideIndex + preloadCount + visibleCount - 1; i++) {
+
+			key = i < 0
+				? i + this.slides.length
+				: i >= this.slides.length
+				? i - this.slides.length
+				: i;
+
+			slide = this.slides[key];
+
+			if (self.options.type === 'slide') {
+				if (!this.options.loop && (i < 0 || i >= this.slides.length)) {
+					continue;
 				}
-				else if (
-					self.options.type === 'fade' &&
-					i === self.slideIndex &&
-					slide.element.next().length
+				if (
+					oldIndex !== undefined
+					&& $.inArray(key, activeSlides) === -1
+					&& (i < 0 || i >= this.slides.length)
+					&& slide.isInjected()
 				) {
+					this.preloadOnCleanup = true;
+					continue;
+				}
+				self.modify(slide.element, {
+					offset: self.getSlideOffset(i)
+				});
+			}
+
+			// Check if the slide isn't already injected
+			if (!slide.isInjected()) {
+				if (self.options.type === 'fade') {
+					self.modify(slide.element, {opacity: 0});
+				}
+				self.elements.slides.append(slide.element);
+				slide.size(size.x, size.y);
+			}
+			else if (
+				self.options.type !== 'slide' &&
+				i === self.slideIndex &&
+				slide.element.next().length
+			) {
+				if (self.options.type === 'fade') {
 					if (slide.element.next().length === 1) {
 						self.modify(slide.element, {opacity: 1 - slide.element.next().css('opacity')});
 						self.modify(slide.element.next(), {opacity: 1});
@@ -1190,10 +1589,12 @@ Rst.Slider = (function() {
 					else {
 						self.modify(slide.element, {opacity: 0});
 					}
-					self.elements.slides.append(slide.element);
 				}
+				// Move slide to the last position
+				self.elements.slides.append(slide.element);
 			}
-		});
+
+		}
 
 	};
 
@@ -1202,31 +1603,56 @@ Rst.Slider = (function() {
 	 */
 	Slider.prototype.cleanupSlides = function() {
 
+		clearTimeout(this.cleanupSlidesTimeout);
+
 		var self = this;
+		var visibleCount = this.getVisibleSlidesCount();
 		var preloadCount = this.options.type === 'slide' ?
 			this.options.preloadSlides :
 			0;
+		var keepSlides = [];
+		var activeSlides = [];
+
+		for (var i = this.slideIndex - preloadCount; i <= this.slideIndex + preloadCount + visibleCount - 1; i++) {
+			keepSlides.push(i < 0
+				? i + this.slides.length
+				: i >= this.slides.length
+				? i - this.slides.length
+				: i
+			);
+		}
+		for (i = this.slideIndex; i <= this.slideIndex + visibleCount - 1; i++) {
+			activeSlides.push(i >= this.slides.length
+				? i - this.slides.length
+				: i
+			);
+		}
 
 		$.each(this.slides, function(i, slide) {
-			if (
-				(i < self.slideIndex - preloadCount || i > self.slideIndex + preloadCount) &&
-				slide.element.get(0).parentNode && slide.element.get(0).parentNode.tagName
-			) {
+			if (slide.isInjected() && $.inArray(i, keepSlides) === -1) {
 				if (
 					self.options.type === 'fade' &&
 					self.slides[self.slideIndex].element.css('opacity') < 1
 				) {
 					return;
 				}
+				if (self.options.type === 'side-slide') {
+					var prop = self.options.direction === 'x' ? 'left' : 'top';
+					if (self.slides[self.slideIndex].element.position()[prop] !== 0) {
+						return;
+					}
+				}
 				slide.element.detach();
 			}
-			if (i !== self.slideIndex && slide.state !== 'inactive') {
+			if ($.inArray(i, activeSlides) === -1 && slide.state !== 'inactive') {
 				slide.setState('inactive');
 			}
 		});
 
-		this.nav.setActive(this.slideIndex);
-		this.slides[this.slideIndex].setState('active');
+		this.nav.setActive(activeSlides);
+		$.each(activeSlides, function(i, slideIndex) {
+			self.slides[slideIndex].setState('active');
+		});
 
 		if (this.options.deepLinkPrefix && this.getIndexFromUrl() !== this.slideIndex) {
 			if (this.slideIndex) {
@@ -1257,13 +1683,63 @@ Rst.Slider = (function() {
 			this.preloadSlides(this.slideIndex);
 		}
 
+		this.elements.main.trigger({
+			type: 'rsts-slidestop',
+			rstSlider: this
+		});
+
+	};
+
+	/**
+	 * Returns the calculated offset for the specified slide
+	 *
+	 * @param  int index slide index
+	 * @return number    calculated offset
+	 */
+	Slider.prototype.getSlideOffset = function(index) {
+		var size = this.getViewSizeFixed(true);
+
+		return (index - this.slideIndex)
+			* (this.slideSize + this.getGapSize())
+			+ this.activeSlideOffset;
+	};
+
+	/**
+	 * Returns the calculated number of visible slides
+	 *
+	 * @return number calculated number of visible slides
+	 */
+	Slider.prototype.getVisibleSlidesCount = function() {
+
+		if (!this.options.slideMaxCount && !this.options.slideMinSize) {
+			return 1;
+		}
+
+		var size = Math.round(
+			this.getViewSizeFixed(true)[this.options.direction]
+			* this.options.visibleArea
+		);
+		var gapSize = this.getGapSize();
+		var count = this.options.slideMaxCount;
+
+		if (!count || (size - (gapSize * (count - 1))) / count < this.options.slideMinSize) {
+			count = Math.floor((size + gapSize) / (this.options.slideMinSize + gapSize));
+		}
+
+		return Math.min(this.slides.length, Math.max(1, count));
+
 	};
 
 	/**
 	 * returns an object containing view width and height fixed values
 	 * @return object {x: ..., y: ...}
 	 */
-	Slider.prototype.getViewSizeFixed = function() {
+	Slider.prototype.getViewSizeFixed = function(useCache) {
+
+		if (useCache && this.viewSizeFixedCache) {
+			// Return a copy of the object
+			return $.extend({}, this.viewSizeFixedCache);
+		}
 
 		var x, y;
 
@@ -1304,7 +1780,19 @@ Rst.Slider = (function() {
 			y = Math.round(x / this.proportion);
 		}
 
-		return {x: x, y: y};
+		this.viewSizeFixedCache = {x: x, y: y};
+
+		var gapSize = this.getGapSize();
+		var visibleCount = this.getVisibleSlidesCount();
+		this.slideSize = Math.round(
+			(
+				((this.options.direction === 'x' ? x : y) * this.options.visibleArea)
+				- (gapSize * (visibleCount - 1))
+			) / visibleCount
+		);
+
+		// Return a copy of the object
+		return $.extend({}, this.viewSizeFixedCache);
 
 	};
 
@@ -1314,25 +1802,48 @@ Rst.Slider = (function() {
 	 */
 	Slider.prototype.getViewSize = function(slideIndex) {
 
-		var size;
 		slideIndex = slideIndex || 0;
 
-		size = this.getViewSizeFixed();
+		var size = this.getViewSizeFixed();
+		var backupSize = size[this.options.direction];
+		size[this.options.direction] = this.slideSize;
 
-		if (! size.x || ! size.y) {
-			// calculate the missing dimension
-			size = this.slides[slideIndex].size(size.x, size.y, true);
-			if (size.x < 10) {
-				size.x = 10;
+		// calculate the missing dimension
+		if (!size.x || !size.y) {
+
+			var visibleCount = this.getVisibleSlidesCount();
+			var missingDimension = !size.x ? 'x' : 'y';
+			var key, slideSize, newSize;
+			for (var i = slideIndex; i <= slideIndex + visibleCount - 1; i++) {
+				key = i >= this.slides.length
+					? i - this.slides.length
+					: i;
+				slideSize = this.slides[key].size(size.x, size.y, true);
+				newSize = Math.max(newSize || 0, slideSize[missingDimension]);
 			}
-			if (size.y < 10) {
-				size.y = 10;
-			}
+
+			size[missingDimension] = Math.max(10, newSize || 0);
+
 		}
 
-		this.slideSize = size[this.options.direction];
+		size[this.options.direction] = backupSize;
 
 		return size;
+
+	};
+
+	/**
+	 * @return number gap size in pixels
+	 */
+	Slider.prototype.getGapSize = function() {
+
+		var size = this.options.gapSize;
+		if (typeof size === 'string' && size.slice(-1) === '%') {
+			size = size.split('%')[0].split(',').join('.')
+				* this.getViewSizeFixed(true)[this.options.direction] / 100;
+		}
+
+		return Math.round(parseFloat(size)) || 0;
 
 	};
 
@@ -1342,10 +1853,16 @@ Rst.Slider = (function() {
 	Slider.prototype.resize = function() {
 
 		var self = this;
-		var size, width, height;
+		var visibleCountBefore = this.getVisibleSlidesCount();
+		var width, height;
+		var pauseAutoplay = !this.autoplayPaused;
 
 		// Check if the CSS height value has changed to "auto" or vice versa
 		if (this.options.direction === 'x' && this.options.height === 'css') {
+			// Pause autoplay to freeze the progress bar
+			if (pauseAutoplay) {
+				this.pauseAutoplay();
+			}
 			this.elements.view.css({display: 'none'});
 			if (this.nav.elements.main) {
 				this.nav.elements.main.css({display: 'none'});
@@ -1367,13 +1884,38 @@ Rst.Slider = (function() {
 			if (this.elements.footer) {
 				this.elements.footer.css({display: ''});
 			}
+			if (pauseAutoplay) {
+				this.playAutoplay();
+			}
 		}
 
-		size = this.getViewSize(this.slideIndex);
+		var size = this.getViewSize(this.slideIndex);
 		this.modify(this.elements.crop, {
 			width: size.x,
 			height: size.y
 		});
+
+		if (this.elements.overlayPrev && this.elements.overlayNext) {
+			if (this.options.direction === 'x') {
+				this.modify(this.elements.overlayPrev, {
+					width: Math.round(size.x * (1 - this.options.visibleArea) / 2)
+				});
+				this.modify(this.elements.overlayNext, {
+					width: Math.round(size.x * (1 - this.options.visibleArea) / 2)
+				});
+			}
+			else {
+				this.modify(this.elements.overlayPrev, {
+					height: Math.round(size.y * (1 - this.options.visibleArea) / 2)
+				});
+				this.modify(this.elements.overlayNext, {
+					height: Math.round(size.y * (1 - this.options.visibleArea) / 2)
+				});
+			}
+		}
+
+		var backupSize = size[this.options.direction];
+		size[this.options.direction] = this.slideSize;
 
 		if (!this.autoSize || this.options.direction === 'x') {
 			width = size.x;
@@ -1383,22 +1925,68 @@ Rst.Slider = (function() {
 		}
 
 		$.each(this.slides, function(i, slide) {
-			if (slide.element.get(0).parentNode && slide.element.get(0).parentNode.tagName) {
+			if (slide.isInjected()) {
 				slide.size(width, height);
 				if (self.options.type === 'slide') {
 					self.modify(slide.element, {
-						offset: i * (
-							(self.options.direction === 'x' ? width : height) +
-							self.options.gapSize
-						)
+						offset: self.getSlideOffset(i)
 					});
 				}
 			}
 		});
+
+		this.preloadSlides(this.slideIndex);
+
 		if (this.options.type === 'slide') {
 			this.modify(this.elements.slides, {
-				offset: (size[this.options.direction] + self.options.gapSize) * -this.slideIndex
+				offset: -self.getSlideOffset(this.slideIndex)
+					+ Math.round(
+						backupSize
+						* (1 - this.options.visibleArea)
+						/ 2
+					)
 			});
+		}
+
+		if (visibleCountBefore !== this.getVisibleSlidesCount()) {
+			this.nav.combineItems();
+			// Sets active states
+			this.cleanupSlides();
+		}
+
+		this.checkVisibility();
+
+	};
+
+	/**
+	 * check if the slider is currently visible and pause or start autoplay
+	 */
+	Slider.prototype.checkVisibility = function() {
+
+		var documentVisible = !(document.hidden || document.webkitHidden);
+		var sliderVisible = false;
+		var main = this.elements.main;
+		var offset = main.offset();
+		var $window = $(window);
+
+		if (
+			documentVisible
+			&& offset.left < $window.width() + $window.scrollLeft()
+			&& offset.left + main.outerWidth() > $window.scrollLeft()
+			&& offset.top < $window.height() + $window.scrollTop()
+			&& offset.top + main.outerHeight() > $window.scrollTop()
+		) {
+			sliderVisible = true;
+		}
+
+		if (this.isVisible !== sliderVisible) {
+			this.isVisible = sliderVisible;
+			if (sliderVisible) {
+				this.playAutoplay();
+			}
+			else {
+				this.pauseAutoplay();
+			}
 		}
 
 	};
@@ -1558,9 +2146,17 @@ Rst.Slider = (function() {
 		this.isDragging = false;
 		this.elements.main.removeClass(this.options.cssPrefix + 'dragging');
 
-		var leftSlideIndex = Math.floor(
-			this.getOffset(this.elements.slides) * -1 /
-			(this.slideSize + this.options.gapSize)
+		var leftSlideIndex = this.slideIndex + Math.floor(
+			(
+				- this.getOffset(this.elements.slides)
+				- this.activeSlideOffset
+				+ (
+					this.getViewSizeFixed(true)[this.options.direction]
+					* (1 - this.options.visibleArea)
+					/ 2
+				)
+			) /
+			(this.slideSize + this.getGapSize())
 		);
 
 		if (this.dragLastDiff <= 0) {
@@ -1627,17 +2223,30 @@ Rst.Slider = (function() {
 			pos[this.options.direction] -
 			this.dragStartPos[this.options.direction];
 
-		if (slidesPos > 0) {
-			slidesPos *= 0.4;
-		}
-		if (slidesPos <
-			(- this.slideSize - this.options.gapSize) *
-			(this.slides.length - 1)
-		) {
-			slidesPos = (slidesPos * 0.4) + (
-				(- this.slideSize - this.options.gapSize) *
-				(this.slides.length - 1)
-			) * 0.6;
+		var visibleCount = this.getVisibleSlidesCount();
+		if (!this.options.loop) {
+			if (slidesPos > - this.getSlideOffset(0) + (
+				this.getViewSizeFixed(true)[this.options.direction]
+				* (1 - this.options.visibleArea) / 2
+			)) {
+				slidesPos = (slidesPos * 0.4) - (
+					(this.getSlideOffset(0) - (
+						this.getViewSizeFixed(true)[this.options.direction]
+						* (1 - this.options.visibleArea) / 2
+					)) * 0.6
+				);
+			}
+			if (slidesPos < - this.getSlideOffset(this.slides.length - visibleCount) + (
+				this.getViewSizeFixed(true)[this.options.direction]
+				* (1 - this.options.visibleArea) / 2
+			)) {
+				slidesPos = (slidesPos * 0.4) - (
+					(this.getSlideOffset(this.slides.length - visibleCount) - (
+						this.getViewSizeFixed(true)[this.options.direction]
+						* (1 - this.options.visibleArea) / 2
+					)) * 0.6
+				);
+			}
 		}
 
 		this.modify(this.elements.slides, {
@@ -1703,7 +2312,6 @@ Rst.SliderNav = (function() {
 		var self = this;
 
 		this.slider = slider;
-		this.activeIndex = null;
 		this.elements = {};
 
 		if (slider.options.controls) {
@@ -1781,20 +2389,104 @@ Rst.SliderNav = (function() {
 	}
 
 	/**
-	 * set active nav element
+	 * set active nav elements
 	 */
-	SliderNav.prototype.setActive = function(index) {
+	SliderNav.prototype.setActive = function(indexes) {
 
-		if (
-			typeof this.activeIndex === 'number'
-			&& this.elements[this.activeIndex]
-		) {
-			this.elements[this.activeIndex].children('a').removeClass('active');
+		var self = this;
+		var slides = this.slider.getSlides();
+
+		if (this.activeIndexes) {
+			$.each(this.activeIndexes, function(i, index) {
+				if (!self.elements[index]) {
+					return;
+				}
+				self.elements[index].children('a').removeClass('active');
+			});
 		}
 
-		this.activeIndex = index;
-		if (this.elements[this.activeIndex]) {
-			this.elements[this.activeIndex].children('a').addClass('active');
+		if (
+			this.elements[slides.length]
+			&& $.inArray(slides.length - 1, indexes) !== -1
+		) {
+			indexes = [slides.length];
+		}
+
+		this.activeIndexes = indexes;
+
+		var visibleActive = false;
+		$.each(this.activeIndexes, function(i, index) {
+			if (!self.elements[index]) {
+				return;
+			}
+			if (self.elements[index][0].style.display !== 'none') {
+				visibleActive = true;
+			}
+			self.elements[index].children('a').addClass('active');
+		});
+
+		// No visible item is active so we activate the last one
+		if (!visibleActive && this.elements[slides.length]) {
+			$.each(this.activeIndexes, function(i, index) {
+				if (!self.elements[index]) {
+					return;
+				}
+				self.elements[index].children('a').removeClass('active');
+			});
+			this.activeIndexes = [slides.length];
+			this.elements[slides.length].children('a').addClass('active');
+		}
+
+	};
+
+	/**
+	 * combine navigation items
+	 */
+	SliderNav.prototype.combineItems = function() {
+
+		var visibleCount = this.slider.getVisibleSlidesCount();
+		var slides = this.slider.getSlides();
+
+		if (this.elements[slides.length]) {
+			this.elements[slides.length].remove();
+			delete this.elements[slides.length];
+		}
+
+		$.each(this.elements, function() {
+			this.css('display', '');
+		});
+
+		if (visibleCount < 2 || !this.slider.options.combineNavItems) {
+			return;
+		}
+
+		var lastIndex;
+		for (var i = 0; this.elements[i]; i++) {
+			if (
+				(i - Math.floor((visibleCount - 1) / 2)) % visibleCount
+				|| i > slides.length - visibleCount
+			) {
+				this.elements[i].css('display', 'none');
+			}
+			else {
+				lastIndex = i;
+			}
+		}
+
+		if (slides.length % visibleCount === 0) {
+			this.elements[
+				slides.length - visibleCount
+				+ Math.floor((visibleCount - 1) / 2)
+			].css('display', '');
+		}
+		else {
+			var newIndex = slides.length
+				- (slides.length % visibleCount || visibleCount)
+				+ Math.floor((visibleCount - 1) / 2);
+			this.elements[slides.length] = this.createNavItem(
+				newIndex,
+				slides[newIndex >= slides.length ? slides.length - 1 : newIndex].getData()
+			).insertAfter(this.elements[slides.length - 1]);
 		}
 
 	};
@@ -1813,11 +2505,29 @@ Rst.SliderNav = (function() {
 				.attr('href', '')
 				.text((self.slider.options.navType !== 'numbers' && data.name) ?
 					data.name :
-					(index + 1)
+					(data.index + 1)
 				)
 				.on('click', function(event){
 					event.preventDefault();
-					self.slider.goTo(index);
+					var visibleCount = self.slider.getVisibleSlidesCount();
+					var goTo = index - Math.floor(
+						(visibleCount - 1) / 2
+					);
+					if (!self.slider.options.loop) {
+						goTo = Math.min(
+							self.slider.slides.length - visibleCount,
+							Math.max(0, goTo)
+						);
+					}
+					else {
+						if (goTo < 0) {
+							goTo += self.slider.slides.length;
+						}
+						else if (goTo >= self.slider.slides.length) {
+							goTo -= self.slider.slides.length;
+						}
+					}
+					self.slider.goTo(goTo);
 				})
 			);
 

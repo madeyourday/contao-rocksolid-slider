@@ -163,7 +163,7 @@ class Slider extends \Module
 		$this->Template->slides = $this->parseSlides(SlideModel::findPublishedByPid($this->rsts_id));
 		$this->Template->options = $this->arrData;
 
-		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider-1.2.0.min.js|static';
+		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider-1.3.0.min.js|static';
 		$GLOBALS['TL_CSS'][] = 'system/modules/rocksolid-slider/assets/css/rocksolid-slider.min.css||static';
 		$skinPath = 'system/modules/rocksolid-slider/assets/css/' . (empty($this->arrData['rsts_skin']) ? 'default' : $this->arrData['rsts_skin']) . '-skin.min.css';
 		if (file_exists(TL_ROOT . '/' . $skinPath)) {
