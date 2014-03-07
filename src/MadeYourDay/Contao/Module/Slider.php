@@ -147,7 +147,7 @@ class Slider extends \Module
 
 			foreach ($images as $key => $image) {
 				$newImage = new \stdClass();
-				$image['size'] = $this->imgSize;
+				$image['size'] = isset($this->imgSize) ? $this->imgSize : $this->size;
 				$this->addImageToTemplate($newImage, $image);
 				$images[$key] = $newImage;
 			}
@@ -171,15 +171,35 @@ class Slider extends \Module
 			}
 		}
 
+		// strings / boolean
+		foreach (array('centerContent') as $key) {
+			if (! empty($this->arrData['rsts_' . $key])) {
+				$options[$key] = $this->arrData['rsts_' . $key];
+				if ($options[$key] === 'false') {
+					$options[$key] = false;
+				}
+				if ($options[$key] === 'true') {
+					$options[$key] = true;
+				}
+			}
+		}
+
 		// boolean
-		foreach (array('random', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions', 'controls') as $key) {
+		foreach (array('random', 'loop', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions', 'controls', 'combineNavItems') as $key) {
 			$options[$key] = (bool) $this->arrData['rsts_' . $key];
 		}
 
 		// positive numbers
-		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart') as $key) {
+		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart', 'slideMaxCount', 'slideMinSize', 'prevNextSteps') as $key) {
 			if (! empty($this->arrData['rsts_' . $key]) && $this->arrData['rsts_' . $key] > 0) {
 				$options[$key] = $this->arrData['rsts_' . $key] * 1;
+			}
+		}
+
+		// percentages
+		foreach (array('visibleArea') as $key) {
+			if (!empty($this->arrData['rsts_' . $key])) {
+				$options[$key] = $this->arrData['rsts_' . $key] / 100;
 			}
 		}
 
@@ -246,7 +266,7 @@ class Slider extends \Module
 					'alt' => $meta['title'],
 					'imageUrl' => $meta['link'],
 					'caption' => $meta['caption'],
-					'size' => $this->imgSize,
+					'size' => isset($this->imgSize) ? $this->imgSize : $this->size,
 				));
 			}
 

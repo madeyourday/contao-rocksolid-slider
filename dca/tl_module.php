@@ -12,7 +12,7 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,headline,type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_autoplay,rsts_videoAutoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_navType,rsts_controls,rsts_scaleMode,rsts_deepLinkPrefix,rsts_keyboard,rsts_captions;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,headline,type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_scaleMode,rsts_captions;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_prevNextSteps,rsts_slideMinSize,rsts_visibleArea,rsts_combineNavItems;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_id'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_id'],
@@ -31,12 +31,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_template'] = array(
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(32) NOT NULL default ''",
 );
-// slider type (slide or fade)
+// slider type (slide, side-slide or fade)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_type'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_type'],
 	'exclude' => true,
 	'inputType' => 'select',
-	'options' => array('slide' => 'slide', 'fade' => 'fade'),
+	'options' => array('slide' => 'slide', 'side-slide' => 'side-slide', 'fade' => 'fade'),
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
@@ -57,8 +57,32 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_random'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_random'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => 'w50 m12'),
+	'eval' => array('tl_class' => 'w50'),
 	'sql' => "char(1) NOT NULL default ''",
+);
+// if true the slider loops infinitely
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_loop'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_loop'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "char(1) NOT NULL default ''",
+);
+// true, "x" or "y" to center the the slides content
+// use the attribute data-rsts-center to set the mode per slide
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_centerContent'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_centerContent'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array(
+		'false',
+		'true',
+		'x',
+		'y',
+	),
+	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_centerContent_options'],
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "varchar(64) NOT NULL default ''",
 );
 // slider skin (set this to "none" to disable the default skin)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_skin'] = array(
@@ -113,7 +137,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_gapSize'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "int(10) unsigned NOT NULL default '0'",
+	'sql' => "varchar(64) NOT NULL default '0%'",
 );
 // duration of the slide animation in milliseconds
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_duration'] = array(
@@ -136,7 +160,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_videoAutoplay'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_videoAutoplay'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => 'w50 m12'),
+	'eval' => array('tl_class' => 'w50'),
 	'sql' => "char(1) NOT NULL default ''",
 );
 // false or the duration between user interaction and autoplay
@@ -183,7 +207,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_controls'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_controls'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => 'w50 m12'),
+	'eval' => array('tl_class' => 'w50'),
 	'sql' => "char(1) NOT NULL default '1'",
 );
 // image scale mode (fit, crop, scale)
@@ -224,12 +248,54 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_captions'] = array(
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "char(1) NOT NULL default '1'",
 );
+// maximum number of visible slides
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_slideMaxCount'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_slideMaxCount'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20),
+	'eval' => array('tl_class' => 'w50', 'includeBlankOption' => true),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+// number of slides to navigate by clicking prev or next
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_prevNextSteps'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_prevNextSteps'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20),
+	'eval' => array('tl_class' => 'w50', 'includeBlankOption' => true),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+// the size of the area for the visible slide (0 = 0%, 1 = 100%)
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_visibleArea'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_visibleArea'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "double unsigned NOT NULL default '0'",
+);
+// minimal size of one slide in px
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_slideMinSize'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_slideMinSize'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+// combine navigation items if multiple slides are visible (default true)
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_combineNavItems'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_combineNavItems'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "char(1) NOT NULL default '1'",
+);
 // custom slider skin (rsts_skin gets ignored if this is set)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_customSkin'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_customSkin'],
 	'exclude' => true,
 	'inputType' => 'text',
-	'eval' => array('tl_class' => 'w50'),
+	'eval' => array('tl_class' => 'w50 clr'),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
 // prefix for all RockSolid Slider specific css class names
