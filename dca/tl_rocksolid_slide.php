@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 	),
 
 	'palettes' => array(
-		'default' => '{title_legend},title,videoURL,singleSRC;{publish_legend},published,start,stop',
+		'default' => '{title_legend},title,videoURL,singleSRC,scaleMode,centerContent;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode;{publish_legend},published,start,stop',
 	),
 
 	'fields' => array(
@@ -134,6 +134,89 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'filesOnly' => true,
 			),
 			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
+		),
+		'scaleMode' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['scaleMode'],
+			'exclude' => true,
+			'inputType' => 'select',
+			'options' => array('fit', 'crop', 'scale'),
+			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['scaleModes'],
+			'eval' => array(
+				'includeBlankOption' => true,
+				'tl_class' => 'w50',
+			),
+			'sql' => "varchar(64) NOT NULL default ''",
+		),
+		'centerContent' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContent'],
+			'exclude' => true,
+			'inputType' => 'select',
+			'options' => array(
+				'false',
+				'true',
+				'x',
+				'y',
+			),
+			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContents'],
+			'eval' => array(
+				'includeBlankOption' => true,
+				'tl_class' => 'w50',
+			),
+			'sql' => "varchar(64) NOT NULL default ''",
+		),
+		'backgroundImage' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundImage'],
+			'exclude' => true,
+			'inputType' => 'fileTree',
+			'eval' => array(
+				'fieldType' => 'radio',
+				'files' => true,
+				'filesOnly' => true,
+			),
+			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
+		),
+		'backgroundVideos' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundVideos'],
+			'exclude' => true,
+			'inputType' => 'fileTree',
+			'eval' => array(
+				'multiple' => true,
+				'fieldType' => 'checkbox',
+				'orderField' => 'backgroundVideosOrder',
+				'files' => true,
+				'filesOnly' => true,
+			),
+			'sql' => "blob NULL",
+		),
+		'backgroundVideosOrder' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundVideosOrder'],
+			'sql' => "blob NULL",
+		),
+		'backgroundImageSize' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundImageSize'],
+			'exclude' => true,
+			'inputType' => 'imageSize',
+			'options' => $GLOBALS['TL_CROP'],
+			'reference' => &$GLOBALS['TL_LANG']['MSC'],
+			'eval' => array(
+				'rgxp' => 'digit',
+				'nospace' => true,
+				'helpwizard' => true,
+				'tl_class' => 'w50',
+			),
+			'sql' => "varchar(64) NOT NULL default ''",
+		),
+		'backgroundScaleMode' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundScaleMode'],
+			'exclude' => true,
+			'inputType' => 'select',
+			'options' => array('fit', 'crop', 'scale'),
+			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundScaleModes'],
+			'eval' => array(
+				'includeBlankOption' => true,
+				'tl_class' => 'w50',
+			),
+			'sql' => "varchar(64) NOT NULL default ''",
 		),
 		'published' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['published'],

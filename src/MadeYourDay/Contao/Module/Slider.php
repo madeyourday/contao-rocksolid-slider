@@ -298,6 +298,46 @@ class Slider extends \Module
 				}
 			}
 
+			if (
+				trim($slide['backgroundImage']) &&
+				($file = version_compare(VERSION, '3.2', '<')
+					? \FilesModel::findByPk($slide['backgroundImage'])
+					: \FilesModel::findByUuid($slide['backgroundImage'])
+				) &&
+				($fileObject = new \File($file->path, true)) &&
+				$fileObject->isGdImage
+			) {
+				$meta = $this->getMetaData($file->meta, $objPage->language);
+				$slide['backgroundImage'] = new \stdClass;
+				$this->addImageToTemplate($slide['backgroundImage'], array(
+					'id' => $file->id,
+					'name' => $fileObject->basename,
+					'singleSRC' => $file->path,
+					'alt' => $meta['title'],
+					'imageUrl' => $meta['link'],
+					'caption' => $meta['caption'],
+					'size' => $slide['backgroundImageSize'],
+				));
+			}
+			else {
+				$slide['backgroundImage'] = null;
+			}
+
+			if ($slide['backgroundVideos']) {
+				$videoFiles = deserialize($slide['backgroundVideos'], true);
+				if (version_compare(VERSION, '3.2', '<')) {
+					$videoFiles = \FilesModel::findMultipleByIds($videoFiles);
+				}
+				else {
+					$videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
+				}
+				$videos = array();
+				foreach ($videoFiles as $file) {
+					$videos[] = $file;
+				}
+				$slide['backgroundVideos'] = $videos;
+			}
+
 			$slides[] = $slide;
 
 		}
