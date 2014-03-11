@@ -32,11 +32,24 @@
 				$attributes[] = 'data-rsts-center="' . $slide['centerContent'] . '"';
 			}
 			$attributes = implode(' ', $attributes);
+
 			$imageAttributes = array();
 			if (!empty($slide['scaleMode'])) {
 				$imageAttributes[] = 'data-rsts-scale-mode="' . $slide['scaleMode'] . '"';
 			}
+			if (!empty($slide['imagePosition'])) {
+				$imageAttributes[] = 'data-rsts-position="' . $slide['imagePosition'] . '"';
+			}
 			$imageAttributes = implode(' ', $imageAttributes);
+
+			$backgroundAttributes = array();
+			if (!empty($slide['backgroundScaleMode'])) {
+				$backgroundAttributes[] = 'data-rsts-scale-mode="' . $slide['backgroundScaleMode'] . '"';
+			}
+			if (!empty($slide['backgroundPosition'])) {
+				$backgroundAttributes[] = 'data-rsts-position="' . $slide['backgroundPosition'] . '"';
+			}
+			$backgroundAttributes = implode(' ', $backgroundAttributes);
 		?>
 
 		<?php if (! empty($slide['videoURL'])): ?>
@@ -63,13 +76,13 @@
 		<?php endif ?>
 
 		<?php if (!empty($slide['backgroundVideos'])): ?>
-			<video data-rsts-background <?php if (!empty($slide['backgroundScaleMode'])): ?> data-rsts-scale-mode="<?php echo $slide['backgroundScaleMode'] ?>"<?php endif ?><?php if (!empty($slide['backgroundImage'])): ?> poster="<?php echo $slide['backgroundImage']->src ?>"<?php endif ?>>
+			<video data-rsts-background<?php if (!empty($slide['backgroundImage'])): ?> poster="<?php echo $slide['backgroundImage']->src ?>"<?php endif ?> <?php echo $backgroundAttributes ?>>
 				<?php foreach ($slide['backgroundVideos'] as $video): ?>
 					<source src="<?php echo $video->path ?>" type="video/<?php echo $video->extension ?>"></source>
 				<?php endforeach ?>
 			</video>
 		<?php elseif (!empty($slide['backgroundImage'])): ?>
-			<img data-rsts-background src="<?php echo $slide['backgroundImage']->src ?>"<?php echo $slide['backgroundImage']->imgSize ?> alt="<?php echo $slide['backgroundImage']->alt ?>"<?php if (!empty($slide['backgroundScaleMode'])): ?> data-rsts-scale-mode="<?php echo $slide['backgroundScaleMode'] ?>"<?php endif ?>>
+			<img data-rsts-background src="<?php echo $slide['backgroundImage']->src ?>"<?php echo $slide['backgroundImage']->imgSize ?> alt="<?php echo $slide['backgroundImage']->alt ?>" <?php echo $backgroundAttributes ?>>
 		<?php endif ?>
 
 		</div>

@@ -12,7 +12,7 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,headline,type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_scaleMode,rsts_captions;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_prevNextSteps,rsts_slideMinSize,rsts_visibleArea,rsts_combineNavItems;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,headline,type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_prevNextSteps,rsts_slideMinSize,rsts_visibleArea,rsts_combineNavItems;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_id'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_id'],
@@ -220,7 +220,19 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_scaleMode'] = array(
 		'fit' => $GLOBALS['TL_LANG']['tl_module']['rsts_scaleMode_fit'],
 		'crop' => $GLOBALS['TL_LANG']['tl_module']['rsts_scaleMode_crop'],
 		'scale' => $GLOBALS['TL_LANG']['tl_module']['rsts_scaleMode_scale'],
+		'none' => $GLOBALS['TL_LANG']['tl_module']['rsts_scaleMode_none'],
 	),
+	'eval' => array('tl_class' => 'w50 clr'),
+	'sql' => "varchar(64) NOT NULL default ''",
+);
+// image position (center, top, right, bottom, left, top-left, top-right, bottom-left, bottom-right)
+// use the attribute data-rsts-position to set it per slide
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_imagePosition'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_imagePosition'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array('center', 'top', 'right', 'bottom', 'left', 'top-left', 'top-right', 'bottom-left', 'bottom-right'),
+	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_imagePositions'],
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
@@ -245,7 +257,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_captions'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_captions'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
-	'eval' => array('tl_class' => 'w50'),
+	'eval' => array('tl_class' => 'w50 m12'),
 	'sql' => "char(1) NOT NULL default '1'",
 );
 // maximum number of visible slides

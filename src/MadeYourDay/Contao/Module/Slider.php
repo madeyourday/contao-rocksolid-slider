@@ -165,7 +165,7 @@ class Slider extends \Module
 		$options = array();
 
 		// strings
-		foreach (array('type', 'direction', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode', 'deepLinkPrefix') as $key) {
+		foreach (array('type', 'direction', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode', 'imagePosition', 'deepLinkPrefix') as $key) {
 			if (! empty($this->arrData['rsts_' . $key])) {
 				$options[$key] = $this->arrData['rsts_' . $key];
 			}

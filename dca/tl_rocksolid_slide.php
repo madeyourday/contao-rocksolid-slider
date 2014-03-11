@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 	),
 
 	'palettes' => array(
-		'default' => '{title_legend},title,videoURL,singleSRC,scaleMode,centerContent;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode;{publish_legend},published,start,stop',
+		'default' => '{title_legend},title,videoURL,singleSRC,scaleMode,imagePosition,centerContent;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{publish_legend},published,start,stop',
 	),
 
 	'fields' => array(
@@ -139,8 +139,20 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['scaleMode'],
 			'exclude' => true,
 			'inputType' => 'select',
-			'options' => array('fit', 'crop', 'scale'),
+			'options' => array('fit', 'crop', 'scale', 'none'),
 			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['scaleModes'],
+			'eval' => array(
+				'includeBlankOption' => true,
+				'tl_class' => 'w50',
+			),
+			'sql' => "varchar(64) NOT NULL default ''",
+		),
+		'imagePosition' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['imagePosition'],
+			'exclude' => true,
+			'inputType' => 'select',
+			'options' => array('center', 'top', 'right', 'bottom', 'left', 'top-left', 'top-right', 'bottom-left', 'bottom-right'),
+			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['imagePositions'],
 			'eval' => array(
 				'includeBlankOption' => true,
 				'tl_class' => 'w50',
@@ -210,8 +222,20 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundScaleMode'],
 			'exclude' => true,
 			'inputType' => 'select',
-			'options' => array('fit', 'crop', 'scale'),
-			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundScaleModes'],
+			'options' => array('fit', 'crop', 'scale', 'none'),
+			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['scaleModes'],
+			'eval' => array(
+				'includeBlankOption' => true,
+				'tl_class' => 'w50 clr',
+			),
+			'sql' => "varchar(64) NOT NULL default ''",
+		),
+		'backgroundPosition' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundPosition'],
+			'exclude' => true,
+			'inputType' => 'select',
+			'options' => array('center', 'top', 'right', 'bottom', 'left', 'top-left', 'top-right', 'bottom-left', 'bottom-right'),
+			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['imagePositions'],
 			'eval' => array(
 				'includeBlankOption' => true,
 				'tl_class' => 'w50',
