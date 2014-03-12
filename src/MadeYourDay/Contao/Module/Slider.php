@@ -215,7 +215,7 @@ class Slider extends \Module
 
 		$this->Template->options = $options;
 
-		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider-1.3.1.min.js|static';
+		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider.min.js|static';
 		$GLOBALS['TL_CSS'][] = 'system/modules/rocksolid-slider/assets/css/rocksolid-slider.min.css||static';
 		$skinPath = 'system/modules/rocksolid-slider/assets/css/' . (empty($this->arrData['rsts_skin']) ? 'default' : $this->arrData['rsts_skin']) . '-skin.min.css';
 		if (file_exists(TL_ROOT . '/' . $skinPath)) {
