@@ -20,29 +20,53 @@
 
 	<?php foreach ($this->slides as $slide): ?>
 
+		<?php
+			$attributes = array();
+			if (!empty($slide['title'])) {
+				$attributes[] = 'data-rsts-name="' . $slide['title'] . '"';
+			}
+			if (!empty($slide['centerContent'])) {
+				if ($slide['centerContent'] === 'false') {
+					$slide['centerContent'] = '';
+				}
+				$attributes[] = 'data-rsts-center="' . $slide['centerContent'] . '"';
+			}
+			$attributes = implode(' ', $attributes);
+
+			$imageAttributes = array();
+			if (!empty($slide['scaleMode'])) {
+				$imageAttributes[] = 'data-rsts-scale-mode="' . $slide['scaleMode'] . '"';
+			}
+			if (!empty($slide['imagePosition'])) {
+				$imageAttributes[] = 'data-rsts-position="' . $slide['imagePosition'] . '"';
+			}
+			$imageAttributes = implode(' ', $imageAttributes);
+		?>
+
 		<?php if (! empty($slide['videoURL'])): ?>
 
-			<img<?php if (! empty($slide['title'])): ?> data-rsts-name="<?php echo $slide['title'] ?>"<?php endif ?> data-rsts-type="video" data-rsts-video="<?php echo $slide['videoURL'] ?>" src="<?php echo $slide['image']->src ?>" />
+			<div data-rsts-type="video" data-rsts-video="<?php echo $slide['videoURL'] ?>" <?php echo $attributes ?>>
+				<img src="<?php echo $slide['image']->src ?>" <?php echo $imageAttributes ?> />
 
 		<?php elseif (! empty($slide['image'])): ?>
 
-			<div data-rsts-type="image"<?php if (! empty($slide['title'])): ?> data-rsts-name="<?php echo $slide['title'] ?>"<?php endif ?>>
-				<img src="<?php echo $slide['image']->src ?>"<?php echo $slide['image']->imgSize ?> alt="<?php echo $slide['image']->alt ?>" />
+			<div data-rsts-type="image" <?php echo $attributes ?>>
+				<img src="<?php echo $slide['image']->src ?>"<?php echo $slide['image']->imgSize ?> alt="<?php echo $slide['image']->alt ?>" <?php echo $imageAttributes ?> />
 				<?php if ($slide['image']->href): ?>
 					<a class="rsts-details" href="<?php echo $slide['image']->href ?>">more...</a>
 				<?php endif ?>
 				<?php if ($slide['image']->caption): ?>
 					<p class="rsts-text"><?php echo $slide['image']->caption ?></p>
 				<?php endif ?>
-			</div>
 
 		<?php else: ?>
 
-			<div<?php if (! empty($slide['title'])): ?> data-rsts-name="<?php echo $slide['title'] ?>"<?php endif ?>>
+			<div <?php echo $attributes ?>>
 				<?php echo $slide['text'] ?>
-			</div>
 
 		<?php endif ?>
+
+		</div>
 
 	<?php endforeach ?>
 
@@ -50,32 +74,6 @@
 
 <script type="text/javascript">
 //<![CDATA[
-	jQuery('.mod_rocksolid_slider').last().rstSlider(<?php
-
-		$options = array();
-
-		// strings
-		foreach (array('type', 'direction', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode', 'deepLinkPrefix') as $key) {
-			if (! empty($this->options['rsts_' . $key])) {
-				$options[$key] = $this->options['rsts_' . $key];
-			}
-		}
-
-		// boolean
-		foreach (array('random', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions') as $key) {
-			$options[$key] = (bool) $this->options['rsts_' . $key];
-		}
-
-		// positive numbers
-		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart') as $key) {
-			if (! empty($this->options['rsts_' . $key]) && $this->options['rsts_' . $key] > 0) {
-				$options[$key] = $this->options['rsts_' . $key] * 1;
-			}
-		}
-
-		$options['gapSize'] = $this->options['rsts_gapSize'] * 1;
-
-		echo json_encode($options);
-	?>);
+	jQuery('.mod_rocksolid_slider').last().rstSlider(<?php echo json_encode($this->options); ?>);
 //]]>
 </script>

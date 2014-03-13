@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 	),
 
 	'palettes' => array(
-		'default' => '{title_legend},title,videoURL,singleSRC;{publish_legend},published,start,stop',
+		'default' => '{title_legend},title,videoURL,singleSRC,scaleMode,imagePosition,centerContent;{background_legend},getPro;{publish_legend},published,start,stop',
 	),
 
 	'fields' => array(
@@ -134,6 +134,54 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'filesOnly' => true,
 			),
 			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
+		),
+		'scaleMode' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['scaleMode'],
+			'exclude' => true,
+			'inputType' => 'select',
+			'options' => array('fit', 'crop', 'scale', 'none'),
+			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['scaleModes'],
+			'eval' => array(
+				'includeBlankOption' => true,
+				'tl_class' => 'w50',
+			),
+			'sql' => "varchar(64) NOT NULL default ''",
+		),
+		'imagePosition' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['imagePosition'],
+			'exclude' => true,
+			'inputType' => 'select',
+			'options' => array('center', 'top', 'right', 'bottom', 'left', 'top-left', 'top-right', 'bottom-left', 'bottom-right'),
+			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['imagePositions'],
+			'eval' => array(
+				'includeBlankOption' => true,
+				'tl_class' => 'w50',
+			),
+			'sql' => "varchar(64) NOT NULL default ''",
+		),
+		'centerContent' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContent'],
+			'exclude' => true,
+			'inputType' => 'select',
+			'options' => array(
+				'false',
+				'true',
+				'x',
+				'y',
+			),
+			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContents'],
+			'eval' => array(
+				'includeBlankOption' => true,
+				'tl_class' => 'w50',
+			),
+			'sql' => "varchar(64) NOT NULL default ''",
+		),
+		'getPro' => array(
+			'input_field_callback' => function() {
+				return '<div>'
+					. $GLOBALS['TL_LANG']['tl_rocksolid_slide']['getPro']
+					. '</div>';
+			},
 		),
 		'published' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['published'],

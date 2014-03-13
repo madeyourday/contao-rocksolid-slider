@@ -147,7 +147,7 @@ class Slider extends \Module
 
 			foreach ($images as $key => $image) {
 				$newImage = new \stdClass();
-				$image['size'] = $this->imgSize;
+				$image['size'] = isset($this->imgSize) ? $this->imgSize : $this->size;
 				$this->addImageToTemplate($newImage, $image);
 				$images[$key] = $newImage;
 			}
@@ -165,14 +165,27 @@ class Slider extends \Module
 		$options = array();
 
 		// strings
-		foreach (array('type', 'direction', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode', 'deepLinkPrefix') as $key) {
+		foreach (array('type', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode', 'imagePosition', 'deepLinkPrefix') as $key) {
 			if (! empty($this->arrData['rsts_' . $key])) {
 				$options[$key] = $this->arrData['rsts_' . $key];
 			}
 		}
 
+		// strings / boolean
+		foreach (array('centerContent') as $key) {
+			if (! empty($this->arrData['rsts_' . $key])) {
+				$options[$key] = $this->arrData['rsts_' . $key];
+				if ($options[$key] === 'false') {
+					$options[$key] = false;
+				}
+				if ($options[$key] === 'true') {
+					$options[$key] = true;
+				}
+			}
+		}
+
 		// boolean
-		foreach (array('random', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions', 'controls') as $key) {
+		foreach (array('random', 'loop', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions', 'controls') as $key) {
 			$options[$key] = (bool) $this->arrData['rsts_' . $key];
 		}
 
@@ -195,7 +208,7 @@ class Slider extends \Module
 
 		$this->Template->options = $options;
 
-		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider-1.3.0.min.js|static';
+		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider.min.js|static';
 		$GLOBALS['TL_CSS'][] = 'system/modules/rocksolid-slider/assets/css/rocksolid-slider.min.css||static';
 		$skinPath = 'system/modules/rocksolid-slider/assets/css/' . (empty($this->arrData['rsts_skin']) ? 'default' : $this->arrData['rsts_skin']) . '-skin.min.css';
 		if (file_exists(TL_ROOT . '/' . $skinPath)) {
@@ -246,7 +259,7 @@ class Slider extends \Module
 					'alt' => $meta['title'],
 					'imageUrl' => $meta['link'],
 					'caption' => $meta['caption'],
-					'size' => $this->imgSize,
+					'size' => isset($this->imgSize) ? $this->imgSize : $this->size,
 				));
 			}
 
@@ -276,6 +289,46 @@ class Slider extends \Module
 					$slide['image']->imgSize = '';
 					$slide['image']->alt = '';
 				}
+			}
+
+			if (
+				trim($slide['backgroundImage']) &&
+				($file = version_compare(VERSION, '3.2', '<')
+					? \FilesModel::findByPk($slide['backgroundImage'])
+					: \FilesModel::findByUuid($slide['backgroundImage'])
+				) &&
+				($fileObject = new \File($file->path, true)) &&
+				$fileObject->isGdImage
+			) {
+				$meta = $this->getMetaData($file->meta, $objPage->language);
+				$slide['backgroundImage'] = new \stdClass;
+				$this->addImageToTemplate($slide['backgroundImage'], array(
+					'id' => $file->id,
+					'name' => $fileObject->basename,
+					'singleSRC' => $file->path,
+					'alt' => $meta['title'],
+					'imageUrl' => $meta['link'],
+					'caption' => $meta['caption'],
+					'size' => $slide['backgroundImageSize'],
+				));
+			}
+			else {
+				$slide['backgroundImage'] = null;
+			}
+
+			if ($slide['backgroundVideos']) {
+				$videoFiles = deserialize($slide['backgroundVideos'], true);
+				if (version_compare(VERSION, '3.2', '<')) {
+					$videoFiles = \FilesModel::findMultipleByIds($videoFiles);
+				}
+				else {
+					$videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
+				}
+				$videos = array();
+				foreach ($videoFiles as $file) {
+					$videos[] = $file;
+				}
+				$slide['backgroundVideos'] = $videos;
 			}
 
 			$slides[] = $slide;

@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.3.0 */
+/*! rocksolid-slider v1.3.1 */
 (function($, window, document) {
 
 var Rst = {};
@@ -263,15 +263,15 @@ Rst.Slide = (function() {
 
 		var scaleMode = image.attr('data-rsts-scale-mode')
 			|| this.slider.options.scaleMode;
+		var position = image.attr('data-rsts-position')
+			|| this.slider.options.imagePosition;
 		var originalSize = this.getOriginalSize(image);
 		var originalProp = originalSize.x / originalSize.y;
 		var newProp = x / y;
 
 		var css = {
 			width: originalSize.x,
-			height: originalSize.y,
-			'margin-left': 0,
-			'margin-top': 0
+			height: originalSize.y
 		};
 
 		if (scaleMode === 'fit' || scaleMode === 'crop') {
@@ -282,12 +282,10 @@ Rst.Slide = (function() {
 			) {
 				css.width = x;
 				css.height = x / originalProp;
-				css['margin-top'] = (y - css.height) / 2;
 			}
 			else {
 				css.width = y * originalProp;
 				css.height = y;
-				css['margin-left'] = (x - css.width) / 2;
 			}
 
 		}
@@ -297,11 +295,21 @@ Rst.Slide = (function() {
 			css.height = y;
 
 		}
-		else {
 
-			css['margin-top'] = (y - originalSize.y) / 2;
-			css['margin-left'] = (x - originalSize.x) / 2;
+		css['margin-top'] = (y - css.height) / 2;
+		css['margin-left'] = (x - css.width) / 2;
 
+		if (position === 'top' || position === 'top-left' || position === 'top-right') {
+			css['margin-top'] = 0;
+		}
+		else if (position === 'bottom' || position === 'bottom-left' || position === 'bottom-right') {
+			css['margin-top'] = y - css.height;
+		}
+		if (position === 'left' || position === 'top-left' || position === 'bottom-left') {
+			css['margin-left'] = 0;
+		}
+		else if (position === 'right' || position === 'top-right' || position === 'bottom-right') {
+			css['margin-left'] = x - css.width;
 		}
 
 		image.css(css);
@@ -891,6 +899,10 @@ Rst.Slider = (function() {
 		// use the attribute data-rsts-scale-mode to set the mode per slide
 		// only works if width and height are not set to "auto"
 		scaleMode: 'fit',
+		// image position (center, top, right, bottom, left, top-left,
+		// top-right, bottom-left, bottom-right)
+		// use the attribute data-rsts-position to set it per slide
+		imagePosition: 'center',
 		// URL hash prefix or false to disable deep linking, e.g. "slider-"
 		deepLinkPrefix: false,
 		// true to enable keyboard arrow navigation
@@ -2464,7 +2476,7 @@ Rst.SliderNav = (function() {
 		for (var i = 0; this.elements[i]; i++) {
 			if (
 				(i - Math.floor((visibleCount - 1) / 2)) % visibleCount
-				|| i > slides.length - visibleCount
+				|| (i - Math.floor((visibleCount - 1) / 2)) > slides.length - visibleCount
 			) {
 				this.elements[i].css('display', 'none');
 			}
