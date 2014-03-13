@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.3.1 */
+/*! rocksolid-slider v1.3.2 */
 (function($, window, document) {
 
 var Rst = {};
@@ -92,6 +92,12 @@ Rst.Slide = (function() {
 			this.element.children().last().css({
 				position: 'relative'
 			});
+			if (this.backgrounds.filter('video').length) {
+				// Fixes bug in Chrome 33 with disappearing elements over videos
+				this.element.children().last().css({
+					'-webkit-transform': 'translateZ(0)'
+				});
+			}
 		}
 
 		this.element.find('video[autoplay]').each(function() {
@@ -265,13 +271,22 @@ Rst.Slide = (function() {
 			|| this.slider.options.scaleMode;
 		var position = image.attr('data-rsts-position')
 			|| this.slider.options.imagePosition;
+
 		var originalSize = this.getOriginalSize(image);
+		if (!originalSize.x || !originalSize.y) {
+			return;
+		}
+
 		var originalProp = originalSize.x / originalSize.y;
 		var newProp = x / y;
 
 		var css = {
 			width: originalSize.x,
-			height: originalSize.y
+			height: originalSize.y,
+			'min-width': 0,
+			'min-height': 0,
+			'max-width': 'none',
+			'max-height': 'none'
 		};
 
 		if (scaleMode === 'fit' || scaleMode === 'crop') {
@@ -342,10 +357,17 @@ Rst.Slide = (function() {
 
 		}
 
-		return {
-			x: size.x || 10,
-			y: size.y || 10
-		};
+		if (!size.x || !size.y) {
+			if (element.attr('width') || element.attr('height')) {
+				size.x = parseFloat(element.attr('width') || element.attr('height'));
+				size.y = parseFloat(element.attr('height') || element.attr('width'));
+			}
+			else {
+				size.x = size.y = 0;
+			}
+		}
+
+		return size;
 
 	};
 
@@ -360,6 +382,10 @@ Rst.Slide = (function() {
 			image.css({
 				width: '',
 				height: '',
+				'min-width': '',
+				'min-height': '',
+				'max-width': '',
+				'max-height': '',
 				'margin-left': '',
 				'margin-top': ''
 			});
@@ -2455,6 +2481,10 @@ Rst.SliderNav = (function() {
 	 * combine navigation items
 	 */
 	SliderNav.prototype.combineItems = function() {
+
+		if (!this.elements[0]) {
+			return;
+		}
 
 		var visibleCount = this.slider.getVisibleSlidesCount();
 		var slides = this.slider.getSlides();
