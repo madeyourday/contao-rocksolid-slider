@@ -12,13 +12,17 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
-// Dynamically add the parent table
-if (Input::get('do') == 'rocksolid_slider') {
-	$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_rocksolid_slide';
-}
+if (TL_MODE === 'BE') {
 
-// Load module language file
-$this->loadLanguageFile('tl_module');
+	// Dynamically add the parent table
+	if (Input::get('do') == 'rocksolid_slider') {
+		$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_rocksolid_slide';
+	}
+
+	// Load module language file
+	$this->loadLanguageFile('tl_module');
+
+}
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_slider'] = '{type_legend},type,headline;{rocksolid_slider_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_prevNextSteps,rsts_slideMinSize,rsts_visibleArea,rsts_combineNavItems;{template_legend:hide},rsts_template,size;{protected_legend:hide},protected;{expert_legend:hide},guests,rsts_customSkin,rsts_cssPrefix,cssID,space;{invisible_legend:hide},invisible,start,stop';
 
