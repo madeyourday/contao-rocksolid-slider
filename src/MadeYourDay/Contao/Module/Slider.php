@@ -42,19 +42,29 @@ class Slider extends \Module
 			return $template->parse();
 		}
 
-		// Return if there is no slider id
-		if (! $this->rsts_id) {
-			return '';
+		if (!$this->rsts_id) {
+
+			$this->multiSRC = deserialize($this->multiSRC);
+			if (!is_array($this->multiSRC) || !count($this->multiSRC)) {
+				// Return if there is no slider id and no images
+				return '';
+			}
+
+		}
+		else {
+
+			$this->slider = SliderModel::findByPk($this->rsts_id);
+
+			// Return if there is no slider
+			if (! $this->slider || $this->slider->id !== $this->rsts_id) {
+				return '';
+			}
+
+			$this->multiSRC = deserialize($this->slider->multiSRC);
+			$this->orderSRC = $this->slider->orderSRC;
+
 		}
 
-		$this->slider = SliderModel::findByPk($this->rsts_id);
-
-		// Return if there is no slider
-		if (! $this->slider || $this->slider->id !== $this->rsts_id) {
-			return '';
-		}
-
-		$this->multiSRC = deserialize($this->slider->multiSRC);
 		if (version_compare(VERSION, '3.2', '<')) {
 			$this->files = \FilesModel::findMultipleByIds($this->multiSRC);
 		}
@@ -112,14 +122,14 @@ class Slider extends \Module
 
 			}
 
-			if ($this->slider->orderSRC) {
+			if ($this->orderSRC) {
 				// Turn the order string into an array and remove all values
 				if (version_compare(VERSION, '3.2', '<')) {
-					$order = explode(',', $this->slider->orderSRC);
+					$order = explode(',', $this->orderSRC);
 					$order = array_map('intval', $order);
 				}
 				else {
-					$order = deserialize($this->slider->orderSRC);
+					$order = deserialize($this->orderSRC);
 				}
 				if (!$order || !is_array($order)) {
 					$order = array();
@@ -160,7 +170,10 @@ class Slider extends \Module
 		}
 
 		$this->Template->images = $images;
-		$this->Template->slides = $this->parseSlides(SlideModel::findPublishedByPid($this->rsts_id));
+		$this->Template->slides = array();
+		if ($this->rsts_id) {
+			$this->Template->slides = $this->parseSlides(SlideModel::findPublishedByPid($this->rsts_id));
+		}
 
 		$options = array();
 

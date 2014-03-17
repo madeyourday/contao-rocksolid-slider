@@ -225,4 +225,29 @@ class Slider extends \Backend
 	{
 		return $this->getTemplateGroup('rsts_');
 	}
+
+	/**
+	 * On load callback for tl_content
+	 *
+	 * @param \DataContainer $dc
+	 * @return void
+	 */
+	public function contentOnloadCallback($dc)
+	{
+		if (empty($dc->id)) {
+			return;
+		}
+
+		$contentElement = \ContentModel::findByPk($dc->id);
+
+		if (!$contentElement || !isset($contentElement->type)) {
+			return;
+		}
+
+		if ($contentElement->type === 'rocksolid_slider') {
+			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['mandatory'] = false;
+			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['isGallery'] = true;
+			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['filesOnly'] = true;
+		}
+	}
 }
