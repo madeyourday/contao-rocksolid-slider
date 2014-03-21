@@ -122,6 +122,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_skin'] = array(
 // - a css lenght value: e.g. "100%", "500px", "50em"
 // - "auto": get the size from the active slide dimensions at runtime
 //   height can be set to auto only if the direction is "x"
+// - "normalize": similar to auto but uses the size of the largest slide
 // - a proportion: keep a fixed proportion for the slides, e.g. "480x270"
 //   this must not set to both dimensions
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_width'] = array(
