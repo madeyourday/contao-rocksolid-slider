@@ -64,7 +64,7 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContents']['x'] = 'Horizontal';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContents']['y'] = 'Vertical';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContents']['true'] = 'Horizontal and vertical';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['background_legend'] = 'Background';
-$GLOBALS['TL_LANG']['tl_rocksolid_slide']['getPro'] = '<a target="_blank" href="http://rocksolidthemes.com/en/contao/plugins/responsive-slider">Buy pro version</a>';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['getPro'] = 'This feature requires the pro version of the slider, <a target="_blank" href="http://rocksolidthemes.com/en/contao/plugins/responsive-slider">buy pro version now</a>.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['publish_legend'] = 'Publish';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['published'][0] = 'Publish slide';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['published'][1] = 'Display the slide on the website.';

@@ -88,7 +88,7 @@ $GLOBALS['TL_LANG']['tl_module']['rsts_keyboard'][0] = 'Activate keyboard naviga
 $GLOBALS['TL_LANG']['tl_module']['rsts_keyboard'][1] = 'If activated the arrow keys can be used to controll the slider.';
 $GLOBALS['TL_LANG']['tl_module']['rsts_captions'][0] = 'Show slide title';
 $GLOBALS['TL_LANG']['tl_module']['rsts_captions'][1] = 'Displays the title as a headline in the slides.';
-$GLOBALS['TL_LANG']['tl_module']['rsts_getPro'] = '<a target="_blank" href="http://rocksolidthemes.com/en/contao/plugins/responsive-slider">Buy pro version</a>';
+$GLOBALS['TL_LANG']['tl_module']['rsts_getPro'] = 'This feature requires the pro version of the slider, <a target="_blank" href="http://rocksolidthemes.com/en/contao/plugins/responsive-slider">buy pro version now</a>.';
 $GLOBALS['TL_LANG']['tl_module']['rsts_template'][0] = 'Template';
 $GLOBALS['TL_LANG']['tl_module']['rsts_template'][1] = 'Choose the slider template.';
 $GLOBALS['TL_LANG']['tl_module']['rsts_customSkin'][0] = 'Individual skin';
