@@ -39,6 +39,10 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_type'] = array(
 	'options' => array('slide' => 'slide', 'fade' => 'fade'),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
+// For backwards compatibility
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_direction'] = array(
+	'sql' => "varchar(64) NOT NULL default ''",
+);
 // if true the slides get shuffled once on initialization
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_random'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_random'],
