@@ -234,7 +234,7 @@ class Slider extends \Backend
 	 */
 	public function contentOnloadCallback($dc)
 	{
-		if (empty($dc->id)) {
+		if (!$dc->id) {
 			return;
 		}
 
