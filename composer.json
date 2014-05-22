@@ -26,7 +26,7 @@
 		"classmap":["src/"]
 	},
 	"replace":{
-		"contao-legacy/rocksolid-slider":"*"
+		"contao-legacy/rocksolid-slider":"self.version"
 	},
 	"extra":{
 		"contao":{
