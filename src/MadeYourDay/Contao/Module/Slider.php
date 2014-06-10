@@ -42,11 +42,27 @@ class Slider extends \Module
 			return $template->parse();
 		}
 
-		if (!$this->rsts_id) {
+		if ($this->rsts_content_type === 'rsts_news') {
+			$newsModule = new SliderNews($this->objModel, $this->strColumn);
+			$this->newsArticles = $newsModule->getNewsArticles();
+			if (!count($this->newsArticles)) {
+				// Return if there are no news articles
+				return '';
+			}
+		}
+		else if ($this->rsts_content_type === 'rsts_events') {
+			$eventsModule = new SliderEvents($this->objModel, $this->strColumn);
+			$this->eventItems = $eventsModule->getEventItems();
+			if (!count($this->eventItems)) {
+				// Return if there are no events
+				return '';
+			}
+		}
+		else if ($this->rsts_content_type === 'rsts_images' || !$this->rsts_id) {
 
 			$this->multiSRC = deserialize($this->multiSRC);
 			if (!is_array($this->multiSRC) || !count($this->multiSRC)) {
-				// Return if there is no slider id and no images
+				// Return if there are no images
 				return '';
 			}
 
@@ -170,10 +186,26 @@ class Slider extends \Module
 		}
 
 		$this->Template->images = $images;
-		$this->Template->slides = array();
-		if ($this->rsts_id) {
-			$this->Template->slides = $this->parseSlides(SlideModel::findPublishedByPid($this->rsts_id));
+		$slides = array();
+		if (isset($this->newsArticles)) {
+			foreach ($this->newsArticles as $newsArticle) {
+				$slides[] = array(
+					'text' => $newsArticle,
+				);
+			}
 		}
+		else if (isset($this->eventItems)) {
+			foreach ($this->eventItems as $eventItem) {
+				$slides[] = array(
+					'text' => $eventItem,
+				);
+			}
+		}
+		else if (isset($this->slider->id)) {
+			$slides = $this->parseSlides(SlideModel::findPublishedByPid($this->slider->id));
+		}
+
+		$this->Template->slides = $slides;
 
 		$options = array();
 

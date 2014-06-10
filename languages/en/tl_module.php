@@ -12,9 +12,18 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
+$GLOBALS['TL_LANG']['tl_module']['rsts_news_legend'] = 'News Settings';
+$GLOBALS['TL_LANG']['tl_module']['rsts_events_legend'] = 'Event Settings';
+$GLOBALS['TL_LANG']['tl_module']['rsts_images_legend'] = 'Images';
 $GLOBALS['TL_LANG']['tl_module']['rsts_carousel_legend'] = 'Carousel Settings';
 $GLOBALS['TL_LANG']['tl_module']['rsts_autoplay_legend'] = 'Autoplay Settings';
 $GLOBALS['TL_LANG']['tl_module']['rsts_navigation_legend'] = 'Navigation Settings';
+$GLOBALS['TL_LANG']['tl_module']['rsts_content_type'][0] = 'Slider content type';
+$GLOBALS['TL_LANG']['tl_module']['rsts_content_type'][1] = 'Select the type of the contents source.';
+$GLOBALS['TL_LANG']['tl_module']['rsts_content_types']['rsts_default'] = 'Slider';
+$GLOBALS['TL_LANG']['tl_module']['rsts_content_types']['rsts_news'] = 'News archive';
+$GLOBALS['TL_LANG']['tl_module']['rsts_content_types']['rsts_events'] = 'Events';
+$GLOBALS['TL_LANG']['tl_module']['rsts_content_types']['rsts_images'] = 'Images';
 $GLOBALS['TL_LANG']['tl_module']['rsts_id'][0] = 'Slider';
 $GLOBALS['TL_LANG']['tl_module']['rsts_id'][1] = 'Edit the content at <i>Content › RockSolid Slider</i>.';
 $GLOBALS['TL_LANG']['tl_module']['rsts_type'][0] = 'Animation type';

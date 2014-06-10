@@ -8,6 +8,8 @@
 
 namespace MadeYourDay\Contao;
 
+use MadeYourDay\Contao\Module\SliderEvents;
+
 /**
  * RockSolid Slider DCA
  *
@@ -245,9 +247,51 @@ class Slider extends \Backend
 		}
 
 		if ($contentElement->type === 'rocksolid_slider') {
-			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['mandatory'] = false;
 			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['isGallery'] = true;
 			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['filesOnly'] = true;
+			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['extensions'] = $GLOBALS['TL_CONFIG']['validImageTypes'];
 		}
+	}
+
+	/**
+	 * On load callback for tl_module
+	 *
+	 * @param \DataContainer $dc
+	 * @return void
+	 */
+	public function moduleOnloadCallback($dc)
+	{
+		if (!$dc->id) {
+			return;
+		}
+
+		$module = \ModuleModel::findByPk($dc->id);
+
+		if (!$module || !isset($module->type)) {
+			return;
+		}
+
+		if ($module->type === 'rocksolid_slider') {
+			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['isGallery'] = true;
+			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['filesOnly'] = true;
+			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['extensions'] = $GLOBALS['TL_CONFIG']['validImageTypes'];
+		}
+	}
+
+	/**
+	 * parseFrontendTemplate hook for SliderEvents::getEventItems()
+	 *
+	 * @param  string $contents HTML output
+	 * @param  string $template Temmplate name
+	 * @return string           Modified HTML output
+	 */
+	public function parseEventsTemplateHook($contents, $template)
+	{
+		// Only modify output of event templates
+		if (substr($template, 0, 6) === 'event_') {
+			$contents = SliderEvents::TEMPLATE_SEPARATOR . $contents;
+		}
+
+		return $contents;
 	}
 }
