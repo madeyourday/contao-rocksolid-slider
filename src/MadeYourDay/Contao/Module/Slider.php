@@ -235,7 +235,7 @@ class Slider extends \Module
 		}
 
 		// positive numbers
-		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart', 'slideMaxCount', 'slideMinSize', 'prevNextSteps') as $key) {
+		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart', 'slideMaxCount', 'slideMinSize', 'prevNextSteps', 'visibleAreaMax') as $key) {
 			if (! empty($this->arrData['rsts_' . $key]) && $this->arrData['rsts_' . $key] > 0) {
 				$options[$key] = $this->arrData['rsts_' . $key] * 1;
 			}
