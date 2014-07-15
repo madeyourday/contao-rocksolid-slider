@@ -9,7 +9,7 @@
 		<div data-rsts-type="image">
 			<img src="<?php echo $image->src ?>"<?php echo $image->imgSize ?> alt="<?php echo $image->alt ?>" />
 			<?php if ($image->href): ?>
-				<a href="<?php echo $image->href ?>">more...</a>
+				<a href="<?php echo $image->href ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['more'] ?></a>
 			<?php endif ?>
 			<?php if ($image->caption): ?>
 				<p class="caption"><?php echo $image->caption ?></p>
@@ -53,7 +53,7 @@
 			<div data-rsts-type="image" <?php echo $attributes ?>>
 				<img src="<?php echo $slide['image']->src ?>"<?php echo $slide['image']->imgSize ?> alt="<?php echo $slide['image']->alt ?>" <?php echo $imageAttributes ?> />
 				<?php if ($slide['image']->href): ?>
-					<a class="rsts-details" href="<?php echo $slide['image']->href ?>">more...</a>
+					<a class="rsts-details" href="<?php echo $slide['image']->href ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['more'] ?></a>
 				<?php endif ?>
 				<?php if ($slide['image']->caption): ?>
 					<p class="rsts-text"><?php echo $slide['image']->caption ?></p>
