@@ -55,7 +55,7 @@
 		<?php if (! empty($slide['videoURL'])): ?>
 
 			<div data-rsts-type="video" data-rsts-video="<?php echo $slide['videoURL'] ?>" <?php echo $attributes ?>>
-				<img src="<?php echo $slide['image']->src ?>" <?php echo $imageAttributes ?> />
+				<img src="<?php echo $slide['image']->src ?>" alt="<?php echo $slide['image']->alt ?>" <?php echo $imageAttributes ?> />
 
 		<?php elseif (! empty($slide['image'])): ?>
 
