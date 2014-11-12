@@ -118,7 +118,7 @@ class Slider extends \Module
 
 				$file = new \File($files->path, true);
 
-				if (!$file->isGdImage) {
+				if (!$file->isGdImage && !$file->isImage) {
 					continue;
 				}
 
@@ -300,7 +300,7 @@ class Slider extends \Module
 					: \FilesModel::findByUuid($slide['singleSRC'])
 				) &&
 				($fileObject = new \File($file->path, true)) &&
-				$fileObject->isGdImage
+				($fileObject->isGdImage || $fileObject->isImage)
 			) {
 				$meta = $this->getMetaData($file->meta, $objPage->language);
 				$slide['image'] = new \stdClass;
@@ -316,6 +316,7 @@ class Slider extends \Module
 			}
 
 			if ($slide['videoURL'] && empty($slide['image'])) {
+				$slide['image'] = new \stdClass;
 				if (preg_match(
 					'(^
 						https?://  # http or https
@@ -329,17 +330,19 @@ class Slider extends \Module
 					html_entity_decode($slide['videoURL']), $matches)
 				) {
 					$video = $matches[1];
-					$slide['image'] = new \stdClass;
 					$slide['image']->src = '//img.youtube.com/vi/' . $video . '/0.jpg';
-					$slide['image']->imgSize = '';
-					$slide['image']->alt = '';
 				}
 				else {
-					$slide['image'] = new \stdClass;
 					// Grey dummy image
 					$slide['image']->src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAJCAMAAAAM9FwAAAAAA1BMVEXGxsbd/8BlAAAAFUlEQVR42s3BAQEAAACAkP6vdiO6AgCZAAG/wrlvAAAAAElFTkSuQmCC';
-					$slide['image']->imgSize = '';
-					$slide['image']->alt = '';
+				}
+				$slide['image']->imgSize = '';
+				$slide['image']->alt = '';
+				if (version_compare(VERSION, '3.4', '>=')) {
+					$slide['image']->picture = array(
+						'img' => array('src' => $slide['image']->src, 'srcset' => $slide['image']->src),
+						'sources' => array(),
+					);
 				}
 			}
 
@@ -350,7 +353,7 @@ class Slider extends \Module
 					: \FilesModel::findByUuid($slide['backgroundImage'])
 				) &&
 				($fileObject = new \File($file->path, true)) &&
-				$fileObject->isGdImage
+				($fileObject->isGdImage || $fileObject->isImage)
 			) {
 				$meta = $this->getMetaData($file->meta, $objPage->language);
 				$slide['backgroundImage'] = new \stdClass;

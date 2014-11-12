@@ -7,7 +7,11 @@
 	<?php foreach ($this->images as $image): ?>
 
 		<div data-rsts-type="image">
-			<img src="<?php echo $image->src ?>"<?php echo $image->imgSize ?> alt="<?php echo $image->alt ?>" />
+			<?php if (version_compare(VERSION, '3.4', '<')): ?>
+				<img src="<?php echo $image->src ?>"<?php echo $image->imgSize ?> alt="<?php echo $image->alt ?>" />
+			<?php else: ?>
+				<?php $this->insert('picture_default', $image->picture) ?>
+			<?php endif ?>
 			<?php if ($image->href): ?>
 				<a href="<?php echo $image->href ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['more'] ?></a>
 			<?php endif ?>
@@ -42,7 +46,7 @@
 			}
 			$imageAttributes = implode(' ', $imageAttributes);
 
-			$backgroundAttributes = array();
+			$backgroundAttributes = array('data-rsts-background');
 			if (!empty($slide['backgroundScaleMode'])) {
 				$backgroundAttributes[] = 'data-rsts-scale-mode="' . $slide['backgroundScaleMode'] . '"';
 			}
@@ -55,12 +59,28 @@
 		<?php if (! empty($slide['videoURL'])): ?>
 
 			<div data-rsts-type="video" data-rsts-video="<?php echo $slide['videoURL'] ?>" <?php echo $attributes ?>>
-				<img src="<?php echo $slide['image']->src ?>" alt="<?php echo $slide['image']->alt ?>" <?php echo $imageAttributes ?> />
+				<?php if (version_compare(VERSION, '3.4', '<')): ?>
+					<img src="<?php echo $slide['image']->src ?>"<?php echo $slide['image']->imgSize ?> alt="<?php echo $slide['image']->alt ?>" <?php echo $imageAttributes ?> />
+				<?php else: ?>
+					<?php
+						ob_start();
+						$this->insert('picture_default', $slide['image']->picture);
+						echo preg_replace('(<img\\s)i', '<img ' . $imageAttributes . ' ', ob_get_clean());
+					?>
+				<?php endif ?>
 
 		<?php elseif (! empty($slide['image'])): ?>
 
 			<div data-rsts-type="image" <?php echo $attributes ?>>
-				<img src="<?php echo $slide['image']->src ?>"<?php echo $slide['image']->imgSize ?> alt="<?php echo $slide['image']->alt ?>" <?php echo $imageAttributes ?> />
+				<?php if (version_compare(VERSION, '3.4', '<')): ?>
+					<img src="<?php echo $slide['image']->src ?>"<?php echo $slide['image']->imgSize ?> alt="<?php echo $slide['image']->alt ?>" <?php echo $imageAttributes ?> />
+				<?php else: ?>
+					<?php
+						ob_start();
+						$this->insert('picture_default', $slide['image']->picture);
+						echo preg_replace('(<img\\s)i', '<img ' . $imageAttributes . ' ', ob_get_clean());
+					?>
+				<?php endif ?>
 				<?php if ($slide['image']->href): ?>
 					<a class="rsts-details" href="<?php echo $slide['image']->href ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['more'] ?></a>
 				<?php endif ?>
@@ -76,13 +96,21 @@
 		<?php endif ?>
 
 		<?php if (!empty($slide['backgroundVideos'])): ?>
-			<video data-rsts-background<?php if (!empty($slide['backgroundImage'])): ?> poster="<?php echo $slide['backgroundImage']->src ?>"<?php endif ?> <?php echo $backgroundAttributes ?>>
+			<video<?php if (!empty($slide['backgroundImage'])): ?> poster="<?php echo $slide['backgroundImage']->src ?>"<?php endif ?> <?php echo $backgroundAttributes ?>>
 				<?php foreach ($slide['backgroundVideos'] as $video): ?>
 					<source src="<?php echo TL_FILES_URL . $video->path ?>" type="video/<?php echo $video->extension ?>" />
 				<?php endforeach ?>
 			</video>
 		<?php elseif (!empty($slide['backgroundImage'])): ?>
-			<img data-rsts-background src="<?php echo $slide['backgroundImage']->src ?>"<?php echo $slide['backgroundImage']->imgSize ?> alt="<?php echo $slide['backgroundImage']->alt ?>" <?php echo $backgroundAttributes ?> />
+			<?php if (version_compare(VERSION, '3.4', '<')): ?>
+				<img src="<?php echo $slide['backgroundImage']->src ?>"<?php echo $slide['backgroundImage']->imgSize ?> alt="<?php echo $slide['backgroundImage']->alt ?>" <?php echo $backgroundAttributes ?> />
+			<?php else: ?>
+				<?php
+					ob_start();
+					$this->insert('picture_default', $slide['backgroundImage']->picture);
+					echo preg_replace('(<img\\s)i', '<img ' . $backgroundAttributes . ' ', ob_get_clean());
+				?>
+			<?php endif ?>
 		<?php endif ?>
 
 		</div>
