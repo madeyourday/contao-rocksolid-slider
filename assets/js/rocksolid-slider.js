@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.4.0 */
+/*! rocksolid-slider v1.4.1 */
 (function($, window, document) {
 
 var Rst = {};
@@ -32,7 +32,10 @@ Rst.Slide = (function() {
 			name: this.content.attr('data-rsts-name') || this.content.attr('title')
 		};
 
-		if (element.nodeName === 'IMG') {
+		if (
+			element.nodeName.toLowerCase() === 'img'
+			|| element.nodeName.toLowerCase() === 'picture'
+		) {
 			this.type = 'image';
 		}
 		this.type = this.content.attr('data-rsts-type') || this.type || 'default';
@@ -63,7 +66,7 @@ Rst.Slide = (function() {
 			|| this.slider.device === 'iPod'
 		) {
 			this.element.find('[data-rsts-background]').each(function() {
-				if (this.nodeName !== 'VIDEO') {
+				if (this.nodeName.toLowerCase() !== 'video') {
 					return;
 				}
 				var $this = $(this);
@@ -78,15 +81,24 @@ Rst.Slide = (function() {
 			});
 		}
 
-		this.backgrounds = this.element.find('[data-rsts-background]')
-			.attr('autoplay', true)
-			.attr('loop', true)
-			.css({
+		this.backgrounds = [];
+		this.element.find('[data-rsts-background]').each(function() {
+			var element = $(this);
+			if (element.is('img') && element.parent().is('picture')) {
+				element = element.parent();
+			}
+			if (element.is('video')) {
+				element.attr('autoplay', true).attr('loop', true);
+			}
+			element.css({
 				position: 'absolute',
 				top: 0,
 				left: 0
-			})
-			.prependTo(this.element);
+			});
+			self.backgrounds.push(element[0]);
+		});
+
+		this.backgrounds = $(this.backgrounds).prependTo(this.element);
 
 		if (this.backgrounds.length) {
 			this.element.children().last().css({
@@ -164,8 +176,8 @@ Rst.Slide = (function() {
 	 * @var object regular expressions for video URLs
 	 */
 	Slide.prototype.videoRegExp = {
-		youtube: /^https?:\/\/(?:www\.youtube\.com\/(?:watch\?v=|v\/|embed\/)|youtu\.be\/)([0-9a-z_\-]{11})(?:$|&|\/)/i,
-		vimeo: /^https?:\/\/(?:player\.)?vimeo\.com\/(?:video\/)?([0-9]+)/i
+		youtube: /^https?:\/\/(?:www\.youtube\.com\/(?:watch\?v=|v\/|embed\/)|youtu\.be\/)([0-9a-z_\-]{11})(?:$|&|\?|#|\/)(?:(?:.*[?&#]|)t=([0-9hms]+))?/i,
+		vimeo: /^https?:\/\/(?:player\.)?vimeo\.com\/(?:video\/)?([0-9]+)(?:.*#t=([0-9hms]+))?/i
 	};
 
 	/**
@@ -185,6 +197,8 @@ Rst.Slide = (function() {
 	Slide.prototype.size = function(x, y, ret) {
 
 		var autoSize = !x || !y;
+
+		this.updateResponsiveImages(true);
 
 		if (x && ! y) {
 			this.slider.modify(this.element, {width: x, height: ''});
@@ -216,6 +230,24 @@ Rst.Slide = (function() {
 			x: x,
 			y: y
 		};
+
+	};
+
+	/**
+	 * update responsive images if picturefill or respimage are present
+	 */
+	Slide.prototype.updateResponsiveImages = function(reevaluate) {
+
+		var polyfill = window.picturefill || window.respimage;
+
+		if (!polyfill) {
+			return;
+		}
+
+		polyfill({
+			elements: this.element.find('img').get(),
+			reevaluate: !!reevaluate
+		});
 
 	};
 
@@ -256,7 +288,11 @@ Rst.Slide = (function() {
 		var self = this;
 
 		this.backgrounds.each(function() {
-			self.scaleImage($(this), x, y);
+			var element = $(this);
+			if (element.is('picture')) {
+				element = element.find('img').first();
+			}
+			self.scaleImage(element, x, y);
 		});
 
 	};
@@ -336,7 +372,7 @@ Rst.Slide = (function() {
 		element = $(element);
 		var size = {};
 
-		if (element[0].nodeName === 'IMG') {
+		if (element[0].nodeName.toLowerCase() === 'img') {
 
 			if ('naturalWidth' in new Image()) {
 				size.x = element[0].naturalWidth;
@@ -350,7 +386,7 @@ Rst.Slide = (function() {
 			}
 
 		}
-		else if (element[0].nodeName === 'VIDEO') {
+		else if (element[0].nodeName.toLowerCase() === 'video') {
 
 			size.x = element[0].videoWidth;
 			size.y = element[0].videoHeight;
@@ -506,7 +542,7 @@ Rst.Slide = (function() {
 	Slide.prototype.startVideo = function() {
 
 		var self = this;
-		var videoId, apiCallback, matches;
+		var videoId, apiCallback, matches, time;
 
 		this.slider.stopAutoplay(true);
 
@@ -515,12 +551,21 @@ Rst.Slide = (function() {
 			this.element.addClass(this.slider.options.cssPrefix + 'video-youtube');
 
 			videoId = matches[1];
+			time = matches[2];
+			if (time) {
+				time = time.split(/[hm]/).reverse();
+				time[0] = parseInt(time[0] || 0, 10);
+				time[1] = parseInt(time[1] || 0, 10);
+				time[2] = parseInt(time[2] || 0, 10);
+				time = time[0] + (time[1] * 60) + (time[2] * 60 * 60);
+			}
 			this.videoElement = $(document.createElement('iframe'))
 				.addClass(this.slider.options.cssPrefix + 'video-iframe')
 				.attr('src',
 					'http://www.youtube.com/embed/' +
 					videoId +
-					'?autoplay=1&enablejsapi=1&wmode=opaque'
+					'?autoplay=1&enablejsapi=1&wmode=opaque' +
+					(time ? '&start=' + time : '')
 				)
 				.attr('frameborder', 0)
 				.attr('allowfullscreen', 'allowfullscreen')
@@ -559,12 +604,14 @@ Rst.Slide = (function() {
 			this.element.addClass(this.slider.options.cssPrefix + 'video-vimeo');
 
 			videoId = matches[1];
+			time = matches[2];
 			this.videoElement = $(document.createElement('iframe'))
 				.addClass(this.slider.options.cssPrefix + 'video-iframe')
 				.attr('src',
 					'http://player.vimeo.com/video/' +
 					videoId +
-					'?autoplay=1&api=1'
+					'?autoplay=1&api=1' +
+					(time ? '#t=' + time : '')
 				)
 				.attr('frameborder', 0)
 				.attr('allowfullscreen', 'allowfullscreen')
@@ -1942,6 +1989,16 @@ Rst.Slider = (function() {
 			if (pauseAutoplay) {
 				this.pauseAutoplay();
 			}
+			if (
+				this.elements.main.css('position') === 'static'
+				|| this.elements.main.css('position') === 'relative'
+			) {
+				// Prevent scrolling issues, see #18
+				this.elements.main.css(
+					'margin-bottom',
+					this.elements.main.outerHeight(true) + 100 + 'px'
+				);
+			}
 			this.elements.view.css({display: 'none'});
 			if (this.nav.elements.main) {
 				this.nav.elements.main.css({display: 'none'});
@@ -1963,6 +2020,7 @@ Rst.Slider = (function() {
 			if (this.elements.footer) {
 				this.elements.footer.css({display: ''});
 			}
+			this.elements.main.css('margin-bottom', '');
 			if (pauseAutoplay) {
 				this.playAutoplay();
 			}
@@ -2142,7 +2200,20 @@ Rst.Slider = (function() {
 			move: 'mousemove'
 		};
 
-		if (window.navigator.msPointerEnabled && window.navigator.msMaxTouchPoints) {
+		if (window.navigator.pointerEnabled && window.navigator.maxTouchPoints) {
+			eventNames = {
+				start: 'pointerdown',
+				stop: 'pointerup',
+				move: 'pointermove'
+			};
+			this.elements.crop.css('touch-action', 'pan-' + (this.options.direction === 'x' ? 'y' : 'x') + ' pinch-zoom double-tap-zoom');
+			this.elements.main.on('pointerdown', function(event) {
+				if (event.originalEvent.pointerType === 'touch') {
+					self.setTouch(true);
+				}
+			});
+		}
+		else if (window.navigator.msPointerEnabled && window.navigator.msMaxTouchPoints) {
 			eventNames = {
 				start: 'MSPointerDown',
 				stop: 'MSPointerUp',
@@ -2196,7 +2267,10 @@ Rst.Slider = (function() {
 		}
 
 		// detect mouse or touch event
-		if (window.navigator.msPointerEnabled && window.navigator.msMaxTouchPoints) {
+		if (window.navigator.pointerEnabled && window.navigator.maxTouchPoints) {
+			this.setTouch(event.originalEvent.pointerType === 'touch');
+		}
+		else if (window.navigator.msPointerEnabled && window.navigator.msMaxTouchPoints) {
 			this.setTouch(event.originalEvent.pointerType === event.originalEvent.MSPOINTER_TYPE_TOUCH);
 		}
 		else {
