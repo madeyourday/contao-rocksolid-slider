@@ -35,6 +35,17 @@
 				}
 				$attributes[] = 'data-rsts-center="' . $slide['centerContent'] . '"';
 			}
+			if (!empty($slide['slideClass'])) {
+				$attributes[] = 'class="' . $slide['slideClass'] . '"';
+			}
+			if (!empty($slide['invertControls'])) {
+				$slide['sliderClass'] = (empty($slide['sliderClass']) ? '' : $slide['sliderClass'] . ' ')
+					. (empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix'])
+					. 'invert-controls';
+			}
+			if (!empty($slide['sliderClass'])) {
+				$attributes[] = 'data-rsts-class="' . $slide['sliderClass'] . '"';
+			}
 			$attributes = implode(' ', $attributes);
 
 			$imageAttributes = array();
