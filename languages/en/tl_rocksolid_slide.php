@@ -63,8 +63,15 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContents']['false'] = 'Not cent
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContents']['x'] = 'Horizontal';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContents']['y'] = 'Vertical';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContents']['true'] = 'Horizontal and vertical';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['invertControls'][0] = 'Invert slider controls';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['invertControls'][1] = 'Inverts the slider controls for this slide (not applicable for all skins).';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['background_legend'] = 'Background';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['getPro'] = 'This feature requires the pro version of the slider, <a target="_blank" href="http://rocksolidthemes.com/en/contao/plugins/responsive-slider">buy pro version now</a>.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['expert_legend'] = 'Expert settings';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['slideClass'][0] = 'CSS class';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['slideClass'][1] = 'One or more classes for this slide element.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['sliderClass'][0] = 'Slider CSS class';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['sliderClass'][1] = 'This class gets assigned to the slider once this slide is active.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['publish_legend'] = 'Publish';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['published'][0] = 'Publish slide';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['published'][1] = 'Display the slide on the website.';
