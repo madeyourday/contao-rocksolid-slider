@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.4.1 */
+/*! rocksolid-slider v1.4.2 */
 (function($, window, document) {
 
 var Rst = {};
@@ -28,8 +28,11 @@ Rst.Slide = (function() {
 
 		this.content = $(element);
 
+		var sliderClasses = this.content.attr('data-rsts-class');
+
 		this.data = {
-			name: this.content.attr('data-rsts-name') || this.content.attr('title')
+			name: this.content.attr('data-rsts-name') || this.content.attr('title'),
+			sliderClasses: (sliderClasses && sliderClasses.split(' ')) || []
 		};
 
 		if (
@@ -850,6 +853,12 @@ Rst.Slider = (function() {
 			self.resize();
 		});
 		this.resize();
+
+		$(window).on('domready.rsts load.rsts', function(){
+			if (self.windowSizeHasChanged()) {
+				self.resize();
+			}
+		});
 
 		this.nav.combineItems();
 
@@ -1722,6 +1731,8 @@ Rst.Slider = (function() {
 			0;
 		var keepSlides = [];
 		var activeSlides = [];
+		var allClasses = [];
+		var activeClasses = [];
 
 		for (var i = this.slideIndex - preloadCount; i <= this.slideIndex + preloadCount + visibleCount - 1; i++) {
 			keepSlides.push(i < 0
@@ -1739,6 +1750,7 @@ Rst.Slider = (function() {
 		}
 
 		$.each(this.slides, function(i, slide) {
+			$.merge(allClasses, slide.data.sliderClasses);
 			if (slide.isInjected() && $.inArray(i, keepSlides) === -1) {
 				if (
 					self.options.type === 'fade' &&
@@ -1762,7 +1774,13 @@ Rst.Slider = (function() {
 		this.nav.setActive(activeSlides);
 		$.each(activeSlides, function(i, slideIndex) {
 			self.slides[slideIndex].setState('active');
+			$.merge(activeClasses, self.slides[slideIndex].data.sliderClasses);
 		});
+
+		this.elements.main.removeClass($.grep(allClasses, function(className) {
+			return $.inArray(className, activeClasses) === -1;
+		}).join(' '));
+		this.elements.main.addClass(activeClasses.join(' '));
 
 		if (this.options.deepLinkPrefix && this.getIndexFromUrl() !== this.slideIndex) {
 			if (this.slideIndex) {
@@ -1791,6 +1809,10 @@ Rst.Slider = (function() {
 		if (this.preloadOnCleanup) {
 			this.preloadOnCleanup = false;
 			this.preloadSlides(this.slideIndex);
+		}
+
+		if (this.windowSizeHasChanged()) {
+			this.resize();
 		}
 
 		this.elements.main.trigger({
@@ -1974,6 +1996,26 @@ Rst.Slider = (function() {
 	};
 
 	/**
+	 * @return true if the size of the window has changed since the last call
+	 */
+	Slider.prototype.windowSizeHasChanged = function() {
+
+		var changed = !(
+			this.lastWindowDimensions
+			&& this.lastWindowDimensions.x === $(window).width()
+			&& this.lastWindowDimensions.y === $(window).height()
+		);
+
+		this.lastWindowDimensions = {
+			x: $(window).width(),
+			y: $(window).height()
+		};
+
+		return changed;
+
+	};
+
+	/**
 	 * recalculates the size of the slider
 	 */
 	Slider.prototype.resize = function() {
@@ -2115,6 +2157,9 @@ Rst.Slider = (function() {
 		}
 
 		this.checkVisibility();
+
+		// Update last window dimensions
+		this.windowSizeHasChanged();
 
 	};
 
