@@ -6,7 +6,7 @@
 
 	<?php foreach ($this->images as $image): ?>
 
-		<div data-rsts-type="image">
+		<div data-rsts-type="image"<?php if (!empty($this->rsts_invertControls)): ?> data-rsts-class="<?php echo empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix'] ?>invert-controls"<?php endif ?>>
 			<?php if (version_compare(VERSION, '3.4', '<')): ?>
 				<img src="<?php echo $image->src ?>"<?php echo $image->imgSize ?> alt="<?php echo $image->alt ?>">
 			<?php else: ?>
@@ -38,7 +38,10 @@
 			if (!empty($slide['slideClass'])) {
 				$attributes[] = 'class="' . $slide['slideClass'] . '"';
 			}
-			if (!empty($slide['invertControls'])) {
+			if (
+				(!empty($slide['invertControls']) && empty($this->rsts_invertControls))
+				|| (empty($slide['invertControls']) && !empty($this->rsts_invertControls))
+			) {
 				$slide['sliderClass'] = (empty($slide['sliderClass']) ? '' : $slide['sliderClass'] . ' ')
 					. (empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix'])
 					. 'invert-controls';
