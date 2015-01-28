@@ -19,6 +19,9 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 		'ctable' => array('tl_content'),
 		'switchToEdit' => true,
 		'enableVersioning' => true,
+		'onload_callback' => array(
+			array('MadeYourDay\\Contao\\Slider', 'slideOnloadCallback'),
+		),
 		'sql' => array(
 			'keys' => array(
 				'id' => 'primary',

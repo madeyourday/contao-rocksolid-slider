@@ -60,7 +60,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_template'] = array(
 	'inputType' => 'select',
 	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderTemplates'),
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(32) NOT NULL default ''",
+	'sql' => "varchar(32) NOT NULL default 'rsts_default'",
 );
 // slider type (slide, side-slide or fade)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_type'] = array(
