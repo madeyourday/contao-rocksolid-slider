@@ -24,6 +24,19 @@ abstract class SliderRunonce
 	{
 		$database = \Database::getInstance();
 
+		// Copy license key from extension repository
+		if (
+			!\Config::get('rocksolid_slider_license')
+			&& $database->tableExists('tl_repository_installs')
+			&& $database->fieldExists('lickey', 'tl_repository_installs')
+			&& $database->fieldExists('extension', 'tl_repository_installs')
+		) {
+			$result = $database->prepare('SELECT lickey FROM tl_repository_installs WHERE extension = \'rocksolid-slider-pro\'')->execute();
+			if ($result && Slider::checkLicense((string)$result->lickey)) {
+				\Config::persist('rocksolid_slider_license', (string)$result->lickey);
+			}
+		}
+
 		// Fix the singleSRC data type for Contao 3.1 and below
 		if (version_compare(VERSION, '3.2', '<') && $database->tableExists('tl_rocksolid_slide')) {
 			$fields = $database->listFields('tl_rocksolid_slide');

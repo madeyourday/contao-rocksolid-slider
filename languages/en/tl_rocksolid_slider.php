@@ -14,6 +14,8 @@
 
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['new'][0] = 'New slider';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['new'][1] = 'Create a new slider';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['editLicense'][0] = 'License key';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['editLicense'][1] = 'Edit the license key';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['edit'][0] = 'Edit slider';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['edit'][1] = 'Edit slider ID %s';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['editheader'][0] = 'Edit slider settings';
@@ -32,3 +34,6 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][0] = 'Optional: Choose im
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][1] = 'You can choose multiple images if you want to display them together in an image only slider.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][0] = 'Image order';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][1] = '';
+
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['proFieldDescription'] = 'This requires the pro version. <a href="%s"><b>Enter a license key</b></a>.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['proLegendDescription'] = 'This feature requires the pro version of the slider, <a class="tl_submit" href="%s">enter a license key</a> or <a class="tl_submit" target="_blank" href="http://rocksolidthemes.com/en/contao/plugins/responsive-slider">buy pro version now</a>.';

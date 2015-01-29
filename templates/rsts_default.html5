@@ -6,7 +6,7 @@
 
 	<?php foreach ($this->images as $image): ?>
 
-		<div data-rsts-type="image">
+		<div data-rsts-type="image"<?php if (!empty($this->rsts_invertControls)): ?> data-rsts-class="<?php echo empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix'] ?>invert-controls"<?php endif ?>>
 			<?php if (version_compare(VERSION, '3.4', '<')): ?>
 				<img src="<?php echo $image->src ?>"<?php echo $image->imgSize ?> alt="<?php echo $image->alt ?>">
 			<?php else: ?>
@@ -38,7 +38,10 @@
 			if (!empty($slide['slideClass'])) {
 				$attributes[] = 'class="' . $slide['slideClass'] . '"';
 			}
-			if (!empty($slide['invertControls'])) {
+			if (
+				(!empty($slide['invertControls']) && empty($this->rsts_invertControls))
+				|| (empty($slide['invertControls']) && !empty($this->rsts_invertControls))
+			) {
 				$slide['sliderClass'] = (empty($slide['sliderClass']) ? '' : $slide['sliderClass'] . ' ')
 					. (empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix'])
 					. 'invert-controls';
@@ -56,6 +59,15 @@
 				$imageAttributes[] = 'data-rsts-position="' . $slide['imagePosition'] . '"';
 			}
 			$imageAttributes = implode(' ', $imageAttributes);
+
+			$backgroundAttributes = array('data-rsts-background');
+			if (!empty($slide['backgroundScaleMode'])) {
+				$backgroundAttributes[] = 'data-rsts-scale-mode="' . $slide['backgroundScaleMode'] . '"';
+			}
+			if (!empty($slide['backgroundPosition'])) {
+				$backgroundAttributes[] = 'data-rsts-position="' . $slide['backgroundPosition'] . '"';
+			}
+			$backgroundAttributes = implode(' ', $backgroundAttributes);
 		?>
 
 		<?php if (! empty($slide['videoURL'])): ?>
@@ -97,6 +109,24 @@
 
 		<?php endif ?>
 
+		<?php if (!empty($slide['backgroundVideos'])): ?>
+			<video<?php if (!empty($slide['backgroundImage'])): ?> poster="<?php echo $slide['backgroundImage']->src ?>"<?php endif ?> <?php echo $backgroundAttributes ?>>
+				<?php foreach ($slide['backgroundVideos'] as $video): ?>
+					<source src="<?php echo TL_FILES_URL . $video->path ?>" type="video/<?php echo $video->extension ?>">
+				<?php endforeach ?>
+			</video>
+		<?php elseif (!empty($slide['backgroundImage'])): ?>
+			<?php if (version_compare(VERSION, '3.4', '<')): ?>
+				<img src="<?php echo $slide['backgroundImage']->src ?>"<?php echo $slide['backgroundImage']->imgSize ?> alt="<?php echo $slide['backgroundImage']->alt ?>" <?php echo $backgroundAttributes ?>>
+			<?php else: ?>
+				<?php
+					ob_start();
+					$this->insert('picture_default', $slide['backgroundImage']->picture);
+					echo preg_replace('(<img\\s)i', '<img ' . $backgroundAttributes . ' ', ob_get_clean());
+				?>
+			<?php endif ?>
+		<?php endif ?>
+
 		</div>
 
 	<?php endforeach ?>
@@ -104,5 +134,9 @@
 </div>
 
 <script>
+	jQuery('.mod_rocksolid_slider').last().find('video[data-rsts-background]').each(function() {
+		// Disable mejs for background videos
+		this.player = false;
+	});
 	jQuery('.mod_rocksolid_slider').last().rstSlider(<?php echo json_encode($this->options); ?>);
 </script>

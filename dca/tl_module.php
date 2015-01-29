@@ -12,14 +12,45 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,headline,type;{config_legend},rsts_id,rsts_type,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_getPro;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = array('MadeYourDay\\Contao\\Slider', 'moduleOnloadCallback');
 
+$GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'rsts_content_type';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,headline,type,rsts_content_type';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_default'] = '{title_legend},name,headline,type,rsts_content_type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_prevNextSteps,rsts_slideMinSize,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_news'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_news_legend},news_archives,numberOfItems,news_featured,skipFirst,news_template,news_metaFields;{config_legend},rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_prevNextSteps,rsts_slideMinSize,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_events'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_events_legend},cal_calendar,cal_noSpan,cal_format,cal_ignoreDynamic,cal_order,cal_readerModule,cal_limit,cal_template;{config_legend},rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_prevNextSteps,rsts_slideMinSize,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_images'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_images_legend},multiSRC;{config_legend},rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_prevNextSteps,rsts_slideMinSize,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['news_metaFields']['eval']['tl_class'] .= ' clr';
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_content_type'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_content_type'],
+	'default' => 'rsts_default',
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array(
+		'rsts_default',
+		'rsts_news',
+		'rsts_events',
+		'rsts_images',
+	),
+	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_content_types'],
+	'eval' => array(
+		'mandatory' => true,
+		'submitOnChange' => true,
+		'tl_class' => 'w50',
+	),
+	'sql' => "varchar(64) NOT NULL default 'rsts_default'",
+);
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_id'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_id'],
 	'exclude' => true,
 	'inputType' => 'select',
 	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderIds'),
-	'eval' => array('mandatory' => true),
+	'eval' => array(
+		'includeBlankOption' => true,
+		'mandatory' => true,
+	),
 	'sql' => "int(10) unsigned NOT NULL default '0'",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_template'] = array(
@@ -29,18 +60,27 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_template'] = array(
 	'inputType' => 'select',
 	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderTemplates'),
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(32) NOT NULL default ''",
+	'sql' => "varchar(32) NOT NULL default 'rsts_default'",
 );
-// slider type (slide or fade)
+// slider type (slide, side-slide or fade)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_type'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_type'],
 	'exclude' => true,
 	'inputType' => 'select',
-	'options' => array('slide' => 'slide', 'fade' => 'fade'),
+	'options' => array('slide' => 'slide', 'side-slide' => 'side-slide', 'fade' => 'fade'),
+	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
-// For backwards compatibility
+// "x" for horizontal or "y" for vertical
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_direction'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_direction'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array(
+		'x' => $GLOBALS['TL_LANG']['tl_module']['rsts_direction_x'],
+		'y' => $GLOBALS['TL_LANG']['tl_module']['rsts_direction_y'],
+	),
+	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
 // if true the slides get shuffled once on initialization
@@ -97,6 +137,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_skin'] = array(
 // - a css lenght value: e.g. "100%", "500px", "50em"
 // - "auto": get the size from the active slide dimensions at runtime
 //   height can be set to auto only if the direction is "x"
+// - "normalize": similar to auto but uses the size of the largest slide
 // - a proportion: keep a fixed proportion for the slides, e.g. "480x270"
 //   this must not set to both dimensions
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_width'] = array(
@@ -201,6 +242,14 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_controls'] = array(
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "char(1) NOT NULL default '1'",
 );
+// Adds data-rsts-class="rsts-invert-controls" to all slides
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_invertControls'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_invertControls'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "char(1) NOT NULL default ''",
+);
 // image scale mode (fit, crop, scale)
 // only works if width and height are not set to "auto"
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_scaleMode'] = array(
@@ -251,13 +300,55 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_captions'] = array(
 	'eval' => array('tl_class' => 'w50 m12'),
 	'sql' => "char(1) NOT NULL default '1'",
 );
-// get pro version
-$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_getPro'] = array(
-	'input_field_callback' => function() {
-		return '<div>'
-			. $GLOBALS['TL_LANG']['tl_module']['rsts_getPro']
-			. '</div>';
-	},
+// maximum number of visible slides
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_slideMaxCount'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_slideMaxCount'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20),
+	'eval' => array('tl_class' => 'w50', 'includeBlankOption' => true),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+// number of slides to navigate by clicking prev or next
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_prevNextSteps'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_prevNextSteps'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20),
+	'eval' => array('tl_class' => 'w50', 'includeBlankOption' => true),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+// the size of the area for the visible slide (0 = 0%, 1 = 100%)
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_visibleArea'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_visibleArea'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50 clr'),
+	'sql' => "double unsigned NOT NULL default '0'",
+);
+// maximum size of the area for the visible slide in px
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_visibleAreaMax'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_visibleAreaMax'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "double unsigned NOT NULL default '0'",
+);
+// minimal size of one slide in px
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_slideMinSize'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_slideMinSize'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+// combine navigation items if multiple slides are visible (default true)
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_combineNavItems'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_combineNavItems'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array('tl_class' => 'w50 m12'),
+	'sql' => "char(1) NOT NULL default '1'",
 );
 // custom slider skin (rsts_skin gets ignored if this is set)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_customSkin'] = array(

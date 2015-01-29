@@ -17,4 +17,4 @@ $GLOBALS['TL_LANG']['MOD']['rocksolid_slider'][1] = 'Edit slider and slider elem
 
 $GLOBALS['TL_LANG']['FMD']['rocksolid_slider'] =
 $GLOBALS['TL_LANG']['CTE']['rocksolid_slider'] =
-	array('RockSolid Slider', 'jQuery slider for images, videos and content elements.');
+	array('RockSolid Slider', 'jQuery slider for images, videos, news, events and content elements.');

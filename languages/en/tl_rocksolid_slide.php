@@ -66,7 +66,16 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContents']['true'] = 'Horizonta
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['invertControls'][0] = 'Invert slider controls';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['invertControls'][1] = 'Inverts the slider controls for this slide (not applicable for all skins).';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['background_legend'] = 'Background';
-$GLOBALS['TL_LANG']['tl_rocksolid_slide']['getPro'] = 'This feature requires the pro version of the slider, <a target="_blank" href="http://rocksolidthemes.com/en/contao/plugins/responsive-slider">buy pro version now</a>.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundImage'][0] = 'Background image';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundImage'][1] = 'Choose an image to display it in the background of the slide.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundVideos'][0] = 'Background video';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundVideos'][1] = 'Choose one or more video files to display a video in the background of the slide.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundImageSize'][0] = 'Background image size';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundImageSize'][1] = 'The background image size in pixels.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundScaleMode'][0] = 'Background scale mode';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundScaleMode'][1] = 'Scale mode of the background image or video.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundPosition'][0] = 'Background position';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundPosition'][1] = 'Position of the background image or video. This setting overwrites the module settings.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['expert_legend'] = 'Expert settings';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['slideClass'][0] = 'CSS class';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['slideClass'][1] = 'One or more classes for this slide element.';

@@ -66,7 +66,16 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slide']['centerContents']['true'] = 'Horizonta
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['invertControls'][0] = 'Slider-Navigation invertieren';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['invertControls'][1] = 'Invertiert die Slider-Navigation für diesen Slide (nicht auf alle Skins anwendbar).';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['background_legend'] = 'Hintergrund';
-$GLOBALS['TL_LANG']['tl_rocksolid_slide']['getPro'] = 'Für dieses Feature wird die Pro-Version des Sliders benötigt, <a target="_blank" href="http://rocksolidthemes.com/de/contao/plugins/responsive-slider">jetzt Pro-Version kaufen</a>.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundImage'][0] = 'Hintergrund-Bild';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundImage'][1] = 'Wählen Sie ein Bild aus, dass im Hintergrund des Slides angezeigt werden soll.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundVideos'][0] = 'Hintergrund-Video';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundVideos'][1] = 'Wählen Sie eine oder mehrere Videodateien aus, um im Hintergrund des Slides ein Video anzuzeigen.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundImageSize'][0] = 'Hintergrundbild Größe';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundImageSize'][1] = 'Die Größe des Hintergrundbildes in Pixel.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundScaleMode'][0] = 'Hintergrund-Skalierungsmodus';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundScaleMode'][1] = 'Skalierungsmodus des Hintergrundbildes bzw. des Hintergrundvideos.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundPosition'][0] = 'Hintergrundposition';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundPosition'][1] = 'Position des Hintergrundbildes oder Videos. Diese Einstellung überschreibt die Moduleinstellungen.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['expert_legend'] = 'Experten-Einstellungen';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['slideClass'][0] = 'CSS-Klasse';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['slideClass'][1] = 'Eine oder mehrere Klassen für das Slide-Element.';

@@ -42,19 +42,45 @@ class Slider extends \Module
 			return $template->parse();
 		}
 
-		// Return if there is no slider id
-		if (! $this->rsts_id) {
-			return '';
+		if ($this->rsts_content_type === 'rsts_news') {
+			$newsModule = new SliderNews($this->objModel, $this->strColumn);
+			$this->newsArticles = $newsModule->getNewsArticles();
+			if (!count($this->newsArticles)) {
+				// Return if there are no news articles
+				return '';
+			}
+		}
+		else if ($this->rsts_content_type === 'rsts_events') {
+			$eventsModule = new SliderEvents($this->objModel, $this->strColumn);
+			$this->eventItems = $eventsModule->getEventItems();
+			if (!count($this->eventItems)) {
+				// Return if there are no events
+				return '';
+			}
+		}
+		else if ($this->rsts_content_type === 'rsts_images' || !$this->rsts_id) {
+
+			$this->multiSRC = deserialize($this->multiSRC);
+			if (!is_array($this->multiSRC) || !count($this->multiSRC)) {
+				// Return if there are no images
+				return '';
+			}
+
+		}
+		else {
+
+			$this->slider = SliderModel::findByPk($this->rsts_id);
+
+			// Return if there is no slider
+			if (! $this->slider || $this->slider->id !== $this->rsts_id) {
+				return '';
+			}
+
+			$this->multiSRC = deserialize($this->slider->multiSRC);
+			$this->orderSRC = $this->slider->orderSRC;
+
 		}
 
-		$this->slider = SliderModel::findByPk($this->rsts_id);
-
-		// Return if there is no slider
-		if (! $this->slider || $this->slider->id !== $this->rsts_id) {
-			return '';
-		}
-
-		$this->multiSRC = deserialize($this->slider->multiSRC);
 		if (version_compare(VERSION, '3.2', '<')) {
 			$this->files = \FilesModel::findMultipleByIds($this->multiSRC);
 		}
@@ -112,14 +138,14 @@ class Slider extends \Module
 
 			}
 
-			if ($this->slider->orderSRC) {
+			if ($this->orderSRC) {
 				// Turn the order string into an array and remove all values
 				if (version_compare(VERSION, '3.2', '<')) {
-					$order = explode(',', $this->slider->orderSRC);
+					$order = explode(',', $this->orderSRC);
 					$order = array_map('intval', $order);
 				}
 				else {
-					$order = deserialize($this->slider->orderSRC);
+					$order = deserialize($this->orderSRC);
 				}
 				if (!$order || !is_array($order)) {
 					$order = array();
@@ -160,12 +186,31 @@ class Slider extends \Module
 		}
 
 		$this->Template->images = $images;
-		$this->Template->slides = $this->parseSlides(SlideModel::findPublishedByPid($this->rsts_id));
+		$slides = array();
+		if (isset($this->newsArticles)) {
+			foreach ($this->newsArticles as $newsArticle) {
+				$slides[] = array(
+					'text' => $newsArticle,
+				);
+			}
+		}
+		else if (isset($this->eventItems)) {
+			foreach ($this->eventItems as $eventItem) {
+				$slides[] = array(
+					'text' => $eventItem,
+				);
+			}
+		}
+		else if (isset($this->slider->id)) {
+			$slides = $this->parseSlides(SlideModel::findPublishedByPid($this->slider->id));
+		}
+
+		$this->Template->slides = $slides;
 
 		$options = array();
 
 		// strings
-		foreach (array('type', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode', 'imagePosition', 'deepLinkPrefix') as $key) {
+		foreach (array('type', 'direction', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode', 'imagePosition', 'deepLinkPrefix') as $key) {
 			if (! empty($this->arrData['rsts_' . $key])) {
 				$options[$key] = $this->arrData['rsts_' . $key];
 			}
@@ -185,14 +230,21 @@ class Slider extends \Module
 		}
 
 		// boolean
-		foreach (array('random', 'loop', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions', 'controls') as $key) {
+		foreach (array('random', 'loop', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions', 'controls', 'combineNavItems') as $key) {
 			$options[$key] = (bool) $this->arrData['rsts_' . $key];
 		}
 
 		// positive numbers
-		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart') as $key) {
+		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart', 'slideMaxCount', 'slideMinSize', 'prevNextSteps', 'visibleAreaMax') as $key) {
 			if (! empty($this->arrData['rsts_' . $key]) && $this->arrData['rsts_' . $key] > 0) {
 				$options[$key] = $this->arrData['rsts_' . $key] * 1;
+			}
+		}
+
+		// percentages
+		foreach (array('visibleArea') as $key) {
+			if (!empty($this->arrData['rsts_' . $key])) {
+				$options[$key] = $this->arrData['rsts_' . $key] / 100;
 			}
 		}
 
