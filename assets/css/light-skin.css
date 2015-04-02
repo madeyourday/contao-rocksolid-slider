@@ -23,10 +23,6 @@
   -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
-.rsts-skin-light .rsts-slide img {
-  width: 100%;
-  height: auto;
-}
 .rsts-skin-light .rsts-caption {
   position: absolute;
   top: 20px;
@@ -59,7 +55,8 @@
   -o-transform: translate(0, 0);
   transform: translate(0, 0);
 }
-.rsts-skin-light .rsts-prev, .rsts-skin-light .rsts-next {
+.rsts-skin-light .rsts-prev, .rsts-skin-light .rsts-next,
+.rsts-skin-light .rsts-thumbs-prev, .rsts-skin-light .rsts-thumbs-next {
   position: absolute;
   top: 50%;
   right: 20px;
@@ -87,7 +84,8 @@
   -moz-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.3), 0 0 0 1px #cccccc, 0 0 4px 4px rgba(111, 178, 235, 0), 0 0 1px 2px rgba(111, 178, 235, 0), inset 0 0 0 2px white, inset 0 1px 4px 1px rgba(0, 0, 0, 0.15);
   box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.3), 0 0 0 1px #cccccc, 0 0 4px 4px rgba(111, 178, 235, 0), 0 0 1px 2px rgba(111, 178, 235, 0), inset 0 0 0 2px white, inset 0 1px 4px 1px rgba(0, 0, 0, 0.15);
 }
-.rsts-skin-light .rsts-prev:after, .rsts-skin-light .rsts-next:after {
+.rsts-skin-light .rsts-prev:after, .rsts-skin-light .rsts-next:after,
+.rsts-skin-light .rsts-thumbs-prev:after, .rsts-skin-light .rsts-thumbs-next:after {
   content: "\203a";
   position: absolute;
   top: 6px;
@@ -96,18 +94,22 @@
   color: #444444;
   text-indent: 0;
 }
-.rsts-skin-light .rsts-prev {
+.rsts-skin-light .rsts-prev,
+.rsts-skin-light .rsts-thumbs-prev {
   right: auto;
   left: 20px;
 }
-.rsts-skin-light .rsts-prev:after {
+.rsts-skin-light .rsts-prev:after,
+.rsts-skin-light .rsts-thumbs-prev:after {
   content: "\2039";
 }
-.rsts-skin-light:hover .rsts-prev, .rsts-skin-light:hover .rsts-next {
+.rsts-skin-light:hover .rsts-prev, .rsts-skin-light:hover .rsts-next,
+.rsts-skin-light:hover .rsts-thumbs-prev, .rsts-skin-light:hover .rsts-thumbs-next {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
 }
-.rsts-skin-light:hover .rsts-prev:hover, .rsts-skin-light:hover .rsts-next:hover {
+.rsts-skin-light:hover .rsts-prev:hover, .rsts-skin-light:hover .rsts-next:hover,
+.rsts-skin-light:hover .rsts-thumbs-prev:hover, .rsts-skin-light:hover .rsts-thumbs-next:hover {
   -webkit-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2), 0 0 0 1px #cccccc, 0 0 6px 3px rgba(111, 178, 235, 0), 0 0 3px 2px rgba(111, 178, 235, 0.4), inset 0 0 0 2px white, inset 0 1px 4px 1px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2), 0 0 0 1px #cccccc, 0 0 6px 3px rgba(111, 178, 235, 0), 0 0 3px 2px rgba(111, 178, 235, 0.4), inset 0 0 0 2px white, inset 0 1px 4px 1px rgba(0, 0, 0, 0.15);
   box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2), 0 0 0 1px #cccccc, 0 0 6px 3px rgba(111, 178, 235, 0), 0 0 3px 2px rgba(111, 178, 235, 0.4), inset 0 0 0 2px white, inset 0 1px 4px 1px rgba(0, 0, 0, 0.15);
@@ -126,7 +128,8 @@
   -o-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
 }
-.rsts-skin-light:hover .rsts-prev:active, .rsts-skin-light:hover .rsts-next:active {
+.rsts-skin-light:hover .rsts-prev:active, .rsts-skin-light:hover .rsts-next:active,
+.rsts-skin-light:hover .rsts-thumbs-prev:active, .rsts-skin-light:hover .rsts-thumbs-next:active {
   -webkit-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2), 0 0 0 1px #cccccc, 0 0 6px 3px rgba(111, 178, 235, 0), 0 0 3px 2px rgba(111, 178, 235, 0.4), inset 0 0 0 2px rgba(255, 255, 255, 0.8), inset 0 1px 4px 3px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2), 0 0 0 1px #cccccc, 0 0 6px 3px rgba(111, 178, 235, 0), 0 0 3px 2px rgba(111, 178, 235, 0.4), inset 0 0 0 2px rgba(255, 255, 255, 0.8), inset 0 1px 4px 3px rgba(0, 0, 0, 0.3);
   box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.2), 0 0 0 1px #cccccc, 0 0 6px 3px rgba(111, 178, 235, 0), 0 0 3px 2px rgba(111, 178, 235, 0.4), inset 0 0 0 2px rgba(255, 255, 255, 0.8), inset 0 1px 4px 3px rgba(0, 0, 0, 0.3);
@@ -313,6 +316,18 @@
   -webkit-box-shadow: 0 0 5px white;
   -moz-box-shadow: 0 0 5px white;
   box-shadow: 0 0 5px white;
+}
+.rsts-skin-light .rsts-nav-thumbs {
+  margin: -6px 0 0;
+  padding: 0;
+  border: 6px solid white;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: white;
+  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
 .rsts-skin-light .rsts-nav .rsts-nav-prev, .rsts-skin-light .rsts-nav .rsts-nav-next {
   display: none;
@@ -544,7 +559,9 @@
   opacity: 0.8;
 }
 .rsts-skin-light .rsts-overlay-prev,
-.rsts-skin-light .rsts-overlay-next {
+.rsts-skin-light .rsts-overlay-next,
+.rsts-skin-light .rsts-thumbs-overlay-prev,
+.rsts-skin-light .rsts-thumbs-overlay-next {
   position: absolute;
   top: 0;
   left: -1px;
@@ -556,7 +573,8 @@
   background: linear-gradient(90deg, #ffffff, transparent);
   pointer-events: none;
 }
-.rsts-skin-light .rsts-overlay-next {
+.rsts-skin-light .rsts-overlay-next,
+.rsts-skin-light .rsts-thumbs-overlay-next {
   left: auto;
   right: -1px;
   background: -webkit-linear-gradient(0deg, transparent, #ffffff);
@@ -580,6 +598,10 @@
   background: -moz-linear-gradient(transparent, #ffffff);
   background: -o-linear-gradient(transparent, #ffffff);
   background: linear-gradient(transparent, #ffffff);
+}
+.rsts-skin-light .rsts-thumbs-slide.rsts-thumbs-active-thumb {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  opacity: 0.5;
 }
 
 @-webkit-keyframes pulsate {

@@ -12,10 +12,6 @@
 .rsts-skin-liquid.rsts-type-fade .rsts-slide {
   background: white;
 }
-.rsts-skin-liquid .rsts-slide img {
-  width: 100%;
-  height: auto;
-}
 .rsts-skin-liquid .rsts-caption {
   position: absolute;
   top: 20px;
@@ -217,7 +213,8 @@
   background-color: #51a5c0;
   background-color: rgba(81, 165, 192, 0.5);
 }
-.rsts-skin-liquid .rsts-nav .rsts-nav-prev, .rsts-skin-liquid .rsts-nav .rsts-nav-next {
+.rsts-skin-liquid .rsts-nav .rsts-nav-prev, .rsts-skin-liquid .rsts-nav .rsts-nav-next,
+.rsts-skin-liquid .rsts-nav .rsts-thumbs-prev, .rsts-skin-liquid .rsts-nav .rsts-thumbs-next {
   display: none;
 }
 .rsts-skin-liquid .rsts-video-play {
@@ -306,4 +303,8 @@
 .rsts-skin-liquid .rsts-progress.rsts-progress-active {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   opacity: 0.3;
+}
+.rsts-skin-liquid .rsts-thumbs-slide.rsts-thumbs-active-thumb {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=25);
+  opacity: 0.25;
 }

@@ -16,41 +16,79 @@
 .rsts-main, .rsts-main *
 	+box-sizing(border-box)
 
-.rsts-header, .rsts-footer
+.rsts-header, .rsts-footer,
+.rsts-thumbs-header, .rsts-thumbs-footer
 	/* prevent collapsing margins
 	overflow: hidden
 
-.rsts-view
+.rsts-view,
+.rsts-thumbs-view
 	position: relative
+	@media print
+		position: static
 
-.rsts-crop
+.rsts-crop,
+.rsts-thumbs-crop
 	position: relative
 	overflow: hidden
+	@media print
+		position: static
+		overflow: visible
+		width: auto !important
+		height: auto !important
+		transform: none !important
 
-.rsts-slides, .rsts-slide
+.rsts-slides, .rsts-slide,
+.rsts-thumbs-slides, .rsts-thumbs-slide
 	position: absolute
 	left: 0
 	top: 0
+	@media print
+		position: static
+		width: auto !important
+		height: auto !important
+		transform: none !important
+		&.rsts-slide-image img, &.rsts-slide-video img,
+		&.rsts-thumbs-slide-image img, &.rsts-thumbs-slide-video img
+			width: 100% !important
+			height: auto !important
+			margin: 0 !important
 
-.rsts-slide
+.rsts-slide,
+.rsts-thumbs-slide
 	overflow: hidden
+	@media print
+		position: static
 
-.rsts-slide img
-	display: block
-
-.rsts-video-iframe
+.rsts-video-iframe,
+.rsts-thumbs-video-iframe
 	position: absolute
 	top: 0
 	left: 0
 	width: 100%
 	height: 100%
 
-.rsts-type-slide
+.rsts-type-slide .rsts-view,
+.rsts-thumbs-type-slide .rsts-thumbs-view
+	cursor: url("../img/openhand.cur"), default
+	+experimental-value(cursor, grab)
 
-	.rsts-view
-		cursor: url("../img/openhand.cur"), default
-		+experimental-value(cursor, grab)
+.rsts-type-slide.rsts-dragging .rsts-view,
+.rsts-thumbs-type-slide.rsts-thumbs-dragging .rsts-thumbs-view
+	cursor: url("../img/closedhand.cur"), default
+	+experimental-value(cursor, grabbing)
 
-	&.rsts-dragging .rsts-view
-		cursor: url("../img/closedhand.cur"), default
-		+experimental-value(cursor, grabbing)
+@media print
+	.rsts-nav,
+	.rsts-prev,
+	.rsts-next,
+	.rsts-overlay-prev,
+	.rsts-overlay-next,
+	.rsts-progress,
+	.rsts-thumbs-nav,
+	.rsts-thumbs-prev,
+	.rsts-thumbs-next,
+	.rsts-thumbs-overlay-prev,
+	.rsts-thumbs-overlay-next,
+	.rsts-thumbs-progress
+		display: none !important

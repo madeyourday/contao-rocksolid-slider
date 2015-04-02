@@ -41,10 +41,6 @@
 	.rsts-view
 		background: #222
 
-	.rsts-slide img
-		width: 100%
-		height: auto
-
 	.rsts-caption
 		position: absolute
 		top: 20px
@@ -61,7 +57,8 @@
 		+opacity(1)
 		+transform(translate(0, 0))
 
-	.rsts-prev, .rsts-next
+	.rsts-prev, .rsts-next,
+	.rsts-thumbs-prev, .rsts-thumbs-next
 		position: absolute
 		top: 50%
 		right: 20px
@@ -92,14 +89,16 @@
 			font: normal 24px/1 "Courier New", monospace
 			text-indent: 0
 			color: white
-	.rsts-prev
+	.rsts-prev,
+	.rsts-thumbs-prev
 		right: auto
 		left: 20px
 		&:after
 			content: "\2039"
 			left: 12px
 	&:hover
-		.rsts-prev, .rsts-next
+		.rsts-prev, .rsts-next,
+		.rsts-thumbs-prev, .rsts-thumbs-next
 			+opacity(0.5)
 			&:hover
 				+opacity(1)
@@ -212,6 +211,9 @@
 			&.active
 				background-color: #e4e4e4
 				+box-shadow(0 0 5px 2px rgba(white,.4), inset 0 0 1px 1px rgba(white,.8))
+
+	.rsts-nav-thumbs
+		padding: 8px 0
 
 	.rsts-nav
 		.rsts-nav-prev, .rsts-nav-next
@@ -346,7 +348,9 @@
 			+opacity(0.8)
 
 	.rsts-overlay-prev,
-	.rsts-overlay-next
+	.rsts-overlay-next,
+	.rsts-thumbs-overlay-prev,
+	.rsts-thumbs-overlay-next
 		position: absolute
 		top: 0
 		left: -1px
@@ -354,10 +358,15 @@
 		height: 100%
 		+background(linear-gradient(90deg, #222, transparent))
 		pointer-events: none
-	.rsts-overlay-next
+	.rsts-overlay-next,
+	.rsts-thumbs-overlay-next
 		left: auto
 		right: -1px
 		+background(linear-gradient(90deg, transparent, #222))
+	.rsts-thumbs-overlay-prev
+		+background(linear-gradient(90deg, black, transparent))
+	.rsts-thumbs-overlay-next
+		+background(linear-gradient(90deg, transparent, black))
 	&.rsts-direction-y
 		.rsts-overlay-prev
 			left: 0
@@ -368,3 +377,6 @@
 			right: 0
 			bottom: -1px
 			+background(linear-gradient(transparent, #222))
+
+	.rsts-thumbs-slide.rsts-thumbs-active-thumb
+		+opacity(0.5)

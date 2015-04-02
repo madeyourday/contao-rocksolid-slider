@@ -28,10 +28,6 @@
 	&.rsts-type-fade .rsts-slide
 		background-color: white
 
-	.rsts-slide img
-		width: 100%
-		height: auto
-
 	.rsts-caption
 		position: absolute
 		top: 20px
@@ -52,7 +48,8 @@
 	.rsts-prev, .rsts-next
 		display: none
 
-	.rsts-nav-prev a, .rsts-nav-next a, .rsts-video-play, .rsts-video-stop
+	.rsts-nav-prev a, .rsts-nav-next a, .rsts-video-play, .rsts-video-stop,
+	.rsts-thumbs-prev, .rsts-thumbs-next
 		overflow: hidden
 		width: 30px
 		height: 30px
@@ -73,14 +70,27 @@
 			background-color: #eee
 			background-color: rgba(#eee, 0.7)
 
-	.rsts-nav-prev a, .rsts-nav-next a
+	.rsts-nav-prev a, .rsts-nav-next a,
+	.rsts-thumbs-prev, .rsts-thumbs-next
 		display: inline-block
 		vertical-align: top
 
-	.rsts-nav-prev a
+	.rsts-thumbs-prev, .rsts-thumbs-next
+		position: absolute
+		top: 50%
+		right: 10px
+		margin-top: -15px
+
+	.rsts-thumbs-prev
+		right: auto
+		left: 10px
+
+	.rsts-nav-prev a,
+	.rsts-thumbs-prev
 		margin-right: 10px
 		+bg-image-hd("default/arrow-left")
-	.rsts-nav-next a
+	.rsts-nav-next a,
+	.rsts-thumbs-next
 		margin-left: 10px
 		+bg-image-hd("default/arrow-right")
 
@@ -144,6 +154,9 @@
 				background-color: #777
 				+box-shadow(inset 0 2px 0 -1px rgba(white, 0.5), inset 0 -2px 0 -1px rgba(black, 0.3), 0 0 0 1px #555)
 
+	.rsts-nav-thumbs
+		padding-top: 5px
+
 	.rsts-video-play, .rsts-video-stop
 		position: absolute
 
@@ -192,3 +205,6 @@
 			background-color: white
 		&.rsts-progress-active
 			+opacity(0.3)
+
+	.rsts-thumbs-slide.rsts-thumbs-active-thumb
+		+opacity(0.5)

@@ -30,10 +30,6 @@
 .rsts-skin-dark .rsts-view {
   background: #222222;
 }
-.rsts-skin-dark .rsts-slide img {
-  width: 100%;
-  height: auto;
-}
 .rsts-skin-dark .rsts-caption {
   position: absolute;
   top: 20px;
@@ -66,7 +62,8 @@
   -o-transform: translate(0, 0);
   transform: translate(0, 0);
 }
-.rsts-skin-dark .rsts-prev, .rsts-skin-dark .rsts-next {
+.rsts-skin-dark .rsts-prev, .rsts-skin-dark .rsts-next,
+.rsts-skin-dark .rsts-thumbs-prev, .rsts-skin-dark .rsts-thumbs-next {
   position: absolute;
   top: 50%;
   right: 20px;
@@ -102,7 +99,8 @@
   -o-transition: opacity 0.2s ease-in;
   transition: opacity 0.2s ease-in;
 }
-.rsts-skin-dark .rsts-prev:after, .rsts-skin-dark .rsts-next:after {
+.rsts-skin-dark .rsts-prev:after, .rsts-skin-dark .rsts-next:after,
+.rsts-skin-dark .rsts-thumbs-prev:after, .rsts-skin-dark .rsts-thumbs-next:after {
   content: "\203a";
   position: absolute;
   left: 8px;
@@ -111,19 +109,23 @@
   text-indent: 0;
   color: white;
 }
-.rsts-skin-dark .rsts-prev {
+.rsts-skin-dark .rsts-prev,
+.rsts-skin-dark .rsts-thumbs-prev {
   right: auto;
   left: 20px;
 }
-.rsts-skin-dark .rsts-prev:after {
+.rsts-skin-dark .rsts-prev:after,
+.rsts-skin-dark .rsts-thumbs-prev:after {
   content: "\2039";
   left: 12px;
 }
-.rsts-skin-dark:hover .rsts-prev, .rsts-skin-dark:hover .rsts-next {
+.rsts-skin-dark:hover .rsts-prev, .rsts-skin-dark:hover .rsts-next,
+.rsts-skin-dark:hover .rsts-thumbs-prev, .rsts-skin-dark:hover .rsts-thumbs-next {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
 }
-.rsts-skin-dark:hover .rsts-prev:hover, .rsts-skin-dark:hover .rsts-next:hover {
+.rsts-skin-dark:hover .rsts-prev:hover, .rsts-skin-dark:hover .rsts-next:hover,
+.rsts-skin-dark:hover .rsts-thumbs-prev:hover, .rsts-skin-dark:hover .rsts-thumbs-next:hover {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
   -webkit-transition-duration: 0.05s;
@@ -131,7 +133,8 @@
   -o-transition-duration: 0.05s;
   transition-duration: 0.05s;
 }
-.rsts-skin-dark:hover .rsts-prev:active, .rsts-skin-dark:hover .rsts-next:active {
+.rsts-skin-dark:hover .rsts-prev:active, .rsts-skin-dark:hover .rsts-next:active,
+.rsts-skin-dark:hover .rsts-thumbs-prev:active, .rsts-skin-dark:hover .rsts-thumbs-next:active {
   -webkit-box-shadow: inset 0 0 2px 1px black;
   -moz-box-shadow: inset 0 0 2px 1px black;
   box-shadow: inset 0 0 2px 1px black;
@@ -292,6 +295,9 @@
   -webkit-box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.4), inset 0 0 1px 1px rgba(255, 255, 255, 0.8);
   -moz-box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.4), inset 0 0 1px 1px rgba(255, 255, 255, 0.8);
   box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.4), inset 0 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+.rsts-skin-dark .rsts-nav-thumbs {
+  padding: 8px 0;
 }
 .rsts-skin-dark .rsts-nav .rsts-nav-prev, .rsts-skin-dark .rsts-nav .rsts-nav-next {
   display: none;
@@ -476,7 +482,9 @@
   opacity: 0.8;
 }
 .rsts-skin-dark .rsts-overlay-prev,
-.rsts-skin-dark .rsts-overlay-next {
+.rsts-skin-dark .rsts-overlay-next,
+.rsts-skin-dark .rsts-thumbs-overlay-prev,
+.rsts-skin-dark .rsts-thumbs-overlay-next {
   position: absolute;
   top: 0;
   left: -1px;
@@ -488,13 +496,26 @@
   background: linear-gradient(90deg, #222222, transparent);
   pointer-events: none;
 }
-.rsts-skin-dark .rsts-overlay-next {
+.rsts-skin-dark .rsts-overlay-next,
+.rsts-skin-dark .rsts-thumbs-overlay-next {
   left: auto;
   right: -1px;
   background: -webkit-linear-gradient(0deg, transparent, #222222);
   background: -moz-linear-gradient(0deg, transparent, #222222);
   background: -o-linear-gradient(0deg, transparent, #222222);
   background: linear-gradient(90deg, transparent, #222222);
+}
+.rsts-skin-dark .rsts-thumbs-overlay-prev {
+  background: -webkit-linear-gradient(0deg, #000000, transparent);
+  background: -moz-linear-gradient(0deg, #000000, transparent);
+  background: -o-linear-gradient(0deg, #000000, transparent);
+  background: linear-gradient(90deg, #000000, transparent);
+}
+.rsts-skin-dark .rsts-thumbs-overlay-next {
+  background: -webkit-linear-gradient(0deg, transparent, #000000);
+  background: -moz-linear-gradient(0deg, transparent, #000000);
+  background: -o-linear-gradient(0deg, transparent, #000000);
+  background: linear-gradient(90deg, transparent, #000000);
 }
 .rsts-skin-dark.rsts-direction-y .rsts-overlay-prev {
   left: 0;
@@ -512,4 +533,8 @@
   background: -moz-linear-gradient(transparent, #222222);
   background: -o-linear-gradient(transparent, #222222);
   background: linear-gradient(transparent, #222222);
+}
+.rsts-skin-dark .rsts-thumbs-slide.rsts-thumbs-active-thumb {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  opacity: 0.5;
 }
