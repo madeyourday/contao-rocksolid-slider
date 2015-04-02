@@ -235,7 +235,7 @@ class Slider extends \Module
 		}
 
 		// positive numbers
-		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart', 'slideMaxCount', 'slideMinSize', 'prevNextSteps', 'visibleAreaMax') as $key) {
+		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart', 'slideMaxCount', 'slideMinSize', 'rowMaxCount', 'rowMinSize', 'prevNextSteps', 'visibleAreaMax') as $key) {
 			if (! empty($this->arrData['rsts_' . $key]) && $this->arrData['rsts_' . $key] > 0) {
 				$options[$key] = $this->arrData['rsts_' . $key] * 1;
 			}
@@ -245,6 +245,20 @@ class Slider extends \Module
 		foreach (array('visibleArea') as $key) {
 			if (!empty($this->arrData['rsts_' . $key])) {
 				$options[$key] = $this->arrData['rsts_' . $key] / 100;
+			}
+		}
+
+		// ratios
+		foreach (array('rowSlideRatio') as $key) {
+			if (!empty($this->arrData['rsts_' . $key])) {
+				$ratio = explode('x', $this->arrData['rsts_' . $key], 2);
+				if (empty($ratio[1])) {
+					$ratio = floatval($ratio[0]);
+				}
+				else {
+					$ratio = floatval($ratio[1]) / floatval($ratio[0]);
+				}
+				$options[$key] = $ratio;
 			}
 		}
 
