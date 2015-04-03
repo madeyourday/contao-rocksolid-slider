@@ -10,7 +10,11 @@
 
 	<?php $lightboxUrls = array() ?>
 
-	<?php foreach ($this->images as $image): ?>
+	<?php foreach ($this->images as $key => $image): ?>
+
+		<?php if (isset($this->options['preloadSlides']) && $key > $this->options['preloadSlides']): ?>
+			<script type="text/html"><?php ob_start() ?>
+		<?php endif ?>
 
 		<?php if ($this->fullsize && !$image->href) {
 			$lightboxUrls[] = TL_FILES_URL . $image->singleSRC;
@@ -30,9 +34,14 @@
 			<?php endif ?>
 		</<?php echo $this->fullsize ? 'a' : 'div' ?>>
 
+		<?php if (isset($this->options['preloadSlides']) && $key > $this->options['preloadSlides']): ?>
+			<?php echo str_replace(array('\\', '</'), array('\\\\', '<\\/'), ob_get_clean()) ?>
+			</script>
+		<?php endif ?>
+
 	<?php endforeach ?>
 
-	<?php foreach ($this->slides as $slide): ?>
+	<?php foreach ($this->slides as $key => $slide): ?>
 
 		<?php
 			$attributes = array();
@@ -87,6 +96,10 @@
 			}
 			$backgroundAttributes = implode(' ', $backgroundAttributes);
 		?>
+
+		<?php if (isset($this->options['preloadSlides']) && $key > $this->options['preloadSlides']): ?>
+			<script type="text/html"><?php ob_start() ?>
+		<?php endif ?>
 
 		<?php if (! empty($slide['videoURL'])): ?>
 
@@ -161,6 +174,11 @@
 		<?php endif ?>
 
 		</<?php echo $tagName ?>>
+
+		<?php if (isset($this->options['preloadSlides']) && $key > $this->options['preloadSlides']): ?>
+			<?php echo str_replace(array('\\', '</'), array('\\\\', '<\\/'), ob_get_clean()) ?>
+			</script>
+		<?php endif ?>
 
 	<?php endforeach ?>
 

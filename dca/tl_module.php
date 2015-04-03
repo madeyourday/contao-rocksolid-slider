@@ -159,7 +159,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_preloadSlides'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_preloadSlides'],
 	'exclude' => true,
 	'inputType' => 'select',
-	'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9),
+	'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40, 50, 100),
 	'eval' => array('tl_class' => 'w50', 'includeBlankOption' => true),
 	'sql' => "int(10) unsigned NOT NULL default '0'",
 );
