@@ -93,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 	),
 
 	'palettes' => array(
-		'default' => '{title_legend},title,videoURL,singleSRC,scaleMode,imagePosition,centerContent,invertControls;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'default' => '{title_legend},title,videoURL,singleSRC,scaleMode,imagePosition,centerContent,invertControls,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
 	),
 
 	'fields' => array(
@@ -184,6 +184,30 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'exclude' => true,
 			'inputType' => 'checkbox',
 			'eval' => array('tl_class' => 'w50 m12'),
+			'sql' => "char(1) NOT NULL default ''",
+		),
+		'linkUrl' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['linkUrl'],
+			'exclude' => true,
+			'inputType' => 'text',
+			'eval' => array(
+				'rgxp' => 'url',
+				'decodeEntities' => true,
+				'maxlength' => 255,
+				'tl_class' => 'clr w50 wizard',
+			),
+			'wizard' => array(
+				array('MadeYourDay\\Contao\\Slider', 'pagePickerWizard'),
+			),
+			'sql' => "varchar(255) NOT NULL default ''",
+		),
+		'linkNewWindow' => array(
+			'label' => &$GLOBALS['TL_LANG']['MSC']['target'],
+			'exclude' => true,
+			'inputType' => 'checkbox',
+			'eval' => array(
+				'tl_class' => 'w50 m12',
+			),
 			'sql' => "char(1) NOT NULL default ''",
 		),
 		'backgroundImage' => array(
