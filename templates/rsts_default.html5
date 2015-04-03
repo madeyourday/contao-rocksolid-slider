@@ -1,8 +1,12 @@
 <div class="<?php echo $this->class ?> block"<?php echo $this->cssID ?><?php if ($this->style): ?> style="<?php echo $this->style ?>"<?php endif ?>>
 
+	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('headline'); } ?>
 	<?php if ($this->headline): ?>
 		<<?php echo $this->hl ?>><?php echo $this->headline ?></<?php echo $this->hl ?>>
 	<?php endif ?>
+	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
+
+	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('slides'); } ?>
 
 	<?php foreach ($this->images as $image): ?>
 
@@ -131,12 +135,21 @@
 
 	<?php endforeach ?>
 
+	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
+
 </div>
 
 <script>
+<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('script'); } ?>
+
+	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('script_bgvideo'); } ?>
 	jQuery('.mod_rocksolid_slider').last().find('video[data-rsts-background]').each(function() {
 		// Disable mejs for background videos
 		this.player = false;
 	});
+	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
+
 	jQuery('.mod_rocksolid_slider').last().rstSlider(<?php echo json_encode($this->options); ?>);
+
+<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
 </script>
