@@ -93,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 	),
 
 	'palettes' => array(
-		'default' => '{title_legend},title,videoURL,singleSRC,scaleMode,imagePosition,centerContent,invertControls,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'default' => '{title_legend},title,videoURL,singleSRC,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
 	),
 
 	'fields' => array(
@@ -185,6 +185,15 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'inputType' => 'checkbox',
 			'eval' => array('tl_class' => 'w50 m12'),
 			'sql' => "char(1) NOT NULL default ''",
+		),
+		'autoplay' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['autoplay'],
+			'exclude' => true,
+			'inputType' => 'text',
+			'eval' => array(
+				'tl_class' => 'clr w50',
+			),
+			'sql' => "int(10) unsigned NOT NULL default '0'",
 		),
 		'linkUrl' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['linkUrl'],

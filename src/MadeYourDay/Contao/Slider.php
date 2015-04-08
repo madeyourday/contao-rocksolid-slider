@@ -307,7 +307,7 @@ class Slider extends \Backend
 	public function slideOnloadCallback($dc)
 	{
 		if (!static::checkLicense()) {
-			$this->removeProFields($dc->table, array('centerContent'), array('background_legend'));
+			$this->removeProFields($dc->table, array('centerContent', 'autoplay'), array('background_legend'));
 		}
 	}
 

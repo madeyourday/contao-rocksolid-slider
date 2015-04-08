@@ -76,6 +76,9 @@
 			if (!empty($slide['sliderClass'])) {
 				$attributes[] = 'data-rsts-class="' . $slide['sliderClass'] . '"';
 			}
+			if (!empty($slide['autoplay'])) {
+				$attributes[] = 'data-rsts-autoplay="' . $slide['autoplay'] . '"';
+			}
 			$attributes = implode(' ', $attributes);
 
 			$imageAttributes = array();
