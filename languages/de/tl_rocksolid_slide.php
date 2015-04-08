@@ -38,6 +38,8 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slide']['title'][0] = 'Titel';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['title'][1] = 'Dieser Titel wird in der Slider-Navigation verwendet wenn Tabs als Navigations-Typ eingestellt ist.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['videoURL'][0] = 'Video-URL';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['videoURL'][1] = 'YouTube- oder Vimeo-Video-URL (http://www.youtube.com/watch?v=XXXX oder http://vimeo.com/XXXX).';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['videos'][0] = 'Video';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['videos'][1] = 'Wählen Sie eine oder mehrere Videodateien aus um einen Video-Slide zu erstellen.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['singleSRC'][0] = 'Bild';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['singleSRC'][1] = 'Wählen Sie hier ein Bild aus wenn Sie einen Bild- oder Video-Slide (Vorschaubild) erstellen möchten.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['scaleMode'][0] = 'Skalierungsmodus';

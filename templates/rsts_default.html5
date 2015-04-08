@@ -117,6 +117,14 @@
 					?>
 				<?php endif ?>
 
+		<?php elseif (!empty($slide['videos'])): ?>
+			<<?php echo $tagName ?> data-rsts-type="video" <?php echo $attributes ?>>
+				<video controls<?php if (!empty($slide['image'])): ?> poster="<?php echo $slide['image']->src ?>"<?php endif ?>>
+					<?php foreach ($slide['videos'] as $video): ?>
+						<source src="<?php echo TL_FILES_URL . $video->path ?>" type="video/<?php echo $video->extension ?>">
+					<?php endforeach ?>
+				</video>
+
 		<?php elseif (! empty($slide['image'])): ?>
 
 			<?php if ($this->fullsize && $tagName !== 'a') {

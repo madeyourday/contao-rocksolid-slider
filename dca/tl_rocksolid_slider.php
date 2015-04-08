@@ -111,6 +111,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'files' => true,
 				'filesOnly' => true,
 				'isGallery' => true,
+				'extensions' => \Config::get('validImageTypes'),
 			),
 			'sql' => "blob NULL",
 		),

@@ -93,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 	),
 
 	'palettes' => array(
-		'default' => '{title_legend},title,videoURL,singleSRC,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'default' => '{title_legend},title,videoURL,videos,singleSRC,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
 	),
 
 	'fields' => array(
@@ -127,6 +127,24 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'eval' => array('maxlength' => 255),
 			'sql' => "varchar(255) NOT NULL default ''",
 		),
+		'videos' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['videos'],
+			'exclude' => true,
+			'inputType' => 'fileTree',
+			'eval' => array(
+				'multiple' => true,
+				'fieldType' => 'checkbox',
+				'orderField' => 'videosOrder',
+				'files' => true,
+				'filesOnly' => true,
+				'extensions' => 'mp4,m4v,mov,wmv,webm,ogv',
+			),
+			'sql' => "blob NULL",
+		),
+		'videosOrder' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['videosOrder'],
+			'sql' => "blob NULL",
+		),
 		'singleSRC' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['singleSRC'],
 			'exclude' => true,
@@ -135,6 +153,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'fieldType' => 'radio',
 				'files' => true,
 				'filesOnly' => true,
+				'extensions' => \Config::get('validImageTypes'),
 			),
 			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
 		),
@@ -227,6 +246,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'fieldType' => 'radio',
 				'files' => true,
 				'filesOnly' => true,
+				'extensions' => \Config::get('validImageTypes'),
 			),
 			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
 		),
@@ -240,6 +260,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'orderField' => 'backgroundVideosOrder',
 				'files' => true,
 				'filesOnly' => true,
+				'extensions' => 'mp4,m4v,mov,wmv,webm,ogv,ogg',
 			),
 			'sql' => "blob NULL",
 		),

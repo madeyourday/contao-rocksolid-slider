@@ -70,7 +70,7 @@ class Slider extends \Backend
 	 */
 	public function editSlideIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (trim($row['videoURL']) || trim($row['singleSRC'])) {
+		if (trim($row['videoURL']) || trim($row['singleSRC']) || $row['videos']) {
 			return '';
 		}
 		$href .= '&amp;id=' . $row['id'];
@@ -278,6 +278,11 @@ class Slider extends \Backend
 		foreach ($fields as $field) {
 			$GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['disabled'] = true;
 			$GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['mandatory'] = false;
+			if ($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'] === 'fileTree') {
+				// fileTree can’t be disabled
+				$GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['extensions'] = 'none';
+				$GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['path'] = 'none';
+			}
 			$GLOBALS['TL_DCA'][$table]['fields'][$field]['label'] = array(
 				$GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0],
 				sprintf($GLOBALS['TL_LANG']['tl_rocksolid_slider']['proFieldDescription'], 'contao/main.php?do=rocksolid_slider&amp;table=tl_rocksolid_slider_license&amp;ref=' . TL_REFERER_ID) . '<br>' . $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][1],
@@ -307,7 +312,7 @@ class Slider extends \Backend
 	public function slideOnloadCallback($dc)
 	{
 		if (!static::checkLicense()) {
-			$this->removeProFields($dc->table, array('centerContent', 'autoplay'), array('background_legend'));
+			$this->removeProFields($dc->table, array('videos', 'centerContent', 'autoplay'), array('background_legend'));
 		}
 	}
 

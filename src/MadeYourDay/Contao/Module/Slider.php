@@ -360,6 +360,21 @@ class Slider extends \Module
 				}
 			}
 
+			if ($slide['videos']) {
+				$videoFiles = deserialize($slide['videos'], true);
+				if (version_compare(VERSION, '3.2', '<')) {
+					$videoFiles = \FilesModel::findMultipleByIds($videoFiles);
+				}
+				else {
+					$videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
+				}
+				$videos = array();
+				foreach ($videoFiles as $file) {
+					$videos[] = $file;
+				}
+				$slide['videos'] = $videos;
+			}
+
 			if (
 				trim($slide['backgroundImage']) &&
 				($file = version_compare(VERSION, '3.2', '<')
