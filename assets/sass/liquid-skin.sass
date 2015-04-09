@@ -49,7 +49,8 @@
 		+opacity(1)
 		+transform(translate(0, 0))
 
-	.rsts-prev, .rsts-next, .rsts-video-stop, .rsts-nav-numbers a, .rsts-nav-tabs a
+	.rsts-prev, .rsts-next, .rsts-video-stop, .rsts-nav-numbers a, .rsts-nav-tabs a,
+	.rsts-thumbs-prev, .rsts-thumbs-next
 		position: absolute
 		right: 55px
 		bottom: 15px
@@ -74,9 +75,20 @@
 		.rsts-nav-numbers, .rsts-nav-tabs
 			a.active
 				+opacity(0.6)
-	.rsts-next
+	.rsts-next,
+	.rsts-thumbs-next
 		right: 20px
 		+bg-image-hd("liquid/arrow-right")
+
+	.rsts-thumbs-prev, .rsts-thumbs-next
+		position: absolute
+		top: 50%
+		right: 10px
+		margin-top: -15px
+
+	.rsts-thumbs-prev
+		right: auto
+		left: 10px
 
 	&.rsts-direction-y
 		.rsts-prev
@@ -103,6 +115,8 @@
 			+opacity(0)
 		.rsts-nav
 			bottom: 47px
+		.rsts-nav-thumbs
+			+opacity(1)
 		.rsts-prev, .rsts-next
 			bottom: 50px
 		&:hover
@@ -164,9 +178,12 @@
 				background-color: #51a5c0
 				background-color: rgba(#51a5c0, 0.5)
 
+	.rsts-nav-thumbs
+		position: static
+		padding-top: 5px
+
 	.rsts-nav
-		.rsts-nav-prev, .rsts-nav-next,
-		.rsts-thumbs-prev, .rsts-thumbs-next
+		.rsts-nav-prev, .rsts-nav-next
 			display: none
 
 	.rsts-video-play
@@ -227,5 +244,7 @@
 		&.rsts-progress-active
 			+opacity(0.3)
 
-	.rsts-thumbs-slide.rsts-thumbs-active-thumb
-		+opacity(0.25)
+	.rsts-thumbs-slide
+		+opacity(0.8)
+		&.rsts-thumbs-active-thumb
+			+opacity(1)

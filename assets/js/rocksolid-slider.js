@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.5.0 */
+/*! rocksolid-slider v1.5.1 */
 (function($, window, document) {
 
 var Rst = {};
@@ -253,6 +253,9 @@ Rst.Slide = (function() {
 
 			if (!this.data.video && this.element.find('video').last().length) {
 				this.element.find('video').last()[0].controls = false;
+				this.element.find('video').last().on('ended', function() {
+					self.stopVideo(true);
+				});
 			}
 
 		}
@@ -382,7 +385,8 @@ Rst.Slide = (function() {
 		if (this.type === 'video' && !this.data.video) {
 			this.element.find('video').last().css({
 				width: x,
-				height: y
+				height: y,
+				display: 'block'
 			});
 		}
 		else if (this.type === 'image' || this.type === 'video') {
@@ -602,6 +606,11 @@ Rst.Slide = (function() {
 	 */
 	Slide.prototype.stopVideo = function(fromApi, fromButton) {
 
+		if (!this.isVideoPlaying) {
+			return;
+		}
+		this.isVideoPlaying = false;
+
 		if (this.eventNamespace) {
 			$(window).off('message.' + this.eventNamespace);
 			delete this.eventNamespace;
@@ -611,6 +620,11 @@ Rst.Slide = (function() {
 			video[0].controls = false;
 			video[0].pause();
 			video[0].currentTime = 0;
+			if (video[0].poster) {
+				// Brings the poster image back
+				video[0].src = '';
+				video.removeAttr('src');
+			}
 		}
 		if (this.videoElement) {
 			// IE bugfix
@@ -647,6 +661,11 @@ Rst.Slide = (function() {
 
 		var self = this;
 		var videoId, apiCallback, matches, time;
+
+		if (this.isVideoPlaying) {
+			return;
+		}
+		this.isVideoPlaying = true;
 
 		this.slider.stopAutoplay(true);
 
@@ -765,7 +784,7 @@ Rst.Slide = (function() {
 		}
 
 		this.videoStopButton = $(document.createElement('a'))
-			.attr('href', this.data.video)
+			.attr('href', this.data.video || '')
 			.text('stop')
 			.addClass(this.slider.options.cssPrefix + 'video-stop')
 			.on('click', function(event) {
@@ -840,6 +859,7 @@ Rst.Slider = (function() {
 			this.options.visibleAreaMax = 0;
 			this.options.slideMaxCount = 0;
 			this.options.slideMinSize = 0;
+			this.options.slideMaxSize = 0;
 			this.options.rowMaxCount = 0;
 			this.options.rowMinSize = 0;
 			this.options.rowSlideRatio = 0;
@@ -967,6 +987,8 @@ Rst.Slider = (function() {
 				.appendTo(this.elements.main);
 		}
 
+		this.autoplay();
+
 		this.preloadSlides(this.slideIndex);
 		// Sets active states
 		this.cleanupSlides();
@@ -1010,8 +1032,6 @@ Rst.Slider = (function() {
 				transform: 'translateZ(0)'
 			});
 		}
-
-		this.autoplay();
 
 		if (this.options.pauseAutoplayOnHover) {
 			this.elements.view.on('mouseenter', function() {
@@ -1093,6 +1113,8 @@ Rst.Slider = (function() {
 		slideMaxCount: 0,
 		// minimal size of one slide in px
 		slideMinSize: 0,
+		// maximum size of one slide in px
+		slideMaxSize: 0,
 		// maximum number of visible rows
 		rowMaxCount: 0,
 		// minimal size of one row in px
@@ -1145,7 +1167,7 @@ Rst.Slider = (function() {
 		thumbs: {
 			cssPrefix: 'rsts-thumbs-',
 			navType: 'none',
-			slideMinSize: 75,
+			slideMaxSize: 50,
 			preloadSlides: 10,
 			gapSize: 5,
 			width: '100%',
@@ -1223,7 +1245,7 @@ Rst.Slider = (function() {
 		var slideWidth = this.slideSize + this.getGapSize();
 
 		if (loop) {
-			this.activeSlideOffset += slideWidth / rowsCount * loop;
+			this.activeSlideOffset = this.getSlideOffset(this.slideIndex + loop);
 		}
 		else {
 			if (
@@ -1241,7 +1263,7 @@ Rst.Slider = (function() {
 					* slideWidth / rowsCount;
 			}
 			else {
-				this.activeSlideOffset += (index - this.slideIndex) * slideWidth / rowsCount;
+				this.activeSlideOffset = this.getSlideOffset(index);
 			}
 		}
 
@@ -2016,11 +2038,19 @@ Rst.Slider = (function() {
 	 * @return number    calculated offset
 	 */
 	Slider.prototype.getSlideOffset = function(index) {
-		this.getViewSizeFixed(true); // Generate this.slideSize
+		var size = this.getViewSizeFixed(true); // Generate this.slideSize
+		var slidesCount = this.getVisibleSlidesCount();
 		var rowsCount = this.getVisibleRowsCount();
+		var gapSize = this.getGapSize();
+
+		// per slide position deviation (between -0.99... and +0.99...)
+		var deviation = (this.slideSize + gapSize) - (
+			((size[this.options.direction] * this.visibleAreaRate) + gapSize) / slidesCount
+		);
 
 		return Math.floor((index - this.slideIndex) / rowsCount)
-			* (this.slideSize + this.getGapSize())
+			* (this.slideSize + gapSize)
+			- Math.round(deviation * Math.floor((index - this.slideIndex) / rowsCount))
 			+ this.activeSlideOffset;
 	};
 
@@ -2031,11 +2061,12 @@ Rst.Slider = (function() {
 	 * @return number    calculated offset
 	 */
 	Slider.prototype.getRowOffset = function(index) {
-		this.getViewSizeFixed(true); // Generate this.rowSize
+		var viewSize = this.getViewSizeFixed(true); // Generate this.rowSize
 		var rowsCount = this.getVisibleRowsCount();
 		var rowIndex = ((((index - this.slideIndex) % rowsCount) + rowsCount) % rowsCount);
 		var offset = 0;
 		var rowDirection = this.options.direction === 'x' ? 'y' : 'x';
+		var gapSize = this.getGapSize();
 
 		if (this.autoSize) {
 			var size = {};
@@ -2043,10 +2074,15 @@ Rst.Slider = (function() {
 			for (var i = index - rowIndex; i < index; i++) {
 				offset += this.getSlide(i).size(size.x, size.y, true, true)[rowDirection];
 			}
-			offset += rowIndex * this.getGapSize();
+			offset += rowIndex * gapSize;
 		}
 		else {
-			offset = rowIndex * (this.rowSize + this.getGapSize());
+			// per slide position deviation (between -0.99... and +0.99...)
+			var deviation = (this.rowSize + gapSize) - (
+				(viewSize[rowDirection] + gapSize) / rowsCount
+			);
+			offset = rowIndex * (this.rowSize + gapSize)
+				- Math.round(deviation * rowIndex);
 		}
 		return offset;
 	};
@@ -2069,7 +2105,7 @@ Rst.Slider = (function() {
 	 */
 	Slider.prototype.getVisibleSlidesCount = function() {
 
-		if (!this.options.slideMaxCount && !this.options.slideMinSize) {
+		if (!this.options.slideMaxCount && !this.options.slideMinSize && !this.options.slideMaxSize) {
 			return 1;
 		}
 
@@ -2080,8 +2116,18 @@ Rst.Slider = (function() {
 		var gapSize = this.getGapSize();
 		var count = this.options.slideMaxCount;
 
-		if (!count || (size - (gapSize * (count - 1))) / count < this.options.slideMinSize) {
+		if (
+			this.options.slideMinSize
+			&& (!count || (size - (gapSize * (count - 1))) / count < this.options.slideMinSize)
+		) {
 			count = Math.floor((size + gapSize) / (this.options.slideMinSize + gapSize));
+		}
+
+		if (
+			this.options.slideMaxSize
+			&& (!count || (size - (gapSize * (count - 1))) / count > this.options.slideMaxSize)
+		) {
+			count = Math.ceil((size + gapSize) / (this.options.slideMaxSize + gapSize));
 		}
 
 		return Math.min(this.slides.length, Math.max(1, count));
@@ -2175,6 +2221,10 @@ Rst.Slider = (function() {
 			y = undefined;
 		}
 
+		this.viewSizeFixedCache = {x: x, y: y};
+
+		var gapSize = this.getGapSize();
+
 		this.visibleAreaRate = this.options.visibleArea;
 		if (
 			this.options.visibleAreaMax
@@ -2184,10 +2234,17 @@ Rst.Slider = (function() {
 			this.visibleAreaRate = this.options.visibleAreaMax /
 				(this.options.direction === 'x' ? x : y);
 		}
+		if (
+			this.options.slideMaxSize
+			&& (this.options.direction === 'x' ? x : y) * this.visibleAreaRate
+				> this.slides.length * (this.options.slideMaxSize + gapSize) - gapSize
+		) {
+			this.visibleAreaRate = (this.slides.length
+				* (this.options.slideMaxSize + gapSize)
+				- gapSize
+			) / (this.options.direction === 'x' ? x : y);
+		}
 
-		this.viewSizeFixedCache = {x: x, y: y};
-
-		var gapSize = this.getGapSize();
 		var visibleCount = this.getVisibleSlidesCount();
 		var visibleRowsCount = this.getVisibleRowsCount();
 
@@ -2197,7 +2254,7 @@ Rst.Slider = (function() {
 			) + gapSize) * visibleCount) - gapSize) / this.visibleAreaRate);
 		}
 		if (! this.options.height && this.proportion) {
-			y = this.viewSizeFixedCache.y = Math.round((((
+			y = this.viewSizeFixedCache.y = Math.round(((Math.round(
 				((((x * this.visibleAreaRate) + gapSize) / visibleCount) - gapSize) / this.proportion
 			) + gapSize) * visibleRowsCount) - gapSize);
 		}
@@ -2213,7 +2270,7 @@ Rst.Slider = (function() {
 			}
 		}
 
-		this.slideSize = Math.round(
+		this.slideSize = (gapSize > 0 ? Math.round : Math.ceil)(
 			(
 				((this.options.direction === 'x' ? x : y) * this.visibleAreaRate)
 				- (gapSize * (visibleCount - 1))
@@ -2221,7 +2278,7 @@ Rst.Slider = (function() {
 		);
 
 		if (this.options.direction === 'x' ? y : x) {
-			this.rowSize = Math.round((
+			this.rowSize = (gapSize > 0 ? Math.round : Math.ceil)((
 				(this.options.direction === 'x' ? y : x)
 				- (gapSize * (visibleRowsCount - 1))
 			) / visibleRowsCount);
@@ -2723,9 +2780,13 @@ Rst.Slider = (function() {
 		this.isDragging = false;
 		this.elements.main.removeClass(this.options.cssPrefix + 'dragging');
 
+		if (this.dragLastDiff === 0 || this.dragLastDiff === undefined) {
+			return;
+		}
+
 		var leftSlideIndex = this.slideIndex + (Math.floor(
 			(
-				- this.getOffset(this.elements.slides)
+				- Math.round(this.getOffset(this.elements.slides))
 				- this.activeSlideOffset
 				+ (
 					this.getViewSizeFixed(true)[this.options.direction]

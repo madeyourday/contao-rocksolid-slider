@@ -415,8 +415,10 @@
 			bottom: -1px
 			+background(linear-gradient(transparent, white))
 
-	.rsts-thumbs-slide.rsts-thumbs-active-thumb
-		+opacity(0.5)
+	.rsts-thumbs-slide
+		+opacity(0.8)
+		&.rsts-thumbs-active-thumb
+			+opacity(1)
 
 @include keyframes('pulsate')
 	50%
