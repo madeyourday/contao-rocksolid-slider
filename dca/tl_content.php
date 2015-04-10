@@ -28,8 +28,11 @@ $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('MadeYou
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = 'rsts_content_type';
 $GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_slider'] = '{type_legend},type,headline,rsts_content_type';
-$GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_sliderrsts_default'] = '{type_legend},type,headline,rsts_content_type;{rocksolid_slider_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,size,fullsize;{protected_legend:hide},protected;{expert_legend:hide},guests,rsts_customSkin,rsts_cssPrefix,cssID,space;{invisible_legend:hide},invisible,start,stop';
-$GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_sliderrsts_images'] = '{type_legend},type,headline,rsts_content_type;{source_legend:hide},multiSRC;{rocksolid_slider_legend},rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,size,fullsize;{protected_legend:hide},protected;{expert_legend:hide},guests,rsts_customSkin,rsts_cssPrefix,cssID,space;{invisible_legend:hide},invisible,start,stop';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_sliderrsts_default'] = '{type_legend},type,headline,rsts_content_type;{rocksolid_slider_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,size,fullsize;{protected_legend:hide},protected;{expert_legend:hide},guests,rsts_customSkin,rsts_cssPrefix,cssID,space;{invisible_legend:hide},invisible,start,stop';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_sliderrsts_images'] = '{type_legend},type,headline,rsts_content_type;{source_legend:hide},multiSRC;{rocksolid_slider_legend},rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,size,fullsize;{protected_legend:hide},protected;{expert_legend:hide},guests,rsts_customSkin,rsts_cssPrefix,cssID,space;{invisible_legend:hide},invisible,start,stop';
+
+$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = 'rsts_thumbs';
+$GLOBALS['TL_DCA']['tl_content']['subpalettes']['rsts_thumbs'] = 'rsts_thumbs_width,rsts_thumbs_height,rsts_thumbs_gapSize,rsts_thumbs_duration,rsts_thumbs_scaleMode,rsts_thumbs_imagePosition,rsts_thumbs_controls,rsts_thumbs_slideMaxCount,rsts_thumbs_slideMinSize,rsts_thumbs_slideMaxSize,rsts_thumbs_rowMaxCount,rsts_thumbs_rowMinSize,rsts_thumbs_rowSlideRatio,rsts_thumbs_prevNextSteps,rsts_thumbs_visibleArea,rsts_thumbs_visibleAreaMax';
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_content_type'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_content_type'],
@@ -232,6 +235,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_navType'] = array(
 		'bullets' => $GLOBALS['TL_LANG']['tl_module']['rsts_navType_bullets'],
 		'numbers' => $GLOBALS['TL_LANG']['tl_module']['rsts_navType_numbers'],
 		'tabs' => $GLOBALS['TL_LANG']['tl_module']['rsts_navType_tabs'],
+		'thumbs' => $GLOBALS['TL_LANG']['tl_module']['rsts_navType_thumbs'],
 		'none' => $GLOBALS['TL_LANG']['tl_module']['rsts_navType_none'],
 	),
 	'eval' => array('tl_class' => 'w50'),
@@ -302,6 +306,160 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_captions'] = array(
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50 m12'),
 	'sql' => "char(1) NOT NULL default '1'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_thumbs'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array(
+		'submitOnChange' => true,
+		'tl_class' => 'w50 m12',
+	),
+	'sql' => "char(1) NOT NULL default ''",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_width'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_width'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'clr w50'),
+	'sql' => "varchar(64) NOT NULL default ''",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_height'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_height'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "varchar(64) NOT NULL default ''",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_gapSize'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_gapSize'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "varchar(64) NOT NULL default ''",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_duration'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_duration'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_scaleMode'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_scaleMode'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array(
+		'fit' => $GLOBALS['TL_LANG']['tl_module']['rsts_scaleMode_fit'],
+		'crop' => $GLOBALS['TL_LANG']['tl_module']['rsts_scaleMode_crop'],
+		'scale' => $GLOBALS['TL_LANG']['tl_module']['rsts_scaleMode_scale'],
+		'none' => $GLOBALS['TL_LANG']['tl_module']['rsts_scaleMode_none'],
+	),
+	'eval' => array(
+		'tl_class' => 'w50 clr',
+		'includeBlankOption' => true,
+	),
+	'sql' => "varchar(64) NOT NULL default ''",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_imagePosition'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_imagePosition'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array('center', 'top', 'right', 'bottom', 'left', 'top-left', 'top-right', 'bottom-left', 'bottom-right'),
+	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_imagePositions'],
+	'eval' => array(
+		'tl_class' => 'w50',
+		'includeBlankOption' => true,
+	),
+	'sql' => "varchar(64) NOT NULL default ''",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_controls'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_controls'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "char(1) NOT NULL default '1'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_imgSize'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['imgSize'],
+	'exclude' => true,
+	'inputType' => 'imageSize',
+	'options' => System::getImageSizes(),
+	'reference' => &$GLOBALS['TL_LANG']['MSC'],
+	'eval' => array(
+		'rgxp' => 'natural',
+		'includeBlankOption' => true,
+		'nospace' => true,
+		'helpwizard' => true,
+		'tl_class' => 'w50',
+	),
+	'sql' => "varchar(64) NOT NULL default 'a:3:{i:0;s:2:\"50\";i:1;s:2:\"50\";i:2;s:4:\"crop\";}'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_slideMaxCount'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_slideMaxCount'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20),
+	'eval' => array('tl_class' => 'w50 clr', 'includeBlankOption' => true),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_prevNextSteps'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_prevNextSteps'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20),
+	'eval' => array('tl_class' => 'w50 clr', 'includeBlankOption' => true),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_visibleArea'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_visibleArea'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50 clr'),
+	'sql' => "double unsigned NOT NULL default '0'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_visibleAreaMax'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_visibleAreaMax'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "double unsigned NOT NULL default '0'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_slideMinSize'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_slideMinSize'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'clr w50'),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_slideMaxSize'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_slideMaxSize'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_rowMaxCount'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_rowMaxCount'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20),
+	'eval' => array('tl_class' => 'clr w50', 'includeBlankOption' => true),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_rowMinSize'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_rowMinSize'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_rowSlideRatio'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_rowSlideRatio'],
+	'exclude' => true,
+	'inputType' => 'text',
+	'eval' => array('tl_class' => 'w50'),
+	'sql' => "varchar(255) NOT NULL default ''",
 );
 // maximum number of visible slides
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_slideMaxCount'] = array(

@@ -16,3 +16,4 @@ $GLOBALS['TL_LANG']['tl_content']['rocksolid_slider_legend'] = 'RockSolid Slider
 $GLOBALS['TL_LANG']['tl_content']['rsts_carousel_legend'] = 'Carousel Settings';
 $GLOBALS['TL_LANG']['tl_content']['rsts_autoplay_legend'] = 'Autoplay Settings';
 $GLOBALS['TL_LANG']['tl_content']['rsts_navigation_legend'] = 'Navigation Settings';
+$GLOBALS['TL_LANG']['tl_content']['rsts_thumbs_legend'] = 'Thumbnail Settings';

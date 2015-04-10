@@ -13,14 +13,14 @@
 	<?php foreach ($this->images as $key => $image): ?>
 
 		<?php if (isset($this->options['preloadSlides']) && $key > $this->options['preloadSlides']): ?>
-			<script type="text/html"><?php ob_start() ?>
+			<script type="text/html"<?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?php echo $image->thumb->src ?>"<?php endif ?>><?php ob_start() ?>
 		<?php endif ?>
 
 		<?php if ($this->fullsize && !$image->href) {
 			$lightboxUrls[] = TL_FILES_URL . $image->singleSRC;
 		} ?>
 
-		<<?php echo $this->fullsize ? 'a href="' . ($image->href ? $image->href . '" target="_blank' : TL_FILES_URL . $image->singleSRC . '" data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6)) . '"' : 'div' ?> data-rsts-type="image"<?php if (!empty($this->rsts_invertControls)): ?> data-rsts-class="<?php echo empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix'] ?>invert-controls"<?php endif ?>>
+		<<?php echo $this->fullsize ? 'a href="' . ($image->href ? $image->href . '" target="_blank' : TL_FILES_URL . $image->singleSRC . '" data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6)) . '"' : 'div' ?> data-rsts-type="image"<?php if (!empty($this->rsts_invertControls)): ?> data-rsts-class="<?php echo empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix'] ?>invert-controls"<?php endif ?><?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?php echo $image->thumb->src ?>"<?php endif ?>>
 			<?php if (version_compare(VERSION, '3.4', '<')): ?>
 				<img src="<?php echo $image->src ?>"<?php echo $image->imgSize ?> alt="<?php echo $image->alt ?>">
 			<?php else: ?>
@@ -79,6 +79,9 @@
 			if (!empty($slide['autoplay'])) {
 				$attributes[] = 'data-rsts-autoplay="' . $slide['autoplay'] . '"';
 			}
+			if (!empty($slide['thumb']->src)) {
+				$attributes[] = 'data-rsts-thumb="' . $slide['thumb']->src . '"';
+			}
 			$attributes = implode(' ', $attributes);
 
 			$imageAttributes = array();
@@ -101,7 +104,7 @@
 		?>
 
 		<?php if (isset($this->options['preloadSlides']) && $key > $this->options['preloadSlides']): ?>
-			<script type="text/html"><?php ob_start() ?>
+			<script type="text/html"<?php if (!empty($slide['thumb']->src)): ?> data-rsts-thumb="<?php echo $slide['thumb']->src ?>"<?php endif ?>><?php ob_start() ?>
 		<?php endif ?>
 
 		<?php if (! empty($slide['videoURL'])): ?>

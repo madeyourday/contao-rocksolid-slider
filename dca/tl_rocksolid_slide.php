@@ -93,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 	),
 
 	'palettes' => array(
-		'default' => '{title_legend},title,videoURL,videos,singleSRC,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'default' => '{title_legend},title,videoURL,videos,singleSRC,thumbImage,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
 	),
 
 	'fields' => array(
@@ -147,6 +147,18 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 		),
 		'singleSRC' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['singleSRC'],
+			'exclude' => true,
+			'inputType' => 'fileTree',
+			'eval' => array(
+				'fieldType' => 'radio',
+				'files' => true,
+				'filesOnly' => true,
+				'extensions' => \Config::get('validImageTypes'),
+			),
+			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
+		),
+		'thumbImage' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['thumbImage'],
 			'exclude' => true,
 			'inputType' => 'fileTree',
 			'eval' => array(

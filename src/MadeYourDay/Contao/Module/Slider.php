@@ -175,6 +175,11 @@ class Slider extends \Module
 				$newImage = new \stdClass();
 				$image['size'] = isset($this->imgSize) ? $this->imgSize : $this->size;
 				$this->addImageToTemplate($newImage, $image);
+				if ($this->rsts_navType === 'thumbs') {
+					$newImage->thumb = new \stdClass;
+					$image['size'] = $this->rsts_thumbs_imgSize;
+					$this->addImageToTemplate($newImage->thumb, $image);
+				}
 				$images[$key] = $newImage;
 			}
 
@@ -210,7 +215,22 @@ class Slider extends \Module
 		$options = array();
 
 		// strings
-		foreach (array('type', 'direction', 'cssPrefix', 'skin', 'width', 'height', 'navType', 'scaleMode', 'imagePosition', 'deepLinkPrefix') as $key) {
+		foreach (array(
+			'type',
+			'direction',
+			'cssPrefix',
+			'skin',
+			'width',
+			'height',
+			'navType',
+			'scaleMode',
+			'imagePosition',
+			'deepLinkPrefix',
+			'thumbs_width',
+			'thumbs_height',
+			'thumbs_scaleMode',
+			'thumbs_imagePosition',
+		) as $key) {
 			if (! empty($this->arrData['rsts_' . $key])) {
 				$options[$key] = $this->arrData['rsts_' . $key];
 			}
@@ -230,26 +250,57 @@ class Slider extends \Module
 		}
 
 		// boolean
-		foreach (array('random', 'loop', 'videoAutoplay', 'autoplayProgress', 'pauseAutoplayOnHover', 'keyboard', 'captions', 'controls', 'combineNavItems') as $key) {
+		foreach (array(
+			'random',
+			'loop',
+			'videoAutoplay',
+			'autoplayProgress',
+			'pauseAutoplayOnHover',
+			'keyboard',
+			'captions',
+			'controls',
+			'combineNavItems',
+			'thumbs_controls',
+		) as $key) {
 			$options[$key] = (bool) $this->arrData['rsts_' . $key];
 		}
 
 		// positive numbers
-		foreach (array('preloadSlides', 'duration', 'autoplay', 'autoplayRestart', 'slideMaxCount', 'slideMinSize', 'slideMaxSize', 'rowMaxCount', 'rowMinSize', 'prevNextSteps', 'visibleAreaMax') as $key) {
+		foreach (array(
+			'preloadSlides',
+			'duration',
+			'autoplay',
+			'autoplayRestart',
+			'slideMaxCount',
+			'slideMinSize',
+			'slideMaxSize',
+			'rowMaxCount',
+			'rowMinSize',
+			'prevNextSteps',
+			'visibleAreaMax',
+			'thumbs_duration',
+			'thumbs_slideMaxCount',
+			'thumbs_slideMinSize',
+			'thumbs_slideMaxSize',
+			'thumbs_rowMaxCount',
+			'thumbs_rowMinSize',
+			'thumbs_prevNextSteps',
+			'thumbs_visibleAreaMax',
+		) as $key) {
 			if (! empty($this->arrData['rsts_' . $key]) && $this->arrData['rsts_' . $key] > 0) {
 				$options[$key] = $this->arrData['rsts_' . $key] * 1;
 			}
 		}
 
 		// percentages
-		foreach (array('visibleArea') as $key) {
+		foreach (array('visibleArea', 'thumbs_visibleArea') as $key) {
 			if (!empty($this->arrData['rsts_' . $key])) {
 				$options[$key] = $this->arrData['rsts_' . $key] / 100;
 			}
 		}
 
 		// ratios
-		foreach (array('rowSlideRatio') as $key) {
+		foreach (array('rowSlideRatio', 'thumbs_rowSlideRatio') as $key) {
 			if (!empty($this->arrData['rsts_' . $key])) {
 				$ratio = explode('x', $this->arrData['rsts_' . $key], 2);
 				if (empty($ratio[1])) {
@@ -263,13 +314,26 @@ class Slider extends \Module
 		}
 
 		// gap size
-		if (isset($this->arrData['rsts_gapSize']) && $this->arrData['rsts_gapSize'] !== '') {
-			if (substr($this->arrData['rsts_gapSize'], -1) === '%') {
-				$options['gapSize'] = $this->arrData['rsts_gapSize'];
+		foreach (array('gapSize', 'thumbs_gapSize') as $key) {
+			if (isset($this->arrData['rsts_' . $key]) && $this->arrData['rsts_' . $key] !== '') {
+				if (substr($this->arrData['rsts_' . $key], -1) === '%') {
+					$options[$key] = $this->arrData['rsts_' . $key];
+				}
+				else {
+					$options[$key] = $this->arrData['rsts_' . $key] * 1;
+				}
 			}
-			else {
-				$options['gapSize'] = $this->arrData['rsts_gapSize'] * 1;
+		}
+
+		foreach ($options as $key => $value) {
+			if (substr($key, 0, 7) === 'thumbs_') {
+				$options['thumbs'][substr($key, 7)] = $value;
+				unset($options[$key]);
 			}
+		}
+
+		if (empty($this->arrData['rsts_thumbs']) && isset($options['thumbs'])) {
+			unset($options['thumbs']);
 		}
 
 		$this->Template->options = $options;
@@ -413,6 +477,48 @@ class Slider extends \Module
 					$videos[] = $file;
 				}
 				$slide['backgroundVideos'] = $videos;
+			}
+
+			if ($this->rsts_navType === 'thumbs') {
+				$slide['thumb'] = new \stdClass;
+				if (
+					trim($slide['thumbImage']) &&
+					($file = version_compare(VERSION, '3.2', '<')
+						? \FilesModel::findByPk($slide['thumbImage'])
+						: \FilesModel::findByUuid($slide['thumbImage'])
+					) &&
+					($fileObject = new \File($file->path, true)) &&
+					($fileObject->isGdImage || $fileObject->isImage)
+				) {
+					$this->addImageToTemplate($slide['thumb'], array(
+						'id' => $file->id,
+						'name' => $fileObject->basename,
+						'singleSRC' => $file->path,
+						'size' => $this->rsts_thumbs_imgSize,
+					));
+				}
+				elseif (
+					trim($slide['singleSRC']) &&
+					($file = version_compare(VERSION, '3.2', '<')
+						? \FilesModel::findByPk($slide['singleSRC'])
+						: \FilesModel::findByUuid($slide['singleSRC'])
+					) &&
+					($fileObject = new \File($file->path, true)) &&
+					($fileObject->isGdImage || $fileObject->isImage)
+				) {
+					$this->addImageToTemplate($slide['thumb'], array(
+						'id' => $file->id,
+						'name' => $fileObject->basename,
+						'singleSRC' => $file->path,
+						'size' => $this->rsts_thumbs_imgSize,
+					));
+				}
+				elseif (!empty($slide['image']->src)) {
+					$slide['thumb'] = clone $slide['image'];
+				}
+				elseif (!empty($slide['backgroundImage']->src)) {
+					$slide['thumb'] = clone $slide['backgroundImage'];
+				}
 			}
 
 			$slides[] = $slide;
