@@ -207,8 +207,8 @@
 	var slider = $('.mod_rocksolid_slider').last();
 
 	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('script_bgvideo'); } ?>
-	slider.find('video[data-rsts-background]').each(function() {
-		// Disable mejs for background videos
+	slider.find('video[data-rsts-background], [data-rsts-type=video] video').each(function() {
+		// Disable mejs for videos
 		this.player = false;
 	});
 	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
