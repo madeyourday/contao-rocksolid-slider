@@ -77,6 +77,10 @@
 .rsts-thumbs-type-slide.rsts-thumbs-dragging .rsts-thumbs-view
 	cursor: url("../img/closedhand.cur"), default
 	+experimental-value(cursor, grabbing)
+	-webkit-user-select: none
+	-moz-user-select: none
+	-ms-user-select: none
+	user-select: none
 
 @media print
 	.rsts-nav,

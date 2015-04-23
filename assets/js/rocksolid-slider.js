@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.5.1 */
+/*! rocksolid-slider v1.5.2 */
 (function($, window, document) {
 
 var Rst = {};
@@ -2387,7 +2387,11 @@ Rst.Slider = (function() {
 			&& $.inArray(slideIndex, this.getActiveSlides()) === -1
 			&& !this.normalizeSize
 		) {
-			// Don't resize if the source slide doesn't affect the size
+			this.getSlide(slideIndex).size(
+				this.options.direction === 'x' ? this.slideSize : this.rowSize,
+				this.options.direction !== 'x' ? this.slideSize : this.rowSize
+			);
+			// Don't resize the whole slider if the source slide doesn't affect the size
 			return;
 		}
 
@@ -2747,9 +2751,8 @@ Rst.Slider = (function() {
 
 		var pos = this.getPositionFromEvent(event);
 
-		this.elements.main.addClass(this.options.cssPrefix + 'dragging');
-
 		this.isDragging = true;
+		this.isDraggingStarted = false;
 		this.dragStartPos = {
 			x: pos.x - this.elements.slides.offset().left + this.elements.crop.offset().left,
 			y: pos.y - this.elements.slides.offset().top + this.elements.crop.offset().top
@@ -2778,6 +2781,7 @@ Rst.Slider = (function() {
 		}
 
 		this.isDragging = false;
+		this.isDraggingStarted = false;
 		this.elements.main.removeClass(this.options.cssPrefix + 'dragging');
 
 		if (this.dragLastDiff === 0 || this.dragLastDiff === undefined) {
@@ -2846,6 +2850,15 @@ Rst.Slider = (function() {
 		}
 		else {
 			return this.onDragStop();
+		}
+
+		if (!this.isDraggingStarted) {
+			this.isDraggingStarted = true;
+			this.elements.main.addClass(this.options.cssPrefix + 'dragging');
+			(function() {
+				var selection = (window.getSelection && window.getSelection()) || document.selection || {};
+				(selection.empty || selection.removeAllRanges || function() {}).apply(selection);
+			})();
 		}
 
 		var posDiff = this.dragLastPos - pos[this.options.direction];
