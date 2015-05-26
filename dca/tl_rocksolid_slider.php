@@ -41,7 +41,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['editLicense'],
 				'href' => 'table=tl_rocksolid_slider_license',
 				'class' => 'header_icon',
-				'icon' => 'system/themes/default/images/settings.gif',
+				'icon' => 'system/themes/' . \Controller::getTheme() . '/images/settings.gif',
 			),
 			'all' => array(
 				'label' => &$GLOBALS['TL_LANG']['MSC']['all'],
