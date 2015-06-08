@@ -17,10 +17,10 @@
 		<?php endif ?>
 
 		<?php if ($this->fullsize && !$image->href) {
-			$lightboxUrls[] = TL_FILES_URL . $image->singleSRC;
+			$lightboxUrls[] = array(TL_FILES_URL . $image->singleSRC, $image->alt);
 		} ?>
 
-		<<?php echo $this->fullsize ? 'a href="' . ($image->href ? $image->href . '" target="_blank' : TL_FILES_URL . $image->singleSRC . '" data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6)) . '"' : 'div' ?> data-rsts-type="image"<?php if (!empty($this->rsts_invertControls)): ?> data-rsts-class="<?php echo empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix'] ?>invert-controls"<?php endif ?><?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?php echo $image->thumb->src ?>"<?php endif ?>>
+		<<?php echo $this->fullsize ? 'a href="' . ($image->href ? $image->href . '" target="_blank' : TL_FILES_URL . $image->singleSRC . '" data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6)) . '" title="' . $image->alt . '"' : 'div' ?> data-rsts-type="image"<?php if (!empty($this->rsts_invertControls)): ?> data-rsts-class="<?php echo empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix'] ?>invert-controls"<?php endif ?><?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?php echo $image->thumb->src ?>"<?php endif ?>>
 			<?php if (version_compare(VERSION, '3.4', '<')): ?>
 				<img src="<?php echo $image->src ?>"<?php echo $image->imgSize ?> alt="<?php echo $image->alt ?>">
 			<?php else: ?>
@@ -136,8 +136,8 @@
 					$attributes .= ' href="' . $slide['image']->href . '" target="_blank"';
 				}
 				else {
-					$lightboxUrls[] = TL_FILES_URL . $slide['image']->singleSRC;
-					$attributes .= ' href="' . TL_FILES_URL . $slide['image']->singleSRC . '" data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6) . '"';
+					$lightboxUrls[] = array(TL_FILES_URL . $slide['image']->singleSRC, $slide['title']);
+					$attributes .= ' href="' . TL_FILES_URL . $slide['image']->singleSRC . '" data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6) . '" title="' . $slide['title'] . '"';
 				}
 			} ?>
 
@@ -241,7 +241,7 @@
 			var dummyLinks = $([]);
 			dummyLinksWrap.insertAfter(slider);
 			$.each(lightboxUrls, function(index, url) {
-				$('<a>').attr('href', url).attr('data-lightbox', lightboxId).appendTo(dummyLinksWrap);
+				$('<a>').attr('href', url[0]).attr('title', url[1]).attr('data-lightbox', lightboxId).appendTo(dummyLinksWrap);
 			});
 			dummyLinks = dummyLinksWrap.find('a');
 			dummyLinks.colorbox(lightboxConfig);
