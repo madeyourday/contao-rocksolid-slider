@@ -338,9 +338,13 @@ class Slider extends \Module
 
 		$this->Template->options = $options;
 
-		$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/rocksolid-slider/assets/js/rocksolid-slider.min.js|static';
-		$GLOBALS['TL_CSS'][] = 'system/modules/rocksolid-slider/assets/css/rocksolid-slider.min.css||static';
-		$skinPath = 'system/modules/rocksolid-slider/assets/css/' . (empty($this->arrData['rsts_skin']) ? 'default' : $this->arrData['rsts_skin']) . '-skin.min.css';
+		$assetsDir = version_compare(VERSION, '4.0', '>=')
+			? 'web/bundles/rocksolidslider'
+			: 'system/modules/rocksolid-slider/assets';
+
+		$GLOBALS['TL_JAVASCRIPT'][] = $assetsDir . '/js/rocksolid-slider.min.js|static';
+		$GLOBALS['TL_CSS'][] = $assetsDir . '/css/rocksolid-slider.min.css||static';
+		$skinPath = $assetsDir . '/css/' . (empty($this->arrData['rsts_skin']) ? 'default' : $this->arrData['rsts_skin']) . '-skin.min.css';
 		if (file_exists(TL_ROOT . '/' . $skinPath)) {
 			$GLOBALS['TL_CSS'][] = $skinPath . '||static';
 		}
