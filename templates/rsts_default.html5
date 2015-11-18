@@ -202,9 +202,21 @@
 
 <script>
 <?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('script'); } ?>
-(function($) {
+(function() {
 
-	var slider = $('.mod_rocksolid_slider').last();
+var sliderElement = [].slice.call(document.getElementsByClassName('mod_rocksolid_slider'), -1 )[0];
+
+if (window.jQuery && jQuery.fn.rstSlider) {
+	init();
+}
+else {
+	document.addEventListener('DOMContentLoaded', init);
+}
+
+function init() {
+
+	var $ = jQuery;
+	var slider = $(sliderElement);
 
 	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('script_bgvideo'); } ?>
 	slider.find('video[data-rsts-background], [data-rsts-type=video] video').each(function() {
@@ -271,6 +283,8 @@
 	});
 	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
 
-})(jQuery);
+}
+
+})();
 <?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
 </script>
