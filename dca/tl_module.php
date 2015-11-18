@@ -147,14 +147,20 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_width'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_width'],
 	'exclude' => true,
 	'inputType' => 'text',
-	'eval' => array('tl_class' => 'w50'),
+	'eval' => array(
+		'tl_class' => 'w50',
+		'decodeEntities' => true,
+	),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_height'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_height'],
 	'exclude' => true,
 	'inputType' => 'text',
-	'eval' => array('tl_class' => 'w50'),
+	'eval' => array(
+		'tl_class' => 'w50',
+		'decodeEntities' => true,
+	),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
 // number of slides to preload (to the left/right or top/bottom)
@@ -318,14 +324,20 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_width'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_width'],
 	'exclude' => true,
 	'inputType' => 'text',
-	'eval' => array('tl_class' => 'clr w50'),
+	'eval' => array(
+		'tl_class' => 'clr w50',
+		'decodeEntities' => true,
+	),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_height'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_height'],
 	'exclude' => true,
 	'inputType' => 'text',
-	'eval' => array('tl_class' => 'w50'),
+	'eval' => array(
+		'tl_class' => 'w50',
+		'decodeEntities' => true,
+	),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_gapSize'] = array(
