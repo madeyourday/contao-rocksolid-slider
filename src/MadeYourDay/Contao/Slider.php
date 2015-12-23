@@ -54,7 +54,7 @@ class Slider extends \Backend
 		if (is_array($GLOBALS['TL_DCA']['tl_rocksolid_slide']['fields']['published']['save_callback'])) {
 			foreach ($GLOBALS['TL_DCA']['tl_rocksolid_slide']['fields']['published']['save_callback'] as $callback) {
 				$this->import($callback[0]);
-				$blnVisible = $this->$callback[0]->$callback[1]($blnVisible, $this);
+				$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $this);
 			}
 		}
 
