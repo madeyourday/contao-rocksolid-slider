@@ -274,7 +274,7 @@ function init() {
 			links.colorbox(lightboxConfig);
 		};
 
-		slider.on('rsts-slidestop', function(event) {
+		slider.on('rsts-slidestart rsts-slidestop', function(event) {
 			update(slider.find('a[data-lightbox]'));
 		});
 
