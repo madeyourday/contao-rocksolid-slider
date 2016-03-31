@@ -68,12 +68,17 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_template'] = array(
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(32) NOT NULL default 'rsts_default'",
 );
-// slider type (slide, side-slide or fade)
+// slider type (slide, side-slide, fade or fade-in-out)
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_type'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_type'],
 	'exclude' => true,
 	'inputType' => 'select',
-	'options' => array('slide' => 'slide', 'side-slide' => 'side-slide', 'fade' => 'fade'),
+	'options' => array(
+		'slide' => 'slide',
+		'side-slide' => 'side-slide',
+		'fade' => 'fade',
+		'fade-in-out' => 'fade-in-out',
+	),
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
