@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.5.3 */
+/*! rocksolid-slider v1.5.4 */
 (function($, window, document) {
 
 var Rst = {};
@@ -214,7 +214,10 @@ Rst.Slide = (function() {
 				.appendTo(this.element);
 		}
 
+		var mediaLoadEventFired = false;
 		var mediaLoadEvent = function() {
+
+			mediaLoadEventFired = true;
 
 			self.slider.resize(self.data.index);
 
@@ -232,6 +235,15 @@ Rst.Slide = (function() {
 
 		this.element.find('img').on('load', mediaLoadEvent);
 		this.element.find('video').on('loadedmetadata', mediaLoadEvent);
+
+		// Fix IE11 bug with missing load event, see #33
+		if (this.element.find('img').length && !this.element.find('img')[0].complete) {
+			setTimeout(function() {
+				if (!mediaLoadEventFired && self.element.find('img')[0].complete) {
+					mediaLoadEvent();
+				}
+			}, 1000);
+		}
 
 		var headlines = this.element.find('h1,h2,h3,h4,h5,h6');
 		if (! this.data.name && headlines.length) {
@@ -310,6 +322,13 @@ Rst.Slide = (function() {
 	Slide.prototype.size = function(x, y, ret) {
 
 		this.updateResponsiveImages(true);
+
+		if (!this.isInjected()) {
+			return {
+				x: ret ? (x || 0) : x,
+				y: ret ? (y || 0) : y
+			};
+		}
 
 		if (x && ! y) {
 			this.slider.modify(this.element, {width: x, height: ''});
@@ -1108,7 +1127,7 @@ Rst.Slider = (function() {
 	 * @var object default options
 	 */
 	Slider.prototype.defaultOptions = {
-		// slider type (slide, side-slide, fade or none)
+		// slider type (slide, side-slide, fade, fade-in-out or none)
 		type: 'slide',
 		// "x" for horizontal or "y" for vertical
 		direction: 'x',
@@ -1343,7 +1362,14 @@ Rst.Slider = (function() {
 				offset: targetPos
 			}, true, durationScale, fromDrag, !fromDrag && overflow);
 		}
-		else if (this.options.type === 'fade') {
+		else if (this.options.type === 'fade' || this.options.type === 'fade-in-out') {
+			if (this.options.type === 'fade-in-out') {
+				$.each(activeSlidesBefore, function(i, slideIndex) {
+					if (activeSlides.indexOf(slideIndex) === -1) {
+						self.modify(self.slides[slideIndex].element, {opacity: 0}, true);
+					}
+				});
+			}
 			this.modify(this.slides[this.slideIndex].element, {opacity: 1}, true);
 		}
 		else if (this.options.type === 'side-slide') {
@@ -1911,7 +1937,7 @@ Rst.Slider = (function() {
 
 			// Check if the slide isn't already injected
 			if (!slide.isInjected()) {
-				if (self.options.type === 'fade') {
+				if (self.options.type === 'fade' || self.options.type === 'fade-in-out') {
 					self.modify(slide.element, {opacity: 0});
 				}
 				self.elements.slides.append(slide.element);
@@ -1922,7 +1948,7 @@ Rst.Slider = (function() {
 				i === self.slideIndex &&
 				slide.element.next().length
 			) {
-				if (self.options.type === 'fade') {
+				if (self.options.type === 'fade' || self.options.type === 'fade-in-out') {
 					if (slide.element.next().length === 1) {
 						self.modify(slide.element, {opacity: 1 - slide.element.next().css('opacity')});
 						self.modify(slide.element.next(), {opacity: 1});
@@ -1989,7 +2015,7 @@ Rst.Slider = (function() {
 			$.merge(allClasses, slide.data.sliderClasses);
 			if (slide.isInjected() && $.inArray(i, keepSlides) === -1) {
 				if (
-					self.options.type === 'fade' &&
+					(self.options.type === 'fade' || self.options.type === 'fade-in-out') &&
 					self.slides[self.slideIndex].element.css('opacity') < 1
 				) {
 					return;
