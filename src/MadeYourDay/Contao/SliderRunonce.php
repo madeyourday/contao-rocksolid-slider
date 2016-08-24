@@ -32,7 +32,12 @@ abstract class SliderRunonce
 			&& $database->fieldExists('extension', 'tl_repository_installs')
 		) {
 			$result = $database->prepare('SELECT lickey FROM tl_repository_installs WHERE extension = \'rocksolid-slider-pro\'')->execute();
-			if ($result && Slider::checkLicense((string)$result->lickey)) {
+			if (
+				$result
+				&& $result->lickey
+				&& class_exists('MadeYourDay\\Contao\\Slider')
+				&& Slider::checkLicense((string)$result->lickey)
+			) {
 				\Config::getInstance()->add(
 					'$GLOBALS[\'TL_CONFIG\'][\'rocksolid_slider_license\']',
 					(string)$result->lickey
