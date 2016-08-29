@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.5.4 */
+/*! rocksolid-slider v1.6.0 */
 (function($, window, document) {
 
 var Rst = {};
@@ -37,7 +37,9 @@ Rst.Slide = (function() {
 
 		if (element.nodeName.toLowerCase() === 'script' && element.type === 'text/html') {
 			this.contentHtml = element.innerHTML.replace(/\\(.)/gi, '$1');
+			this.data.name = $(element).attr('data-rsts-name') || undefined;
 			this.data.thumbUrl = $(element).attr('data-rsts-thumb') || undefined;
+			this.data.thumbHtml = $(element).attr('data-rsts-thumb-html') || undefined;
 		}
 		else {
 			this.init(element);
@@ -181,6 +183,10 @@ Rst.Slide = (function() {
 
 		if (this.content.attr('data-rsts-thumb')) {
 			this.data.thumbUrl = this.content.attr('data-rsts-thumb');
+		}
+
+		if (this.content.attr('data-rsts-thumb-html')) {
+			this.data.thumbHtml = this.content.attr('data-rsts-thumb-html');
 		}
 
 		if (this.type === 'image') {
@@ -866,6 +872,17 @@ Rst.Slide = (function() {
 		return this.data.thumbUrl || 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs=';
 	};
 
+	/**
+	 * @return string HTML of thumbnail
+	 */
+	Slide.prototype.getThumbHtml = function() {
+		return this.data.thumbHtml || $(document.createElement('div')).append(
+			$(document.createElement('img'))
+				.attr('src', this.getThumbUrl())
+				.attr('alt', this.data.name)
+		).html();
+	};
+
 	return Slide;
 })();
 
@@ -1016,14 +1033,12 @@ Rst.Slider = (function() {
 				.appendTo(this.elements.progress);
 		}
 
-		if (this.options.visibleArea < 1 || this.options.visibleAreaMax) {
-			this.elements.overlayPrev = $(document.createElement('div'))
-				.addClass(this.options.cssPrefix + 'overlay-prev')
-				.appendTo(this.elements.view);
-			this.elements.overlayNext = $(document.createElement('div'))
-				.addClass(this.options.cssPrefix + 'overlay-next')
-				.appendTo(this.elements.view);
-		}
+		this.elements.overlayPrev = $(document.createElement('div'))
+			.addClass(this.options.cssPrefix + 'overlay-prev')
+			.appendTo(this.elements.view);
+		this.elements.overlayNext = $(document.createElement('div'))
+			.addClass(this.options.cssPrefix + 'overlay-next')
+			.appendTo(this.elements.view);
 
 		this.nav = new Rst.SliderNav(this);
 
@@ -1135,6 +1150,8 @@ Rst.Slider = (function() {
 		visibleArea: 1,
 		// maximum size of the area for the visible slide in px
 		visibleAreaMax: 0,
+		// Alignment of the visible area (0 = start, 0.5 = center, 1 = end)
+		visibleAreaAlign: 0.5,
 		// if true the slides get shuffled once on initialization
 		random: false,
 		// if true the slider loops infinitely
@@ -1189,10 +1206,12 @@ Rst.Slider = (function() {
 		autoplayProgress: false,
 		// true to pause the autoplay on hover
 		pauseAutoplayOnHover: false,
-		// navigation type (bullets, numbers, tabs, none)
+		// navigation type (bullets, numbers, tabs, thumbs, none)
 		navType: 'bullets',
 		// false to hide the prev and next controls
 		controls: true,
+		// true to show thumbnails inside the prev and next controls
+		thumbControls: false,
 		// image scale mode (fit, crop, scale or none)
 		// use the attribute data-rsts-scale-mode to set the mode per slide
 		// only works if width and height are not set to "auto"
@@ -1209,10 +1228,11 @@ Rst.Slider = (function() {
 		captions: true,
 		// options for the thumbnail slider (same as main slider options)
 		// the following options inherit from the main options:
-		// visibleArea, visibleAreaMax, loop, duration, controls
+		// visibleArea, visibleAreaMax, visibleAreaAlign, loop, duration, controls
 		thumbs: {
 			cssPrefix: 'rsts-thumbs-',
 			navType: 'none',
+			slideMinSize: 50,
 			slideMaxSize: 50,
 			preloadSlides: 10,
 			gapSize: 5,
@@ -1345,7 +1365,7 @@ Rst.Slider = (function() {
 		var targetPos = - this.getSlideOffset(index)
 			+ Math.round(
 				size[this.options.direction]
-				* (1 - this.visibleAreaRate) / 2
+				* (1 - this.visibleAreaRate) * this.options.visibleAreaAlign
 			);
 
 		if (fromDrag && !overflow) {
@@ -2097,7 +2117,7 @@ Rst.Slider = (function() {
 		var gapSize = this.getGapSize();
 
 		// per slide position deviation (between -0.99... and +0.99...)
-		var deviation = (this.slideSize + gapSize) - (
+		var deviation = this.slidesCutOff ? 0 : (this.slideSize + gapSize) - (
 			((size[this.options.direction] * this.visibleAreaRate) + gapSize) / slidesCount
 		);
 
@@ -2175,8 +2195,7 @@ Rst.Slider = (function() {
 		) {
 			count = Math.floor((size + gapSize) / (this.options.slideMinSize + gapSize));
 		}
-
-		if (
+		else if (
 			this.options.slideMaxSize
 			&& (!count || (size - (gapSize * (count - 1))) / count > this.options.slideMaxSize)
 		) {
@@ -2329,6 +2348,37 @@ Rst.Slider = (function() {
 				- (gapSize * (visibleCount - 1))
 			) / visibleCount
 		);
+		this.slidesCutOff = false;
+
+		if ((
+			this.options.slideMinSize
+			&& this.slideSize < this.options.slideMinSize
+			&& visibleCount > 1
+		) || (
+			this.options.slideMaxSize
+			&& this.slideSize > this.options.slideMaxSize
+		)) {
+
+			this.slideSize = this.options.slideMinSize || this.options.slideMaxSize;
+			this.slidesCutOff = true;
+			this.visibleAreaRate = (visibleCount
+				* (this.slideSize + gapSize)
+				- gapSize
+			) / (this.options.direction === 'x' ? x : y);
+
+			// Recalculate proportions based on new visibleAreaRate
+			if (! this.options.width && this.proportion) {
+				x = this.viewSizeFixedCache.x = Math.round(((((
+					(((y + gapSize) / visibleRowsCount) - gapSize) * this.proportion
+				) + gapSize) * visibleCount) - gapSize) / this.visibleAreaRate);
+			}
+			if (! this.options.height && this.proportion) {
+				y = this.viewSizeFixedCache.y = Math.round(((Math.round(
+					((((x * this.visibleAreaRate) + gapSize) / visibleCount) - gapSize) / this.proportion
+				) + gapSize) * visibleRowsCount) - gapSize);
+			}
+
+		}
 
 		if (this.options.direction === 'x' ? y : x) {
 			this.rowSize = (gapSize > 0 ? Math.round : Math.ceil)((
@@ -2430,7 +2480,7 @@ Rst.Slider = (function() {
 		var slidesOffsetBefore = -this.getSlideOffset(this.slideIndex)
 			+ Math.round(
 				this.getViewSizeFixed(true)[this.options.direction]
-				* (1 - this.visibleAreaRate) / 2
+				* (1 - this.visibleAreaRate) * this.options.visibleAreaAlign
 			);
 		var width, height;
 		var pauseAutoplay = !this.autoplayPaused;
@@ -2526,23 +2576,21 @@ Rst.Slider = (function() {
 			height: size.y
 		});
 
-		if (this.elements.overlayPrev && this.elements.overlayNext) {
-			if (this.options.direction === 'x') {
-				this.modify(this.elements.overlayPrev, {
-					width: Math.round(size.x * (1 - this.visibleAreaRate) / 2)
-				});
-				this.modify(this.elements.overlayNext, {
-					width: Math.round(size.x * (1 - this.visibleAreaRate) / 2)
-				});
-			}
-			else {
-				this.modify(this.elements.overlayPrev, {
-					height: Math.round(size.y * (1 - this.visibleAreaRate) / 2)
-				});
-				this.modify(this.elements.overlayNext, {
-					height: Math.round(size.y * (1 - this.visibleAreaRate) / 2)
-				});
-			}
+		if (this.options.direction === 'x') {
+			this.modify(this.elements.overlayPrev, {
+				width: Math.round(size.x * (1 - this.visibleAreaRate) * this.options.visibleAreaAlign)
+			});
+			this.modify(this.elements.overlayNext, {
+				width: Math.round(size.x * (1 - this.visibleAreaRate) * (1 - this.options.visibleAreaAlign))
+			});
+		}
+		else {
+			this.modify(this.elements.overlayPrev, {
+				height: Math.round(size.y * (1 - this.visibleAreaRate) * this.options.visibleAreaAlign)
+			});
+			this.modify(this.elements.overlayNext, {
+				height: Math.round(size.y * (1 - this.visibleAreaRate) * (1 - this.options.visibleAreaAlign))
+			});
 		}
 
 		var backupSize = size[this.options.direction];
@@ -2573,7 +2621,7 @@ Rst.Slider = (function() {
 		var slidesOffsetTarget = -this.getSlideOffset(this.slideIndex)
 			+ Math.round(
 				backupSize
-				* (1 - this.visibleAreaRate) / 2
+				* (1 - this.visibleAreaRate) * this.options.visibleAreaAlign
 			);
 
 		if (this.options.type === 'slide' && (
@@ -2586,10 +2634,12 @@ Rst.Slider = (function() {
 		}
 
 		if (this.getVisibleCount() >= this.slides.length) {
+			this.elements.main.addClass(this.options.cssPrefix + 'dragging-disabled');
 			this.nav.hide();
 			this.stopAutoplay(true);
 		}
 		else {
+			this.elements.main.removeClass(this.options.cssPrefix + 'dragging-disabled');
 			this.nav.show();
 			if (visibleCountBefore >= this.slides.length) {
 				// restart autoplay
@@ -2776,7 +2826,8 @@ Rst.Slider = (function() {
 
 		if (
 			this.isDragging ||
-			(event.type === 'mousedown' && event.which !== 1)
+			(event.type === 'mousedown' && event.which !== 1) ||
+			this.getVisibleCount() >= this.slides.length
 		) {
 			return;
 		}
@@ -2853,7 +2904,7 @@ Rst.Slider = (function() {
 				+ (
 					this.getViewSizeFixed(true)[this.options.direction]
 					* (1 - this.visibleAreaRate)
-					/ 2
+					* this.options.visibleAreaAlign
 				)
 			) /
 			(this.slideSize + this.getGapSize())
@@ -2928,23 +2979,23 @@ Rst.Slider = (function() {
 		if (!this.options.loop) {
 			if (slidesPos > - this.getSlideOffset(0) + (
 				this.getViewSizeFixed(true)[this.options.direction]
-				* (1 - this.visibleAreaRate) / 2
+				* (1 - this.visibleAreaRate) * this.options.visibleAreaAlign
 			)) {
 				slidesPos = (slidesPos * 0.4) - (
 					(this.getSlideOffset(0) - (
 						this.getViewSizeFixed(true)[this.options.direction]
-						* (1 - this.visibleAreaRate) / 2
+						* (1 - this.visibleAreaRate) * this.options.visibleAreaAlign
 					)) * 0.6
 				);
 			}
 			if (slidesPos < - this.getSlideOffset(this.slides.length - visibleCount) + (
 				this.getViewSizeFixed(true)[this.options.direction]
-				* (1 - this.visibleAreaRate) / 2
+				* (1 - this.visibleAreaRate) * this.options.visibleAreaAlign
 			)) {
 				slidesPos = (slidesPos * 0.4) - (
 					(this.getSlideOffset(this.slides.length - visibleCount) - (
 						this.getViewSizeFixed(true)[this.options.direction]
-						* (1 - this.visibleAreaRate) / 2
+						* (1 - this.visibleAreaRate) * this.options.visibleAreaAlign
 					)) * 0.6
 				);
 			}
@@ -3032,7 +3083,10 @@ Rst.SliderNav = (function() {
 
 			this.elements.prev = $(document.createElement('a'))
 				.attr('href', '')
-				.text('prev')
+				.append($(document.createElement('span'))
+					.addClass(slider.options.cssPrefix + 'prev-label')
+					.text('prev')
+				)
 				.addClass(slider.options.cssPrefix + 'prev')
 				.on('click', function(event){
 					event.preventDefault();
@@ -3041,12 +3095,24 @@ Rst.SliderNav = (function() {
 
 			this.elements.next = $(document.createElement('a'))
 				.attr('href', '')
-				.text('next')
+				.append($(document.createElement('span'))
+					.addClass(slider.options.cssPrefix + 'next-label')
+					.text('next')
+				)
 				.on('click', function(event){
 					event.preventDefault();
 					self.slider.next();
 				})
 				.addClass(slider.options.cssPrefix + 'next');
+
+			if (this.slider.options.thumbControls) {
+				this.elements.prevThumb = $(document.createElement('div'))
+					.addClass(slider.options.cssPrefix + 'prev-thumb')
+					.appendTo(this.elements.prev);
+				this.elements.nextThumb = $(document.createElement('div'))
+					.addClass(slider.options.cssPrefix + 'next-thumb')
+					.appendTo(this.elements.next);
+			}
 
 			slider.elements.view
 				.append(this.elements.prev)
@@ -3077,6 +3143,7 @@ Rst.SliderNav = (function() {
 						// Inherit options:
 						visibleArea: slider.options.visibleArea,
 						visibleAreaMax: slider.options.visibleAreaMax,
+						visibleAreaAlign: slider.options.visibleAreaAlign,
 						loop: slider.options.loop,
 						duration: slider.options.duration,
 						controls: slider.options.controls
@@ -3222,6 +3289,11 @@ Rst.SliderNav = (function() {
 			this.elements[slides.length].children('a').addClass('active');
 		}
 
+		if (this.elements.prevThumb && this.elements.nextThumb) {
+			this.elements.prevThumb.html(this.slider.getSlide(indexes[0] - 1).getThumbHtml());
+			this.elements.nextThumb.html(this.slider.getSlide(indexes[indexes.length - 1] + 1).getThumbHtml());
+		}
+
 	};
 
 	/**
@@ -3351,18 +3423,37 @@ Rst.SliderNav = (function() {
 
 		var self = this;
 
-		return $(document.createElement('a'))
+		var thumb = $(document.createElement('a'))
 			.attr('href', '')
-			.attr('data-rsts-type', 'image')
-			.append($(document.createElement('img'))
-				.attr('src', slide.getThumbUrl())
-				.attr('alt', slide.getData().name)
-			)
+			.html(slide.getThumbHtml())
 			.on('click', function(event){
 				event.preventDefault();
 				self.itemOnClick(index);
 			});
 
+		var children = thumb.children();
+
+		if (children.length === 1) {
+			if (
+				children[0].nodeName.toLowerCase() === 'img'
+				|| children[0].nodeName.toLowerCase() === 'picture'
+			) {
+				thumb.attr('data-rsts-type', 'image');
+			}
+			if (children[0].nodeName.toLowerCase() === 'video') {
+				thumb.attr('data-rsts-type', 'video');
+			}
+		}
+
+		if (children.length) {
+			$.each(children[0].attributes, function(index, attr) {
+				if (attr.name.substr(0, 10) === 'data-rsts-') {
+					thumb.attr(attr.name, attr.value);
+				}
+			});
+		}
+
+		return thumb;
 	};
 
 	/**
