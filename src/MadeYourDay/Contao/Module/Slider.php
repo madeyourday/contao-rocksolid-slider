@@ -109,9 +109,24 @@ class Slider extends \Module
 		if ($this->files) {
 
 			$files = $this->files;
+			$filesExpaned = array();
 
 			// Get all images
 			while ($files->next()) {
+				if ($files->type === 'file') {
+					$filesExpaned[] = $files->current();
+				}
+				else {
+					$subFiles = \FilesModel::findByPid(version_compare(VERSION, '3.2', '<') ? $files->id : $files->uuid);
+					while ($subFiles && $subFiles->next()) {
+						if ($subFiles->type === 'file'){
+							$filesExpaned[] = $subFiles->current();
+						}
+					}
+				}
+			}
+
+			foreach ($filesExpaned as $files) {
 
 				// Continue if the files has been processed or does not exist
 				if (isset($images[$files->path]) || ! file_exists(TL_ROOT . '/' . $files->path)) {

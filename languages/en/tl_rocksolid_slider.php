@@ -35,7 +35,7 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slider']['type'][1] = 'Choose â€œImage Sliderâ
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['types']['content'] = 'Content Slider';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['types']['image'] = 'Image Slider';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][0] = 'Choose images';
-$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][1] = 'Choose multiple images to display them together in an image only slider.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][1] = 'Choose images or folders to display them together in an image only slider.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][0] = 'Image order';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][1] = '';
 

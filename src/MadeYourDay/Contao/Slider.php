@@ -284,8 +284,7 @@ class Slider extends \Backend
 
 		if ($contentElement->type === 'rocksolid_slider') {
 			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['isGallery'] = true;
-			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['filesOnly'] = true;
-			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['extensions'] = $GLOBALS['TL_CONFIG']['validImageTypes'];
+			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['extensions'] = \Config::get('validImageTypes');
 		}
 	}
 

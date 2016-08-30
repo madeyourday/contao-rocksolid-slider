@@ -134,7 +134,6 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'fieldType' => 'checkbox',
 				'orderField' => 'orderSRC',
 				'files' => true,
-				'filesOnly' => true,
 				'isGallery' => true,
 				'extensions' => \Config::get('validImageTypes'),
 				'tl_class' => 'clr',

@@ -35,7 +35,7 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slider']['type'][1] = 'Wählen Sie Bild-Slider
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['types']['content'] = 'Inhalts-Slider';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['types']['image'] = 'Bild-Slider';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][0] = 'Bilder wählen';
-$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][1] = 'Wählen Sie hier mehrere Bilder aus um einen reinen Bilderslider zu erstellen.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][1] = 'Wählen Sie hier Bilder oder Ordner aus um einen reinen Bilderslider zu erstellen.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][0] = 'Bildsortierung';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][1] = '';
 
