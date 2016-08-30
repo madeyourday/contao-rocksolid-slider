@@ -12,7 +12,13 @@
 
 	<?php foreach ($this->images as $key => $image): ?>
 
-		<?php if (isset($this->options['preloadSlides']) && $key > $this->options['preloadSlides']): ?>
+		<?php
+			$loadLazy = isset($this->options['preloadSlides'])
+				&& $key > $this->options['preloadSlides']
+				&& (!$this->options['loop'] || $key < count($this->images) - $this->options['preloadSlides']);
+		?>
+
+		<?php if ($loadLazy): ?>
 			<script type="text/html"<?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?php echo $image->thumb->src ?>"<?php endif ?>><?php ob_start() ?>
 		<?php endif ?>
 
@@ -34,7 +40,7 @@
 			<?php endif ?>
 		</<?php echo $this->fullsize ? 'a' : 'div' ?>>
 
-		<?php if (isset($this->options['preloadSlides']) && $key > $this->options['preloadSlides']): ?>
+		<?php if ($loadLazy): ?>
 			<?php echo str_replace(array('\\', '</'), array('\\\\', '<\\/'), ob_get_clean()) ?>
 			</script>
 		<?php endif ?>
@@ -101,9 +107,13 @@
 				$backgroundAttributes[] = 'data-rsts-position="' . $slide['backgroundPosition'] . '"';
 			}
 			$backgroundAttributes = implode(' ', $backgroundAttributes);
+
+			$loadLazy = isset($this->options['preloadSlides'])
+				&& $key > $this->options['preloadSlides']
+				&& (!$this->options['loop'] || $key < count($this->slides) - $this->options['preloadSlides']);
 		?>
 
-		<?php if (isset($this->options['preloadSlides']) && $key > $this->options['preloadSlides']): ?>
+		<?php if ($loadLazy): ?>
 			<script type="text/html"<?php if (!empty($slide['thumb']->src)): ?> data-rsts-thumb="<?php echo $slide['thumb']->src ?>"<?php endif ?>><?php ob_start() ?>
 		<?php endif ?>
 
@@ -189,7 +199,7 @@
 
 		</<?php echo $tagName ?>>
 
-		<?php if (isset($this->options['preloadSlides']) && $key > $this->options['preloadSlides']): ?>
+		<?php if ($loadLazy): ?>
 			<?php echo str_replace(array('\\', '</'), array('\\\\', '<\\/'), ob_get_clean()) ?>
 			</script>
 		<?php endif ?>
