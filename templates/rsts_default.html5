@@ -26,19 +26,43 @@
 			$lightboxUrls[] = array(TL_FILES_URL . $image->singleSRC, $image->alt);
 		} ?>
 
-		<<?php echo $this->fullsize ? 'a href="' . ($image->href ? $image->href . '" target="_blank' : TL_FILES_URL . $image->singleSRC . '" data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6)) . '" title="' . $image->alt . '"' : 'div' ?> data-rsts-type="image"<?php if (!empty($this->rsts_invertControls)): ?> data-rsts-class="<?php echo empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix'] ?>invert-controls"<?php endif ?><?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?php echo $image->thumb->src ?>"<?php endif ?>>
+		<?php
+			$tagName = 'div';
+			$attributes = array(
+				'data-rsts-type="image"',
+			);
+			if ($image->href || $this->fullsize) {
+				$tagName = 'a';
+				$attributes[] = 'title="' . $image->alt . '"';
+			}
+			if ($image->href) {
+				$attributes[] = 'href="' . $image->href . '"';
+				if ($this->fullsize) {
+					$attributes[] = 'target="_blank"';
+				}
+			}
+			elseif ($this->fullsize) {
+				$attributes[] = 'href="' . TL_FILES_URL . $image->singleSRC . '"';
+				$attributes[] = 'data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6) . '"';
+			}
+			if (!empty($this->rsts_invertControls)) {
+				$attributes[] = 'data-rsts-class="' . (empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix']) . 'invert-controls"';
+			}
+			if (!empty($image->thumb->src)) {
+				$attributes[] = 'data-rsts-thumb="' . $image->thumb->src . '"';
+			}
+		?>
+
+		<<?php echo $tagName ?> <?php echo implode(' ', $attributes) ?>>
 			<?php if (version_compare(VERSION, '3.4', '<')): ?>
 				<img src="<?php echo $image->src ?>"<?php echo $image->imgSize ?> alt="<?php echo $image->alt ?>">
 			<?php else: ?>
 				<?php $this->insert('picture_default', $image->picture) ?>
 			<?php endif ?>
-			<?php if ($image->href && !$this->fullsize): ?>
-				<a href="<?php echo $image->href ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['more'] ?></a>
-			<?php endif ?>
 			<?php if ($image->caption): ?>
 				<p class="caption"><?php echo $image->caption ?></p>
 			<?php endif ?>
-		</<?php echo $this->fullsize ? 'a' : 'div' ?>>
+		</<?php echo $tagName ?>>
 
 		<?php if ($loadLazy): ?>
 			<?php echo str_replace(array('\\', '</'), array('\\\\', '<\\/'), ob_get_clean()) ?>
@@ -140,10 +164,13 @@
 
 		<?php elseif (! empty($slide['image'])): ?>
 
-			<?php if ($this->fullsize && $tagName !== 'a') {
+			<?php if (($this->fullsize || $slide['image']->href) && $tagName !== 'a') {
 				$tagName = 'a';
 				if ($slide['image']->href) {
-					$attributes .= ' href="' . $slide['image']->href . '" target="_blank"';
+					$attributes .= ' href="' . $slide['image']->href . '"';
+					if ($this->fullsize) {
+						$attributes .= ' target="_blank"';
+					}
 				}
 				else {
 					$lightboxUrls[] = array(TL_FILES_URL . $slide['image']->singleSRC, $slide['title']);
@@ -160,9 +187,6 @@
 						$this->insert('picture_default', $slide['image']->picture);
 						echo preg_replace('(<img\\s)i', '<img ' . $imageAttributes . ' ', ob_get_clean());
 					?>
-				<?php endif ?>
-				<?php if ($slide['image']->href && $tagName !== 'a'): ?>
-					<a class="rsts-details" href="<?php echo $slide['image']->href ?>"><?php echo $GLOBALS['TL_LANG']['MSC']['more'] ?></a>
 				<?php endif ?>
 				<?php if ($slide['image']->caption): ?>
 					<p class="rsts-text"><?php echo $slide['image']->caption ?></p>
