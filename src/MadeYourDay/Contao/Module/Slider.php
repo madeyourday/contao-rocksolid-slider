@@ -76,8 +76,10 @@ class Slider extends \Module
 				return '';
 			}
 
-			$this->multiSRC = deserialize($this->slider->multiSRC);
-			$this->orderSRC = $this->slider->orderSRC;
+			if ($this->slider->type === 'image') {
+				$this->multiSRC = deserialize($this->slider->multiSRC);
+				$this->orderSRC = $this->slider->orderSRC;
+			}
 
 		}
 
@@ -206,7 +208,7 @@ class Slider extends \Module
 				);
 			}
 		}
-		else if (isset($this->slider->id)) {
+		else if (isset($this->slider->id) && $this->slider->type === 'content') {
 			$slides = $this->parseSlides(SlideModel::findPublishedByPid($this->slider->id));
 		}
 
@@ -372,10 +374,13 @@ class Slider extends \Module
 
 			$slide = $objSlides->row();
 			$slide['text'] = '';
-			$pids[] = $slide['id'];
-			$idIndexes[(int)$slide['id']] = count($slides);
+			if ($slide['type'] === 'content') {
+				$pids[] = $slide['id'];
+				$idIndexes[(int)$slide['id']] = count($slides);
+			}
 
 			if (
+				in_array($slide['type'], array('image', 'video')) &&
 				trim($slide['singleSRC']) &&
 				($file = version_compare(VERSION, '3.2', '<')
 					? \FilesModel::findByPk($slide['singleSRC'])
@@ -397,7 +402,7 @@ class Slider extends \Module
 				));
 			}
 
-			if ($slide['videoURL'] && empty($slide['image'])) {
+			if ($slide['type'] === 'video' && $slide['videoURL'] && empty($slide['image'])) {
 				$slide['image'] = new \stdClass;
 				if (preg_match(
 					'(^
@@ -428,7 +433,11 @@ class Slider extends \Module
 				}
 			}
 
-			if ($slide['videos']) {
+			if ($slide['type'] !== 'video' && $slide['videoURL']) {
+				$slide['videoURL'] = '';
+			}
+
+			if ($slide['type'] === 'video' && $slide['videos']) {
 				$videoFiles = deserialize($slide['videos'], true);
 				if (version_compare(VERSION, '3.2', '<')) {
 					$videoFiles = \FilesModel::findMultipleByIds($videoFiles);
@@ -441,6 +450,9 @@ class Slider extends \Module
 					$videos[] = $file;
 				}
 				$slide['videos'] = $videos;
+			}
+			else {
+				$slide['videos'] = null;
 			}
 
 			if (
@@ -529,11 +541,12 @@ class Slider extends \Module
 
 		}
 
-		$slideContents = ContentModel::findPublishedByPidsAndTable($pids, SlideModel::getTable());
-
-		if ($slideContents) {
-			while ($slideContents->next()) {
-				$slides[$idIndexes[(int)$slideContents->pid]]['text'] .= $this->getContentElement($slideContents->current());
+		if (count($pids)) {
+			$slideContents = ContentModel::findPublishedByPidsAndTable($pids, SlideModel::getTable());
+			if ($slideContents) {
+				while ($slideContents->next()) {
+					$slides[$idIndexes[(int)$slideContents->pid]]['text'] .= $this->getContentElement($slideContents->current());
+				}
 			}
 		}
 

@@ -93,7 +93,11 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 	),
 
 	'palettes' => array(
-		'default' => '{title_legend},title,videoURL,videos,singleSRC,thumbImage,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'__selector__' => array('type'),
+		'default' => '{title_legend},title,type',
+		'content' => '{title_legend},title,type,thumbImage,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'image' => '{title_legend},title,type,singleSRC,thumbImage,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'video' => '{title_legend},title,type,videoURL,videos,singleSRC,thumbImage,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
 	),
 
 	'fields' => array(
@@ -117,14 +121,38 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'search' => true,
 			'flag' => 1,
 			'inputType' => 'text',
-			'eval' => array('maxlength' => 255),
+			'eval' => array(
+				'maxlength' => 255,
+				'tl_class' => 'w50',
+			),
+			'sql' => "varchar(255) NOT NULL default ''",
+		),
+		'type' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['type'],
+			'exclude' => true,
+			'inputType' => 'select',
+			'options' => array(
+				'content',
+				'image',
+				'video',
+			),
+			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['types'],
+			'eval' => array(
+				'mandatory' => true,
+				'includeBlankOption' => true,
+				'submitOnChange' => true,
+				'tl_class' => 'w50',
+			),
 			'sql' => "varchar(255) NOT NULL default ''",
 		),
 		'videoURL' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['videoURL'],
 			'exclude' => true,
 			'inputType' => 'text',
-			'eval' => array('maxlength' => 255),
+			'eval' => array(
+				'maxlength' => 255,
+				'tl_class' => 'clr',
+			),
 			'sql' => "varchar(255) NOT NULL default ''",
 		),
 		'videos' => array(
@@ -154,6 +182,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'files' => true,
 				'filesOnly' => true,
 				'extensions' => \Config::get('validImageTypes'),
+				'tl_class' => 'clr',
 			),
 			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
 		),
@@ -166,6 +195,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'files' => true,
 				'filesOnly' => true,
 				'extensions' => \Config::get('validImageTypes'),
+				'tl_class' => 'clr',
 			),
 			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
 		),

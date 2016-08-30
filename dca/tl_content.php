@@ -17,6 +17,7 @@ if (TL_MODE === 'BE') {
 	// Dynamically add the parent table
 	if (Input::get('do') == 'rocksolid_slider') {
 		$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_rocksolid_slide';
+		$GLOBALS['TL_DCA']['tl_content']['list']['sorting']['header_callback'] = array('MadeYourDay\\Contao\\Slider', 'headerCallbackContent');
 	}
 
 	// Load module language file

@@ -33,8 +33,8 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 			'panelLayout' => 'filter;search,limit',
 		),
 		'label' => array(
-			'fields' => array('name'),
-			'format' => '%s',
+			'fields' => array('name', 'type'),
+			'format' => '%s <span style="color:#999;padding-left:3px">%s</span>',
 		),
 		'global_operations' => array(
 			'license' => array(
@@ -56,6 +56,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'href' => 'table=tl_rocksolid_slide',
 				'icon' => 'edit.gif',
 				'attributes' => 'class="contextmenu"',
+				'button_callback' => array('MadeYourDay\\Contao\\Slider', 'editSliderIcon'),
 			),
 			'editheader' => array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['editheader'],
@@ -83,7 +84,9 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 	),
 
 	'palettes' => array(
-		'default' => '{slider_legend},name,multiSRC,size',
+		'__selector__' => array('type'),
+		'default' => '{slider_legend},name,type',
+		'image' => '{slider_legend},name,type,multiSRC',
 	),
 
 	'fields' => array(
@@ -97,7 +100,28 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['name'],
 			'exclude' => true,
 			'inputType' => 'text',
-			'eval' => array('mandatory' => true, 'maxlength' => 255),
+			'eval' => array(
+				'mandatory' => true,
+				'maxlength' => 255,
+				'tl_class' => 'w50',
+			),
+			'sql' => "varchar(255) NOT NULL default ''",
+		),
+		'type' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['type'],
+			'exclude' => true,
+			'inputType' => 'select',
+			'options' => array(
+				'content',
+				'image',
+			),
+			'reference' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['types'],
+			'eval' => array(
+				'mandatory' => true,
+				'includeBlankOption' => true,
+				'submitOnChange' => true,
+				'tl_class' => 'w50',
+			),
 			'sql' => "varchar(255) NOT NULL default ''",
 		),
 		'multiSRC' => array(
@@ -105,6 +129,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 			'exclude' => true,
 			'inputType' => 'fileTree',
 			'eval' => array(
+				'mandatory' => true,
 				'multiple' => true,
 				'fieldType' => 'checkbox',
 				'orderField' => 'orderSRC',
@@ -112,6 +137,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'filesOnly' => true,
 				'isGallery' => true,
 				'extensions' => \Config::get('validImageTypes'),
+				'tl_class' => 'clr',
 			),
 			'sql' => "blob NULL",
 		),

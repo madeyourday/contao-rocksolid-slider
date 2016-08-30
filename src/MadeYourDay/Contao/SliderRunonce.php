@@ -94,5 +94,55 @@ abstract class SliderRunonce
 				}
 			}
 		}
+
+		// Initialize the slider type field
+		if (
+			$database->tableExists('tl_rocksolid_slider')
+			&& $database->tableExists('tl_rocksolid_slide')
+			&& $database->fieldExists('pid', 'tl_rocksolid_slide')
+		) {
+			if (!$database->fieldExists('type', 'tl_rocksolid_slider')) {
+				$database->query('ALTER TABLE tl_rocksolid_slider ADD type varchar(255) NOT NULL default \'\'');
+			}
+			if ($database->prepare('SELECT id FROM tl_rocksolid_slider WHERE type = \'\'')->execute()->count()) {
+				$database->query("UPDATE tl_rocksolid_slider
+					SET type = CASE
+						WHEN EXISTS (SELECT id FROM tl_rocksolid_slide
+							WHERE tl_rocksolid_slide.pid = tl_rocksolid_slider.id
+						)
+							THEN 'content'
+						ELSE 'image'
+					END
+					WHERE type = ''
+				");
+			}
+		}
+
+		// Initialize the slide type field
+		if (
+			$database->tableExists('tl_rocksolid_slide')
+			&& $database->tableExists('tl_content')
+			&& $database->fieldExists('pid', 'tl_content')
+			&& $database->fieldExists('ptable', 'tl_content')
+		) {
+			if (!$database->fieldExists('type', 'tl_rocksolid_slide')) {
+				$database->query('ALTER TABLE tl_rocksolid_slide ADD type varchar(255) NOT NULL default \'\'');
+			}
+			if ($database->prepare('SELECT id FROM tl_rocksolid_slide WHERE type = \'\'')->execute()->count()) {
+				$database->query("UPDATE tl_rocksolid_slide
+					SET type = CASE
+						WHEN EXISTS (SELECT id FROM tl_content
+							WHERE tl_content.ptable = 'tl_rocksolid_slide'
+							AND tl_content.pid = tl_rocksolid_slide.id
+						)
+							THEN 'content'
+						WHEN videoURL != '' OR videos IS NOT NULL
+							THEN 'video'
+						ELSE 'image'
+					END
+					WHERE type = ''
+				");
+			}
+		}
 	}
 }

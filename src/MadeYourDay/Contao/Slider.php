@@ -66,11 +66,23 @@ class Slider extends \Backend
 	}
 
 	/**
+	 * Return the "edit slider" button
+	 */
+	public function editSliderIcon($row, $href, $label, $title, $icon, $attributes)
+	{
+		if ($row['type'] !== 'content') {
+			return '';
+		}
+		$href .= '&amp;id=' . $row['id'];
+		return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
+	}
+
+	/**
 	 * Return the "edit slide" button
 	 */
 	public function editSlideIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (trim($row['videoURL']) || trim($row['singleSRC']) || $row['videos']) {
+		if ($row['type'] !== 'content') {
 			return '';
 		}
 		$href .= '&amp;id=' . $row['id'];
@@ -80,8 +92,7 @@ class Slider extends \Backend
 	/**
 	 * DCA Header callback
 	 *
-	 * Adds selected images to the header or redirects to the parent slider if
-	 * no slides are found
+	 * Redirects to the parent slider if type is not "content"
 	 *
 	 * @param  array          $headerFields label value pairs of header fields
 	 * @param  \DataContainer $dc           data container
@@ -94,98 +105,31 @@ class Slider extends \Backend
 			->limit(1)
 			->execute(CURRENT_ID);
 
-		if ($sliderData->numRows < 1) {
-			return $headerFields;
+		if ($sliderData->numRows && $sliderData->type !== 'content') {
+			$this->redirect('contao/main.php?do=rocksolid_slider&act=edit&id=' . CURRENT_ID . '&ref=' . \Input::get('ref') . '&rt=' . REQUEST_TOKEN);
 		}
 
-		$files = deserialize($sliderData->multiSRC);
-		if (is_array($files) && count($files)) {
+		return $headerFields;
+	}
 
-			$slidesCount = $this->Database
-				->prepare('SELECT count(*) as count FROM ' . $dc->table . ' WHERE pid = ?')
-				->execute(CURRENT_ID);
+	/**
+	 * DCA Header callback
+	 *
+	 * Redirects to the parent slide if type is not "content"
+	 *
+	 * @param  array          $headerFields label value pairs of header fields
+	 * @param  \DataContainer $dc           data container
+	 * @return array
+	 */
+	public function headerCallbackContent($headerFields, $dc)
+	{
+		$slideData = $this->Database
+			->prepare('SELECT * FROM ' . $GLOBALS['TL_DCA'][$dc->table]['config']['ptable'] . ' WHERE id = ?')
+			->limit(1)
+			->execute(CURRENT_ID);
 
-			if (!$slidesCount->count) {
-				$this->redirect('contao/main.php?do=rocksolid_slider&act=edit&id=' . CURRENT_ID . '&ref=' . \Input::get('ref') . '&rt=' . REQUEST_TOKEN);
-			}
-
-			$headerFields[$GLOBALS['TL_LANG']['tl_rocksolid_slide']['headerImagesSelected'][0]] = $GLOBALS['TL_LANG']['tl_rocksolid_slide']['headerImagesSelected'][1];
-
-			$images = array();
-			if (version_compare(VERSION, '3.2', '<')) {
-				$files = \FilesModel::findMultipleByIds($files);
-			}
-			else {
-				$files = \FilesModel::findMultipleByUuids($files);
-			}
-
-			while ($files->next()) {
-
-				// Continue if the files has been processed or does not exist
-				if (isset($images[$files->path]) || ! file_exists(TL_ROOT . '/' . $files->path)) {
-					continue;
-				}
-
-				$file = new \File($files->path, true);
-
-				if (!$file->isGdImage) {
-					continue;
-				}
-
-				// Add the image
-				$images[$files->path] = array(
-					'id'=> $files->id,
-					'uuid' => isset($files->uuid) ? $files->uuid : null,
-					'name' => $file->basename,
-					'path' => $files->path,
-				);
-
-			}
-
-			if ($sliderData->orderSRC) {
-
-				// Turn the order string into an array and remove all values
-				if (version_compare(VERSION, '3.2', '<')) {
-					$order = explode(',', $sliderData->orderSRC);
-					$order = array_map('intval', $order);
-				}
-				else {
-					$order = deserialize($sliderData->orderSRC);
-				}
-				if (!$order || !is_array($order)) {
-					$order = array();
-				}
-				$order = array_flip($order);
-				$order = array_map(function(){}, $order);
-
-				// Move the matching elements to their position in $order
-				$idKey = version_compare(VERSION, '3.2', '<') ? 'id' : 'uuid';
-				foreach ($images as $k => $v) {
-					if (array_key_exists($v[$idKey], $order)) {
-						$order[$v[$idKey]] = $v;
-						unset($images[$k]);
-					}
-				}
-
-				$order = array_merge($order, array_values($images));
-
-				// Remove empty (unreplaced) entries
-				$images = array_filter($order);
-				unset($order);
-
-			}
-
-			$images = array_values($images);
-			$imagesHtml = '';
-
-			foreach ($images as $image) {
-				$imagesHtml .= ' ' . $this->generateImage(\Image::get($image['path'], 60, 45, 'center_center'), '', 'class="gimage"');
-			}
-
-			$headerFields[$GLOBALS['TL_LANG']['tl_rocksolid_slide']['headerImages']] = '<div style="margin-top: 12px; margin-right: -40px;">'
-				. $imagesHtml
-				. '</div>';
-
+		if ($slideData->numRows && $slideData->type !== 'content') {
+			$this->redirect('contao/main.php?do=rocksolid_slider&table=tl_rocksolid_slide&act=edit&id=' . CURRENT_ID . '&ref=' . \Input::get('ref') . '&rt=' . REQUEST_TOKEN);
 		}
 
 		return $headerFields;
@@ -198,7 +142,7 @@ class Slider extends \Backend
 	 */
 	public function listSlides($arrRow)
 	{
-		return '<div class="tl_content_left">' . $arrRow['title'] . '</div>';
+		return '<div class="tl_content_left">' . $arrRow['title'] . ' <span style="color:#999;padding-left:3px">' . $GLOBALS['TL_LANG']['tl_rocksolid_slide']['types'][$arrRow['type']] . '</span></div>';
 	}
 
 	/**

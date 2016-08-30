@@ -30,8 +30,12 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slider']['show'][1] = 'Show the details of sli
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['slider_legend'] = 'Slider';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['name'][0] = 'Name';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['name'][1] = '';
-$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][0] = 'Optional: Choose images';
-$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][1] = 'You can choose multiple images if you want to display them together in an image only slider.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['type'][0] = 'Type';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['type'][1] = 'Choose “Image Slider” to create an image only slider or “Content Slider” for mixed contents.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['types']['content'] = 'Content Slider';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['types']['image'] = 'Image Slider';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][0] = 'Choose images';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][1] = 'Choose multiple images to display them together in an image only slider.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][0] = 'Image order';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][1] = '';
 

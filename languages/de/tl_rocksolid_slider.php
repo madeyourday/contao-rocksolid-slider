@@ -30,8 +30,12 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slider']['show'][1] = 'Die Details des Sliders
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['slider_legend'] = 'Slider';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['name'][0] = 'Name';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['name'][1] = '';
-$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][0] = 'Optional: Bilder wählen';
-$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][1] = 'Wählen Sie hier mehrere Bilder aus um einen reinen Bilderslider zu erstellen oder fügen Sie später Inhaltselemente ein.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['type'][0] = 'Typ';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['type'][1] = 'Wählen Sie Bild-Slider aus um einen reinen Bilderslider zu erstellen oder Inhalts-Slider um verschiedene Inhalte einzufügen';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['types']['content'] = 'Inhalts-Slider';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['types']['image'] = 'Bild-Slider';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][0] = 'Bilder wählen';
+$GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][1] = 'Wählen Sie hier mehrere Bilder aus um einen reinen Bilderslider zu erstellen.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][0] = 'Bildsortierung';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][1] = '';
 
