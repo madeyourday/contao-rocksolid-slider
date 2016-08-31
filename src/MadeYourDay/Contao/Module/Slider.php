@@ -39,6 +39,12 @@ class Slider extends \Module
 			$template->link = $this->name;
 			$template->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
+			if ($this->objModel->rsts_id && ($slider = SliderModel::findByPk($this->objModel->rsts_id)) !== null) {
+				$template->id = $slider->id;
+				$template->link = $slider->name;
+				$template->href = 'contao/main.php?do=rocksolid_slider&amp;table=tl_rocksolid_slide&amp;id=' . $slider->id;
+			}
+
 			return $template->parse();
 		}
 
