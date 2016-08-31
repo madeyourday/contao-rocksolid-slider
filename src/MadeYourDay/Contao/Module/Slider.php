@@ -535,6 +535,7 @@ class Slider extends \Module
 					));
 				}
 				elseif (
+					in_array($slide['type'], array('image', 'video')) &&
 					trim($slide['singleSRC']) &&
 					($file = version_compare(VERSION, '3.2', '<')
 						? \FilesModel::findByPk($slide['singleSRC'])

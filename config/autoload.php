@@ -29,4 +29,5 @@ $templatesFolder = version_compare(VERSION, '4.0', '>=')
 
 TemplateLoader::addFiles(array(
 	'rsts_default' => $templatesFolder,
+	'rststhumb_default' => $templatesFolder,
 ));

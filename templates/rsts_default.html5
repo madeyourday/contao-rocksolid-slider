@@ -75,6 +75,13 @@
 	<?php foreach ($this->slides as $key => $slide): ?>
 
 		<?php
+			$thumbHtml = '';
+			if (!empty($slide['thumbTitle']) || !empty($slide['thumbClass']) || !empty($slide['thumbText'])) {
+				ob_start();
+				$this->insert('rststhumb_default', $slide);
+				$thumbHtml = htmlspecialchars(trim(ob_get_clean()));
+			}
+
 			$attributes = array();
 			$tagName = 'div';
 			if (!empty($slide['linkUrl'])) {
@@ -113,6 +120,9 @@
 			if (!empty($slide['thumb']->src)) {
 				$attributes[] = 'data-rsts-thumb="' . $slide['thumb']->src . '"';
 			}
+			if ($thumbHtml) {
+				$attributes[] = 'data-rsts-thumb-html="' . $thumbHtml . '"';
+			}
 			$attributes = implode(' ', $attributes);
 
 			$imageAttributes = array();
@@ -139,7 +149,7 @@
 		?>
 
 		<?php if ($loadLazy): ?>
-			<script type="text/html"<?php if (!empty($slide['title'])): ?> data-rsts-name="<?php echo $slide['title'] ?>"<?php endif ?><?php if (!empty($slide['thumb']->src)): ?> data-rsts-thumb="<?php echo $slide['thumb']->src ?>"<?php endif ?>>
+			<script type="text/html"<?php if (!empty($slide['title'])): ?> data-rsts-name="<?php echo $slide['title'] ?>"<?php endif ?><?php if (!empty($slide['thumb']->src)): ?> data-rsts-thumb="<?php echo $slide['thumb']->src ?>"<?php endif ?><?php if ($thumbHtml): ?> data-rsts-thumb-html="<?php echo $thumbHtml ?>"<?php endif ?>>
 			<?php ob_start() ?>
 		<?php endif ?>
 

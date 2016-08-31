@@ -1,0 +1,11 @@
+<div class="<?php echo $this->thumbClass ?>">
+	<?php if ($this->thumb && isset($this->thumb->picture)): ?>
+		<?php $this->insert('picture_default', $this->thumb->picture) ?>
+	<?php endif ?>
+	<?php if ($this->thumbTitle): ?>
+		<h3><?php echo $this->thumbTitle ?></h3>
+	<?php endif ?>
+	<?php if ($this->thumbText): ?>
+		<p><?php echo $this->thumbText ?></p>
+	<?php endif ?>
+</div>

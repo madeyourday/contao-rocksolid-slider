@@ -95,9 +95,9 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 	'palettes' => array(
 		'__selector__' => array('type'),
 		'default' => '{title_legend},title,type',
-		'content' => '{title_legend},title,type,thumbImage,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
-		'image' => '{title_legend},title,type,singleSRC,thumbImage,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
-		'video' => '{title_legend},title,type,videoURL,videos,singleSRC,thumbImage,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'content' => '{title_legend},title,type,thumbImage,thumbTitle,thumbClass,thumbText,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'image' => '{title_legend},title,type,singleSRC,thumbImage,thumbTitle,thumbClass,thumbText,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'video' => '{title_legend},title,type,videoURL,videos,singleSRC,thumbImage,thumbTitle,thumbClass,thumbText,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
 	),
 
 	'fields' => array(
@@ -198,6 +198,35 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'tl_class' => 'clr',
 			),
 			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
+		),
+		'thumbTitle' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['thumbTitle'],
+			'exclude' => true,
+			'inputType' => 'text',
+			'eval' => array(
+				'tl_class' => 'w50',
+				'maxlength' => 255,
+			),
+			'sql' => "varchar(255) NOT NULL default ''",
+		),
+		'thumbClass' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['thumbClass'],
+			'exclude' => true,
+			'inputType' => 'text',
+			'eval' => array(
+				'tl_class' => 'w50',
+				'maxlength' => 255,
+			),
+			'sql' => "varchar(255) NOT NULL default ''",
+		),
+		'thumbText' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['thumbText'],
+			'exclude' => true,
+			'inputType' => 'textarea',
+			'eval' => array(
+				'tl_class' => 'clr',
+			),
+			'sql' => "mediumtext NULL",
 		),
 		'scaleMode' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['scaleMode'],
