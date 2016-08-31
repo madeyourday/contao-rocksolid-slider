@@ -19,7 +19,8 @@
 		?>
 
 		<?php if ($loadLazy): ?>
-			<script type="text/html"<?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?php echo $image->thumb->src ?>"<?php endif ?>><?php ob_start() ?>
+			<script type="text/html"<?php if ($image->alt): ?> data-rsts-name="<?php echo $image->alt ?>"<?php endif ?><?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?php echo $image->thumb->src ?>"<?php endif ?>>
+			<?php ob_start() ?>
 		<?php endif ?>
 
 		<?php if ($this->fullsize && !$image->href) {
@@ -138,7 +139,8 @@
 		?>
 
 		<?php if ($loadLazy): ?>
-			<script type="text/html"<?php if (!empty($slide['thumb']->src)): ?> data-rsts-thumb="<?php echo $slide['thumb']->src ?>"<?php endif ?>><?php ob_start() ?>
+			<script type="text/html"<?php if (!empty($slide['title'])): ?> data-rsts-name="<?php echo $slide['title'] ?>"<?php endif ?><?php if (!empty($slide['thumb']->src)): ?> data-rsts-thumb="<?php echo $slide['thumb']->src ?>"<?php endif ?>>
+			<?php ob_start() ?>
 		<?php endif ?>
 
 		<?php if (! empty($slide['videoURL'])): ?>
