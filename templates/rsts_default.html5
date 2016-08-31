@@ -61,7 +61,7 @@
 				<?php $this->insert('picture_default', $image->picture) ?>
 			<?php endif ?>
 			<?php if ($image->caption): ?>
-				<p class="caption"><?php echo $image->caption ?></p>
+				<p class="rsts-text"><?php echo $image->caption ?></p>
 			<?php endif ?>
 		</<?php echo $tagName ?>>
 
