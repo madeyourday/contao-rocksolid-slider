@@ -302,6 +302,7 @@ class Slider extends \Module
 			'keyboard',
 			'captions',
 			'controls',
+			'thumbControls',
 			'combineNavItems',
 			'thumbs_controls',
 		) as $key) {
@@ -339,6 +340,16 @@ class Slider extends \Module
 		foreach (array('visibleArea', 'thumbs_visibleArea') as $key) {
 			if (!empty($this->arrData['rsts_' . $key])) {
 				$options[$key] = $this->arrData['rsts_' . $key] / 100;
+			}
+		}
+
+		// percentages including zero
+		foreach (array('visibleAreaAlign') as $key) {
+			if (!empty($this->arrData['rsts_' . $key])) {
+				$options[$key] = $this->arrData['rsts_' . $key] / 100;
+			}
+			else {
+				$options[$key] = 0;
 			}
 		}
 
