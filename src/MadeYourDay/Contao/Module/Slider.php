@@ -64,6 +64,9 @@ class Slider extends \Module
 				return '';
 			}
 		}
+		else if ($this->rsts_content_type === 'rsts_settings') {
+			return '';
+		}
 		else if ($this->rsts_content_type === 'rsts_images' || !$this->rsts_id) {
 
 			$this->multiSRC = deserialize($this->multiSRC);
@@ -94,6 +97,23 @@ class Slider extends \Module
 		}
 		else {
 			$this->files = \FilesModel::findMultipleByUuids($this->multiSRC);
+		}
+
+		if (
+			$this->rsts_import_settings
+			&& $this->rsts_import_settings_from
+			&& ($settingsModule = \ModuleModel::findByPk($this->rsts_import_settings_from))
+		) {
+			$exclude = array('rsts_import_settings', 'rsts_import_settings_from', 'rsts_content_type', 'rsts_id');
+			$include = array('imgSize', 'fullsize');
+			foreach ($settingsModule->row() as $key => $value) {
+				if (
+					(substr($key, 0, 5) === 'rsts_' || in_array($key, $include))
+					&& !in_array($key, $exclude)
+				) {
+					$this->arrData[$key] = $value;
+				}
+			}
 		}
 
 		if ($this->rsts_template) {

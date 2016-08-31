@@ -14,12 +14,18 @@
 
 $GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = array('MadeYourDay\\Contao\\Slider', 'moduleOnloadCallback');
 
+$GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'rsts_import_settings';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'rsts_content_type';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_slider'] = '{title_legend},name,headline,type,rsts_content_type';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_default'] = '{title_legend},name,headline,type,rsts_content_type;{config_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize,fullsize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_news'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_news_legend},news_archives,numberOfItems,news_featured,skipFirst,news_template,news_metaFields;{config_legend},rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize,fullsize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_events'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_events_legend},cal_calendar,cal_noSpan,cal_format,cal_ignoreDynamic,cal_order,cal_readerModule,cal_limit,cal_template;{config_legend},rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize,fullsize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_images'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_images_legend},multiSRC;{config_legend},rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize,fullsize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_default'] = '{title_legend},name,headline,type,rsts_content_type;{config_legend},rsts_id,rsts_import_settings,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize,fullsize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_news'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_news_legend},news_archives,numberOfItems,news_featured,skipFirst,news_template,news_metaFields;{config_legend},rsts_import_settings,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize,fullsize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_events'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_events_legend},cal_calendar,cal_noSpan,cal_format,cal_ignoreDynamic,cal_order,cal_readerModule,cal_limit,cal_template;{config_legend},rsts_import_settings,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize,fullsize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_images'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_images_legend},multiSRC;{config_legend},rsts_import_settings,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize,fullsize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_settings'] = '{title_legend},name,type,rsts_content_type;{config_legend},rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,imgSize,fullsize;{expert_legend:hide},rsts_customSkin,rsts_cssPrefix';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_import_settingsrsts_default'] = '{title_legend},name,headline,type,rsts_content_type;{config_legend},rsts_id,rsts_import_settings,rsts_import_settings_from;{expert_legend:hide},cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_import_settingsrsts_news'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_news_legend},news_archives,numberOfItems,news_featured,skipFirst,news_template,news_metaFields;{config_legend},rsts_import_settings,rsts_import_settings_from;{expert_legend:hide},cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_import_settingsrsts_events'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_events_legend},cal_calendar,cal_noSpan,cal_format,cal_ignoreDynamic,cal_order,cal_readerModule,cal_limit,cal_template;{config_legend},rsts_import_settings,rsts_import_settings_from;{expert_legend:hide},cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_import_settingsrsts_images'] = '{title_legend},name,headline,type,rsts_content_type;{rsts_images_legend},multiSRC;{config_legend},rsts_import_settings,rsts_import_settings_from;{expert_legend:hide},cssID,space';
 
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'rsts_thumbs';
 $GLOBALS['TL_DCA']['tl_module']['subpalettes']['rsts_thumbs'] = 'rsts_thumbs_width,rsts_thumbs_height,rsts_thumbs_gapSize,rsts_thumbs_duration,rsts_thumbs_scaleMode,rsts_thumbs_imagePosition,rsts_thumbs_controls,rsts_thumbs_slideMaxCount,rsts_thumbs_slideMinSize,rsts_thumbs_slideMaxSize,rsts_thumbs_rowMaxCount,rsts_thumbs_rowMinSize,rsts_thumbs_rowSlideRatio,rsts_thumbs_prevNextSteps,rsts_thumbs_visibleArea,rsts_thumbs_visibleAreaMax';
@@ -36,6 +42,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_content_type'] = array(
 		'rsts_news',
 		'rsts_events',
 		'rsts_images',
+		'rsts_settings',
 	),
 	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_content_types'],
 	'eval' => array(
@@ -50,6 +57,27 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_id'] = array(
 	'exclude' => true,
 	'inputType' => 'select',
 	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderIds'),
+	'eval' => array(
+		'includeBlankOption' => true,
+		'mandatory' => true,
+	),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_import_settings'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_import_settings'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array(
+		'submitOnChange' => true,
+		'tl_class' => 'w50 m12',
+	),
+	'sql' => "char(1) NOT NULL default ''",
+);
+$GLOBALS['TL_DCA']['tl_module']['fields']['rsts_import_settings_from'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_import_settings_from'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderModuleIds'),
 	'eval' => array(
 		'includeBlankOption' => true,
 		'mandatory' => true,
@@ -76,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_type'] = array(
 		'fade' => 'fade',
 		'fade-in-out' => 'fade-in-out',
 	),
-	'eval' => array('tl_class' => 'w50'),
+	'eval' => array('tl_class' => 'w50 clr'),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
 // "x" for horizontal or "y" for vertical

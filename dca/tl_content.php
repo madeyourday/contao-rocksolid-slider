@@ -27,10 +27,13 @@ if (TL_MODE === 'BE') {
 
 $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('MadeYourDay\\Contao\\Slider', 'contentOnloadCallback');
 
+$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = 'rsts_import_settings';
 $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = 'rsts_content_type';
 $GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_slider'] = '{type_legend},type,headline,rsts_content_type';
-$GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_sliderrsts_default'] = '{type_legend},type,headline,rsts_content_type;{rocksolid_slider_legend},rsts_id,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,size,fullsize;{protected_legend:hide},protected;{expert_legend:hide},guests,rsts_customSkin,rsts_cssPrefix,cssID,space;{invisible_legend:hide},invisible,start,stop';
-$GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_sliderrsts_images'] = '{type_legend},type,headline,rsts_content_type;{source_legend:hide},multiSRC;{rocksolid_slider_legend},rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,size,fullsize;{protected_legend:hide},protected;{expert_legend:hide},guests,rsts_customSkin,rsts_cssPrefix,cssID,space;{invisible_legend:hide},invisible,start,stop';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_sliderrsts_default'] = '{type_legend},type,headline,rsts_content_type;{rocksolid_slider_legend},rsts_id,rsts_import_settings,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,size,fullsize;{protected_legend:hide},protected;{expert_legend:hide},guests,rsts_customSkin,rsts_cssPrefix,cssID,space;{invisible_legend:hide},invisible,start,stop';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_sliderrsts_images'] = '{type_legend},type,headline,rsts_content_type;{source_legend:hide},multiSRC;{rocksolid_slider_legend},rsts_import_settings,rsts_type,rsts_direction,rsts_random,rsts_loop,rsts_centerContent,rsts_skin,rsts_width,rsts_height,rsts_preloadSlides,rsts_gapSize,rsts_duration,rsts_captions,rsts_scaleMode,rsts_imagePosition;{rsts_navigation_legend},rsts_navType,rsts_deepLinkPrefix,rsts_controls,rsts_keyboard,rsts_invertControls;{rsts_thumbs_legend},rsts_thumbs_imgSize,rsts_thumbs;{rsts_autoplay_legend},rsts_autoplay,rsts_autoplayRestart,rsts_autoplayProgress,rsts_pauseAutoplayOnHover,rsts_videoAutoplay;{rsts_carousel_legend},rsts_slideMaxCount,rsts_slideMinSize,rsts_slideMaxSize,rsts_rowMaxCount,rsts_rowMinSize,rsts_rowSlideRatio,rsts_prevNextSteps,rsts_combineNavItems,rsts_visibleArea,rsts_visibleAreaMax;{template_legend:hide},rsts_template,size,fullsize;{protected_legend:hide},protected;{expert_legend:hide},guests,rsts_customSkin,rsts_cssPrefix,cssID,space;{invisible_legend:hide},invisible,start,stop';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_sliderrsts_import_settingsrsts_default'] = '{type_legend},type,headline,rsts_content_type;{rocksolid_slider_legend},rsts_id,rsts_import_settings,rsts_import_settings_from;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['rocksolid_sliderrsts_import_settingsrsts_images'] = '{type_legend},type,headline,rsts_content_type;{source_legend:hide},multiSRC;{rocksolid_slider_legend},rsts_import_settings,rsts_import_settings_from;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop';
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = 'rsts_thumbs';
 $GLOBALS['TL_DCA']['tl_content']['subpalettes']['rsts_thumbs'] = 'rsts_thumbs_width,rsts_thumbs_height,rsts_thumbs_gapSize,rsts_thumbs_duration,rsts_thumbs_scaleMode,rsts_thumbs_imagePosition,rsts_thumbs_controls,rsts_thumbs_slideMaxCount,rsts_thumbs_slideMinSize,rsts_thumbs_slideMaxSize,rsts_thumbs_rowMaxCount,rsts_thumbs_rowMinSize,rsts_thumbs_rowSlideRatio,rsts_thumbs_prevNextSteps,rsts_thumbs_visibleArea,rsts_thumbs_visibleAreaMax';
@@ -60,6 +63,27 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_id'] = array(
 	),
 	'sql' => "int(10) unsigned NOT NULL default '0'",
 );
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_import_settings'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_import_settings'],
+	'exclude' => true,
+	'inputType' => 'checkbox',
+	'eval' => array(
+		'submitOnChange' => true,
+		'tl_class' => 'w50 m12',
+	),
+	'sql' => "char(1) NOT NULL default ''",
+);
+$GLOBALS['TL_DCA']['tl_content']['fields']['rsts_import_settings_from'] = array(
+	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_import_settings_from'],
+	'exclude' => true,
+	'inputType' => 'select',
+	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderModuleIds'),
+	'eval' => array(
+		'includeBlankOption' => true,
+		'mandatory' => true,
+	),
+	'sql' => "int(10) unsigned NOT NULL default '0'",
+);
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_template'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_template'],
 	'default' => 'rsts_default',
@@ -80,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_type'] = array(
 		'fade' => 'fade',
 		'fade-in-out' => 'fade-in-out',
 	),
-	'eval' => array('tl_class' => 'w50'),
+	'eval' => array('tl_class' => 'w50 clr'),
 	'sql' => "varchar(64) NOT NULL default ''",
 );
 // "x" for horizontal or "y" for vertical

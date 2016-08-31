@@ -198,6 +198,23 @@ class Slider extends \Backend
 	}
 
 	/**
+	 * Get all slider modules and return them as array
+	 *
+	 * @return array
+	 */
+	public function getSliderModuleIds()
+	{
+		$arrModules = array();
+		$objModules = $this->Database->execute("SELECT id, name FROM tl_module WHERE type = 'rocksolid_slider' ORDER BY name");
+
+		while ($objModules->next()) {
+			$arrModules[$objModules->id] = $objModules->name;
+		}
+
+		return $arrModules;
+	}
+
+	/**
 	 * Return all slider templates as array
 	 *
 	 * @return array
