@@ -333,7 +333,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_width'] = array(
 		'tl_class' => 'clr w50',
 		'decodeEntities' => true,
 	),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(64) NOT NULL default '100%'",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_height'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_height'],
@@ -343,7 +343,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_height'] = array(
 		'tl_class' => 'w50',
 		'decodeEntities' => true,
 	),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(64) NOT NULL default '1x1'",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_gapSize'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_gapSize'],
@@ -446,14 +446,14 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_slideMinSize'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'clr w50'),
-	'sql' => "int(10) unsigned NOT NULL default '0'",
+	'sql' => "int(10) unsigned NOT NULL default '50'",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_slideMaxSize'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_slideMaxSize'],
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "int(10) unsigned NOT NULL default '0'",
+	'sql' => "int(10) unsigned NOT NULL default '50'",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_rowMaxCount'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_rowMaxCount'],
