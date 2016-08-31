@@ -99,6 +99,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 		'name' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['name'],
 			'exclude' => true,
+			'search' => true,
 			'inputType' => 'text',
 			'eval' => array(
 				'mandatory' => true,
