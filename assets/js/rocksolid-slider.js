@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.6.1 */
+/*! rocksolid-slider v1.6.2 */
 (function($, window, document) {
 
 var Rst = {};
@@ -1767,9 +1767,10 @@ Rst.Slider = (function() {
 			element.css(css);
 			// Fix iOS Safari bug with invisible slides, see #41
 			if (['iPhone', 'iPad', 'iPod'].indexOf(this.device) !== -1) {
-				element.css('height', '0');
+				var origHeight = element[0].style.height || '';
+				element[0].style.height = '0';
 				element.height();
-				element.css('height', '');
+				element[0].style.height = origHeight;
 			}
 		}
 		else if (animate) {
