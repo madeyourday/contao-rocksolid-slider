@@ -152,11 +152,7 @@
 		<?php if (! empty($slide['videoURL'])): ?>
 
 			<<?php echo $tagName ?> data-rsts-type="video" data-rsts-video="<?php echo $slide['videoURL'] ?>" <?php echo $attributes ?>>
-				<?php
-					ob_start();
-					$this->insert('picture_default', $slide['image']->picture);
-					echo preg_replace('(<img\\s)i', '<img ' . $imageAttributes . ' ', ob_get_clean());
-				?>
+				<?php $this->insert('picture_default', array_merge($slide['image']->picture, ['attributes' => $slide['image']->picture['attributes'] . ' ' . $imageAttributes])) ?>
 
 		<?php elseif (!empty($slide['videos'])): ?>
 			<<?php echo $tagName ?> data-rsts-type="video" <?php echo $attributes ?>>
@@ -183,11 +179,7 @@
 			} ?>
 
 			<<?php echo $tagName ?> data-rsts-type="image" <?php echo $attributes ?>>
-				<?php
-					ob_start();
-					$this->insert('picture_default', $slide['image']->picture);
-					echo preg_replace('(<img\\s)i', '<img ' . $imageAttributes . ' ', ob_get_clean());
-				?>
+				<?php $this->insert('picture_default', array_merge($slide['image']->picture, ['attributes' => $slide['image']->picture['attributes'] . ' ' . $imageAttributes])) ?>
 				<?php if ($slide['image']->caption): ?>
 					<p class="rsts-text"><?php echo $slide['image']->caption ?></p>
 				<?php endif ?>
@@ -210,11 +202,7 @@
 				<?php endforeach ?>
 			</video>
 		<?php elseif (!empty($slide['backgroundImage'])): ?>
-			<?php
-				ob_start();
-				$this->insert('picture_default', $slide['backgroundImage']->picture);
-				echo preg_replace('(<img\\s)i', '<img ' . $backgroundAttributes . ' ', ob_get_clean());
-			?>
+			<?php $this->insert('picture_default', array_merge($slide['backgroundImage']->picture, ['attributes' => $slide['backgroundImage']->picture['attributes'] . ' ' . $backgroundAttributes])) ?>
 		<?php endif ?>
 
 		</<?php echo $tagName ?>>
