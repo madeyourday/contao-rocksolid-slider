@@ -434,7 +434,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_imgSize'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['imgSize'],
 	'exclude' => true,
 	'inputType' => 'imageSize',
-	'options' => version_compare(VERSION, '3.4', '<') ? $GLOBALS['TL_CROP'] : System::getImageSizes(),
+	'options_callback' => function() {
+		return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+	},
 	'reference' => &$GLOBALS['TL_LANG']['MSC'],
 	'eval' => array(
 		'rgxp' => 'natural',
@@ -443,9 +445,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_imgSize'] = array(
 		'helpwizard' => true,
 		'tl_class' => 'w50',
 	),
-	'sql' => version_compare(VERSION, '4', '<')
-		? "varchar(64) NOT NULL default 'a:3:{i:0;s:2:\"50\";i:1;s:2:\"50\";i:2;s:4:\"crop\";}'"
-		: "varchar(64) NOT NULL default 'a:3:{i:0;s:2:\\\"50\\\";i:1;s:2:\\\"50\\\";i:2;s:4:\\\"crop\\\";}'",
+	'sql' => "varchar(64) NOT NULL default 'a:3:{i:0;s:2:\"50\";i:1;s:2:\"50\";i:2;s:4:\"crop\";}'",
 );
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_slideMaxCount'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_slideMaxCount'],

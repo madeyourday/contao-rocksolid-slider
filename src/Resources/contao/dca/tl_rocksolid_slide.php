@@ -184,7 +184,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'extensions' => \Config::get('validImageTypes'),
 				'tl_class' => 'clr',
 			),
-			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
+			'sql' => "binary(16) NULL",
 		),
 		'thumbImage' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['thumbImage'],
@@ -197,7 +197,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'extensions' => \Config::get('validImageTypes'),
 				'tl_class' => 'clr',
 			),
-			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
+			'sql' => "binary(16) NULL",
 		),
 		'thumbTitle' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['thumbTitle'],
@@ -319,7 +319,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'filesOnly' => true,
 				'extensions' => \Config::get('validImageTypes'),
 			),
-			'sql' => version_compare(VERSION, '3.2', '<') ? "varchar(255) NOT NULL default ''" : "binary(16) NULL",
+			'sql' => "binary(16) NULL",
 		),
 		'backgroundVideos' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundVideos'],
@@ -343,7 +343,9 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundImageSize'],
 			'exclude' => true,
 			'inputType' => 'imageSize',
-			'options' => version_compare(VERSION, '3.4', '<') ? $GLOBALS['TL_CROP'] : System::getImageSizes(),
+			'options_callback' => function() {
+				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+			},
 			'reference' => &$GLOBALS['TL_LANG']['MSC'],
 			'eval' => array(
 				'rgxp' => 'digit',

@@ -24,10 +24,7 @@ $GLOBALS['BE_MOD']['content']['rocksolid_slider'] = array(
 		'tl_content',
 		'tl_rocksolid_slider_license',
 	),
-	'icon' => (version_compare(VERSION, '4.0', '>=')
-		? 'bundles/rocksolidslider'
-		: 'system/modules/rocksolid-slider/assets'
-	) . '/img/icon.png',
+	'icon' => 'bundles/rocksolidslider/img/icon.png',
 );
 
 array_insert($GLOBALS['FE_MOD'], 2, array(

@@ -40,7 +40,7 @@ class Slider extends \Backend
 			$icon = 'invisible.gif';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -74,7 +74,7 @@ class Slider extends \Backend
 			return '';
 		}
 		$href .= '&amp;id=' . $row['id'];
-		return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Slider extends \Backend
 			return '';
 		}
 		$href .= '&amp;id=' . $row['id'];
-		return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -159,12 +159,12 @@ class Slider extends \Backend
 				. '&amp;field=' . $dc->field
 				. '&amp;value=' . str_replace(array('{{link_url::', '}}'), '', $dc->value)
 			. '"'
-			. ' title="' . specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '"'
+			. ' title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '"'
 			. ' onclick="'
 				. 'Backend.getScrollOffset();'
 				. 'Backend.openModalSelector({'
 					. '\'width\':765,'
-					. '\'title\':' . specialchars(json_encode($GLOBALS['TL_LANG']['MOD']['page'][0])) . ','
+					. '\'title\':' . \StringUtil::specialchars(json_encode($GLOBALS['TL_LANG']['MOD']['page'][0])) . ','
 					. '\'url\':this.href,'
 					. '\'id\':\'' . $dc->field . '\','
 					. '\'tag\':\'ctrl_'. $dc->field . ((\Input::get('act') == 'editAll') ? '_' . $dc->id : '') . '\','

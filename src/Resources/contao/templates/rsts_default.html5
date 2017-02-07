@@ -1,12 +1,12 @@
 <div class="<?php echo $this->class ?> block"<?php echo $this->cssID ?><?php if ($this->style): ?> style="<?php echo $this->style ?>"<?php endif ?>>
 
-	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('headline'); } ?>
+	<?php $this->block('headline') ?>
 	<?php if ($this->headline): ?>
 		<<?php echo $this->hl ?>><?php echo $this->headline ?></<?php echo $this->hl ?>>
 	<?php endif ?>
-	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
+	<?php $this->endblock() ?>
 
-	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('slides'); } ?>
+	<?php $this->block('slides') ?>
 
 	<?php $lightboxUrls = array() ?>
 
@@ -55,11 +55,7 @@
 		?>
 
 		<<?php echo $tagName ?> <?php echo implode(' ', $attributes) ?>>
-			<?php if (version_compare(VERSION, '3.4', '<')): ?>
-				<img src="<?php echo $image->src ?>"<?php echo $image->imgSize ?> alt="<?php echo $image->alt ?>">
-			<?php else: ?>
-				<?php $this->insert('picture_default', $image->picture) ?>
-			<?php endif ?>
+			<?php $this->insert('picture_default', $image->picture) ?>
 			<?php if ($image->caption): ?>
 				<p class="rsts-text"><?php echo $image->caption ?></p>
 			<?php endif ?>
@@ -156,15 +152,11 @@
 		<?php if (! empty($slide['videoURL'])): ?>
 
 			<<?php echo $tagName ?> data-rsts-type="video" data-rsts-video="<?php echo $slide['videoURL'] ?>" <?php echo $attributes ?>>
-				<?php if (version_compare(VERSION, '3.4', '<')): ?>
-					<img src="<?php echo $slide['image']->src ?>"<?php echo $slide['image']->imgSize ?> alt="<?php echo $slide['image']->alt ?>" <?php echo $imageAttributes ?>>
-				<?php else: ?>
-					<?php
-						ob_start();
-						$this->insert('picture_default', $slide['image']->picture);
-						echo preg_replace('(<img\\s)i', '<img ' . $imageAttributes . ' ', ob_get_clean());
-					?>
-				<?php endif ?>
+				<?php
+					ob_start();
+					$this->insert('picture_default', $slide['image']->picture);
+					echo preg_replace('(<img\\s)i', '<img ' . $imageAttributes . ' ', ob_get_clean());
+				?>
 
 		<?php elseif (!empty($slide['videos'])): ?>
 			<<?php echo $tagName ?> data-rsts-type="video" <?php echo $attributes ?>>
@@ -191,15 +183,11 @@
 			} ?>
 
 			<<?php echo $tagName ?> data-rsts-type="image" <?php echo $attributes ?>>
-				<?php if (version_compare(VERSION, '3.4', '<')): ?>
-					<img src="<?php echo $slide['image']->src ?>"<?php echo $slide['image']->imgSize ?> alt="<?php echo $slide['image']->alt ?>" <?php echo $imageAttributes ?>>
-				<?php else: ?>
-					<?php
-						ob_start();
-						$this->insert('picture_default', $slide['image']->picture);
-						echo preg_replace('(<img\\s)i', '<img ' . $imageAttributes . ' ', ob_get_clean());
-					?>
-				<?php endif ?>
+				<?php
+					ob_start();
+					$this->insert('picture_default', $slide['image']->picture);
+					echo preg_replace('(<img\\s)i', '<img ' . $imageAttributes . ' ', ob_get_clean());
+				?>
 				<?php if ($slide['image']->caption): ?>
 					<p class="rsts-text"><?php echo $slide['image']->caption ?></p>
 				<?php endif ?>
@@ -222,15 +210,11 @@
 				<?php endforeach ?>
 			</video>
 		<?php elseif (!empty($slide['backgroundImage'])): ?>
-			<?php if (version_compare(VERSION, '3.4', '<')): ?>
-				<img src="<?php echo $slide['backgroundImage']->src ?>"<?php echo $slide['backgroundImage']->imgSize ?> alt="<?php echo $slide['backgroundImage']->alt ?>" <?php echo $backgroundAttributes ?>>
-			<?php else: ?>
-				<?php
-					ob_start();
-					$this->insert('picture_default', $slide['backgroundImage']->picture);
-					echo preg_replace('(<img\\s)i', '<img ' . $backgroundAttributes . ' ', ob_get_clean());
-				?>
-			<?php endif ?>
+			<?php
+				ob_start();
+				$this->insert('picture_default', $slide['backgroundImage']->picture);
+				echo preg_replace('(<img\\s)i', '<img ' . $backgroundAttributes . ' ', ob_get_clean());
+			?>
 		<?php endif ?>
 
 		</<?php echo $tagName ?>>
@@ -242,12 +226,12 @@
 
 	<?php endforeach ?>
 
-	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
+	<?php $this->endblock() ?>
 
 </div>
 
 <script>
-<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('script'); } ?>
+<?php $this->block('script') ?>
 (function() {
 
 var sliderElement = [].slice.call(document.getElementsByClassName('mod_rocksolid_slider'), -1 )[0];
@@ -264,16 +248,16 @@ function init() {
 	var $ = jQuery;
 	var slider = $(sliderElement);
 
-	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('script_bgvideo'); } ?>
+	<?php $this->block('script_bgvideo') ?>
 	slider.find('video[data-rsts-background], [data-rsts-type=video] video').each(function() {
 		// Disable mejs for videos
 		this.player = false;
 	});
-	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
+	<?php $this->endblock() ?>
 
 	slider.rstSlider(<?php echo json_encode($this->options); ?>);
 
-	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('script_lightbox'); } ?>
+	<?php $this->block('script_lightbox') ?>
 	// Fix missing lightbox links
 	$(function() {
 
@@ -282,14 +266,14 @@ function init() {
 		}
 
 		var lightboxConfig = {
-			<?php if (version_compare(VERSION, '3.3', '>=')) { $this->block('script_lightbox_config'); } ?>
+			<?php $this->block('script_lightbox_config') ?>
 			loop: false,
 			rel: function() {
 				return $(this).attr('data-lightbox');
 			},
 			maxWidth: '95%',
 			maxHeight: '95%'
-			<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
+			<?php $this->endblock() ?>
 		};
 
 		<?php if (count($lightboxUrls)): ?>
@@ -327,10 +311,10 @@ function init() {
 		update(slider.find('a[data-lightbox]'));
 
 	});
-	<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
+	<?php $this->endblock() ?>
 
 }
 
 })();
-<?php if (version_compare(VERSION, '3.3', '>=')) { $this->endblock(); } ?>
+<?php $this->endblock() ?>
 </script>

@@ -23,9 +23,7 @@ ClassLoader::addClasses(array(
 	'MadeYourDay\\RockSolidSlider\\Model\\ContentModel' => 'system/modules/rocksolid-slider/src/MadeYourDay/Contao/Model/ContentModel.php',
 ));
 
-$templatesFolder = version_compare(VERSION, '4.0', '>=')
-	? 'vendor/madeyourday/contao-rocksolid-slider/templates'
-	: 'system/modules/rocksolid-slider/templates';
+$templatesFolder = 'vendor/madeyourday/contao-rocksolid-slider/src/Resources/contao/templates';
 
 TemplateLoader::addFiles(array(
 	'rsts_default' => $templatesFolder,

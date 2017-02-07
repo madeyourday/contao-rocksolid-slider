@@ -45,19 +45,8 @@ abstract class SliderRunonce
 			}
 		}
 
-		// Fix the singleSRC data type for Contao 3.1 and below
-		if (version_compare(VERSION, '3.2', '<') && $database->tableExists('tl_rocksolid_slide')) {
-			$fields = $database->listFields('tl_rocksolid_slide');
-			foreach ($fields as $field) {
-				if ($field['name'] === 'singleSRC' && $field['type'] !== 'varchar') {
-					$database->query('ALTER TABLE tl_rocksolid_slide CHANGE singleSRC singleSRC varchar(255) NOT NULL default \'\'');
-					$database->query('UPDATE tl_rocksolid_slide SET singleSRC = trim(trailing CHAR(0x00) from singleSRC)');
-				}
-			}
-		}
-
 		// Update the multiSRC and orderSRC field from IDs to UUIDs
-		if (version_compare(VERSION, '3.2', '>=') && $database->tableExists('tl_rocksolid_slider')) {
+		if ($database->tableExists('tl_rocksolid_slider')) {
 
 			$needUpdate = true;
 			$result = $database->prepare('SELECT multiSRC FROM tl_rocksolid_slider WHERE multiSRC != \'\'')->execute();
@@ -83,10 +72,7 @@ abstract class SliderRunonce
 		}
 
 		// Update the singleSRC field from IDs to UUIDs
-		if (
-			version_compare(VERSION, '3.2', '>=') &&
-			$database->tableExists('tl_rocksolid_slide')
-		) {
+		if ($database->tableExists('tl_rocksolid_slide')) {
 			$fields = $database->listFields('tl_rocksolid_slide');
 			foreach ($fields as $field) {
 				if ($field['name'] === 'singleSRC' && $field['type'] !== 'binary') {

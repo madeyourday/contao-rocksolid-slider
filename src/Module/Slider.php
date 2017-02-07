@@ -92,12 +92,7 @@ class Slider extends \Module
 
 		}
 
-		if (version_compare(VERSION, '3.2', '<')) {
-			$this->files = \FilesModel::findMultipleByIds($this->multiSRC);
-		}
-		else {
-			$this->files = \FilesModel::findMultipleByUuids($this->multiSRC);
-		}
+		$this->files = \FilesModel::findMultipleByUuids($this->multiSRC);
 
 		if (
 			$this->rsts_import_settings
@@ -143,7 +138,7 @@ class Slider extends \Module
 					$filesExpaned[] = $files->current();
 				}
 				else {
-					$subFiles = \FilesModel::findByPid(version_compare(VERSION, '3.2', '<') ? $files->id : $files->uuid);
+					$subFiles = \FilesModel::findByPid($files->uuid);
 					while ($subFiles && $subFiles->next()) {
 						if ($subFiles->type === 'file'){
 							$filesExpaned[] = $subFiles->current();
@@ -183,13 +178,7 @@ class Slider extends \Module
 
 			if ($this->orderSRC) {
 				// Turn the order string into an array and remove all values
-				if (version_compare(VERSION, '3.2', '<')) {
-					$order = explode(',', $this->orderSRC);
-					$order = array_map('intval', $order);
-				}
-				else {
-					$order = deserialize($this->orderSRC);
-				}
+				$order = deserialize($this->orderSRC);
 				if (!$order || !is_array($order)) {
 					$order = array();
 				}
@@ -197,10 +186,9 @@ class Slider extends \Module
 				$order = array_map(function(){}, $order);
 
 				// Move the matching elements to their position in $order
-				$idKey = version_compare(VERSION, '3.2', '<') ? 'id' : 'uuid';
 				foreach ($images as $k => $v) {
-					if (array_key_exists($v[$idKey], $order)) {
-						$order[$v[$idKey]] = $v;
+					if (array_key_exists($v['uuid'], $order)) {
+						$order[$v['uuid']] = $v;
 						unset($images[$k]);
 					}
 				}
@@ -392,9 +380,7 @@ class Slider extends \Module
 
 		$this->Template->options = $options;
 
-		$assetsDir = version_compare(VERSION, '4.0', '>=')
-			? 'web/bundles/rocksolidslider'
-			: 'system/modules/rocksolid-slider/assets';
+		$assetsDir = 'web/bundles/rocksolidslider';
 
 		$GLOBALS['TL_JAVASCRIPT'][] = $assetsDir . '/js/rocksolid-slider.min.js|static';
 		$GLOBALS['TL_CSS'][] = $assetsDir . '/css/rocksolid-slider.min.css||static';
@@ -434,10 +420,7 @@ class Slider extends \Module
 			if (
 				in_array($slide['type'], array('image', 'video')) &&
 				trim($slide['singleSRC']) &&
-				($file = version_compare(VERSION, '3.2', '<')
-					? \FilesModel::findByPk($slide['singleSRC'])
-					: \FilesModel::findByUuid($slide['singleSRC'])
-				) &&
+				($file = \FilesModel::findByUuid($slide['singleSRC'])) &&
 				($fileObject = new \File($file->path, true)) &&
 				($fileObject->isGdImage || $fileObject->isImage)
 			) {
@@ -477,12 +460,10 @@ class Slider extends \Module
 				}
 				$slide['image']->imgSize = '';
 				$slide['image']->alt = '';
-				if (version_compare(VERSION, '3.4', '>=')) {
-					$slide['image']->picture = array(
-						'img' => array('src' => $slide['image']->src, 'srcset' => $slide['image']->src),
-						'sources' => array(),
-					);
-				}
+				$slide['image']->picture = array(
+					'img' => array('src' => $slide['image']->src, 'srcset' => $slide['image']->src),
+					'sources' => array(),
+				);
 			}
 
 			if ($slide['type'] !== 'video' && $slide['videoURL']) {
@@ -491,12 +472,7 @@ class Slider extends \Module
 
 			if ($slide['type'] === 'video' && $slide['videos']) {
 				$videoFiles = deserialize($slide['videos'], true);
-				if (version_compare(VERSION, '3.2', '<')) {
-					$videoFiles = \FilesModel::findMultipleByIds($videoFiles);
-				}
-				else {
-					$videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
-				}
+				$videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
 				$videos = array();
 				foreach ($videoFiles as $file) {
 					$videos[] = $file;
@@ -509,10 +485,7 @@ class Slider extends \Module
 
 			if (
 				trim($slide['backgroundImage']) &&
-				($file = version_compare(VERSION, '3.2', '<')
-					? \FilesModel::findByPk($slide['backgroundImage'])
-					: \FilesModel::findByUuid($slide['backgroundImage'])
-				) &&
+				($file = \FilesModel::findByUuid($slide['backgroundImage'])) &&
 				($fileObject = new \File($file->path, true)) &&
 				($fileObject->isGdImage || $fileObject->isImage)
 			) {
@@ -534,12 +507,7 @@ class Slider extends \Module
 
 			if ($slide['backgroundVideos']) {
 				$videoFiles = deserialize($slide['backgroundVideos'], true);
-				if (version_compare(VERSION, '3.2', '<')) {
-					$videoFiles = \FilesModel::findMultipleByIds($videoFiles);
-				}
-				else {
-					$videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
-				}
+				$videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
 				$videos = array();
 				foreach ($videoFiles as $file) {
 					$videos[] = $file;
@@ -551,10 +519,7 @@ class Slider extends \Module
 				$slide['thumb'] = new \stdClass;
 				if (
 					trim($slide['thumbImage']) &&
-					($file = version_compare(VERSION, '3.2', '<')
-						? \FilesModel::findByPk($slide['thumbImage'])
-						: \FilesModel::findByUuid($slide['thumbImage'])
-					) &&
+					($file = \FilesModel::findByUuid($slide['thumbImage'])) &&
 					($fileObject = new \File($file->path, true)) &&
 					($fileObject->isGdImage || $fileObject->isImage)
 				) {
@@ -568,10 +533,7 @@ class Slider extends \Module
 				elseif (
 					in_array($slide['type'], array('image', 'video')) &&
 					trim($slide['singleSRC']) &&
-					($file = version_compare(VERSION, '3.2', '<')
-						? \FilesModel::findByPk($slide['singleSRC'])
-						: \FilesModel::findByUuid($slide['singleSRC'])
-					) &&
+					($file = \FilesModel::findByUuid($slide['singleSRC'])) &&
 					($fileObject = new \File($file->path, true)) &&
 					($fileObject->isGdImage || $fileObject->isImage)
 				) {
