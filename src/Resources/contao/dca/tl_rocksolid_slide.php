@@ -20,7 +20,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 		'switchToEdit' => true,
 		'enableVersioning' => true,
 		'onload_callback' => array(
-			array('MadeYourDay\\Contao\\Slider', 'slideOnloadCallback'),
+			array('MadeYourDay\\RockSolidSlider\\Slider', 'slideOnloadCallback'),
 		),
 		'sql' => array(
 			'keys' => array(
@@ -36,8 +36,8 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'fields' => array('sorting'),
 			'headerFields' => array('name'),
 			'panelLayout' => 'limit',
-			'header_callback' => array('MadeYourDay\\Contao\\Slider', 'headerCallback'),
-			'child_record_callback' => array('MadeYourDay\\Contao\\Slider', 'listSlides'),
+			'header_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'headerCallback'),
+			'child_record_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'listSlides'),
 			'child_record_class' => 'no_padding',
 		),
 		'global_operations' => array(
@@ -54,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'href' => 'table=tl_content',
 				'icon' => 'edit.gif',
 				'attributes' => 'class="contextmenu"',
-				'button_callback' => array('MadeYourDay\\Contao\\Slider', 'editSlideIcon'),
+				'button_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'editSlideIcon'),
 			),
 			'editheader' => array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['editheader'],
@@ -82,7 +82,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['toggle'],
 				'icon' => 'visible.gif',
 				'attributes' => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
-				'button_callback' => array('MadeYourDay\\Contao\\Slider', 'toggleSlideIcon'),
+				'button_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'toggleSlideIcon'),
 			),
 			'show' => array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['show'],
@@ -296,7 +296,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'tl_class' => 'clr w50 wizard',
 			),
 			'wizard' => array(
-				array('MadeYourDay\\Contao\\Slider', 'pagePickerWizard'),
+				array('MadeYourDay\\RockSolidSlider\\Slider', 'pagePickerWizard'),
 			),
 			'sql' => "varchar(255) NOT NULL default ''",
 		),

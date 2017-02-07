@@ -12,10 +12,10 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
-$GLOBALS['TL_MODELS']['tl_rocksolid_slider'] = 'MadeYourDay\\Contao\\Model\\SliderModel';
-$GLOBALS['TL_MODELS']['tl_rocksolid_slide'] = 'MadeYourDay\\Contao\\Model\\SlideModel';
+$GLOBALS['TL_MODELS']['tl_rocksolid_slider'] = 'MadeYourDay\\RockSolidSlider\\Model\\SliderModel';
+$GLOBALS['TL_MODELS']['tl_rocksolid_slide'] = 'MadeYourDay\\RockSolidSlider\\Model\\SlideModel';
 
-$GLOBALS['TL_CTE']['includes']['rocksolid_slider'] = 'MadeYourDay\\Contao\\Module\\Slider';
+$GLOBALS['TL_CTE']['includes']['rocksolid_slider'] = 'MadeYourDay\\RockSolidSlider\\Module\\Slider';
 
 $GLOBALS['BE_MOD']['content']['rocksolid_slider'] = array(
 	'tables' => array(
@@ -32,6 +32,6 @@ $GLOBALS['BE_MOD']['content']['rocksolid_slider'] = array(
 
 array_insert($GLOBALS['FE_MOD'], 2, array(
 	'miscellaneous' => array(
-		'rocksolid_slider' => 'MadeYourDay\\Contao\\Module\\Slider',
+		'rocksolid_slider' => 'MadeYourDay\\RockSolidSlider\\Module\\Slider',
 	)
 ));

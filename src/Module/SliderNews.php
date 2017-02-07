@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-namespace MadeYourDay\Contao\Module;
+namespace MadeYourDay\RockSolidSlider\Module;
 
 /**
  * Slider News Module

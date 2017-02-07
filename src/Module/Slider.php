@@ -6,11 +6,11 @@
  * file that was distributed with this source code.
  */
 
-namespace MadeYourDay\Contao\Module;
+namespace MadeYourDay\RockSolidSlider\Module;
 
-use MadeYourDay\Contao\Model\SlideModel;
-use MadeYourDay\Contao\Model\SliderModel;
-use MadeYourDay\Contao\Model\ContentModel;
+use MadeYourDay\RockSolidSlider\Model\SlideModel;
+use MadeYourDay\RockSolidSlider\Model\SliderModel;
+use MadeYourDay\RockSolidSlider\Model\ContentModel;
 
 /**
  * Slider Frontend Module

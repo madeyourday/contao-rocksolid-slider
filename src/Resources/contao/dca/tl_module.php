@@ -12,7 +12,7 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
-$GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = array('MadeYourDay\\Contao\\Slider', 'moduleOnloadCallback');
+$GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = array('MadeYourDay\\RockSolidSlider\\Slider', 'moduleOnloadCallback');
 
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'rsts_import_settings';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'rsts_content_type';
@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_id'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_id'],
 	'exclude' => true,
 	'inputType' => 'select',
-	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderIds'),
+	'options_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'getSliderIds'),
 	'eval' => array(
 		'includeBlankOption' => true,
 		'mandatory' => true,
@@ -77,7 +77,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_import_settings_from'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_import_settings_from'],
 	'exclude' => true,
 	'inputType' => 'select',
-	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderModuleIds'),
+	'options_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'getSliderModuleIds'),
 	'eval' => array(
 		'includeBlankOption' => true,
 		'mandatory' => true,
@@ -89,7 +89,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_template'] = array(
 	'default' => 'rsts_default',
 	'exclude' => true,
 	'inputType' => 'select',
-	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderTemplates'),
+	'options_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'getSliderTemplates'),
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(32) NOT NULL default 'rsts_default'",
 );

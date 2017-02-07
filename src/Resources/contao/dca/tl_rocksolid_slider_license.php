@@ -30,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider_license'] = array(
 				'tl_class' => 'w50',
 			),
 			'save_callback' => array(
-				array('MadeYourDay\\Contao\\Slider', 'licenseSaveCallback'),
+				array('MadeYourDay\\RockSolidSlider\\Slider', 'licenseSaveCallback'),
 			),
 		),
 	),

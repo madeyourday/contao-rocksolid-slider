@@ -6,9 +6,9 @@
  * file that was distributed with this source code.
  */
 
-namespace MadeYourDay\Contao;
+namespace MadeYourDay\RockSolidSlider;
 
-use MadeYourDay\Contao\Module\SliderEvents;
+use MadeYourDay\RockSolidSlider\Module\SliderEvents;
 
 /**
  * RockSolid Slider DCA

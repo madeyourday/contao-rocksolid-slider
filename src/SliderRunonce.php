@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-namespace MadeYourDay\Contao;
+namespace MadeYourDay\RockSolidSlider;
 
 /**
  * RockSolid Slider Runonce
@@ -35,7 +35,7 @@ abstract class SliderRunonce
 			if (
 				$result
 				&& $result->lickey
-				&& class_exists('MadeYourDay\\Contao\\Slider')
+				&& class_exists('MadeYourDay\\RockSolidSlider\\Slider')
 				&& Slider::checkLicense((string)$result->lickey)
 			) {
 				\Config::getInstance()->add(

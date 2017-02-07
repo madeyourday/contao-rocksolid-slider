@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-namespace MadeYourDay\Contao\Module;
+namespace MadeYourDay\RockSolidSlider\Module;
 
 /**
  * Slider Events Module
@@ -37,7 +37,7 @@ class SliderEvents extends \ModuleEventlist
 		$this->perPage = 0;
 
 		$parseTemplateHook = array(
-			'MadeYourDay\\Contao\\Slider',
+			'MadeYourDay\\RockSolidSlider\\Slider',
 			'parseEventsTemplateHook'
 		);
 		// Add the TEMPLATE_SEPARATOR to be able to split the output into single events

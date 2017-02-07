@@ -17,7 +17,7 @@ if (TL_MODE === 'BE') {
 	// Dynamically add the parent table
 	if (Input::get('do') == 'rocksolid_slider') {
 		$GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_rocksolid_slide';
-		$GLOBALS['TL_DCA']['tl_content']['list']['sorting']['header_callback'] = array('MadeYourDay\\Contao\\Slider', 'headerCallbackContent');
+		$GLOBALS['TL_DCA']['tl_content']['list']['sorting']['header_callback'] = array('MadeYourDay\\RockSolidSlider\\Slider', 'headerCallbackContent');
 	}
 
 	// Load module language file
@@ -25,7 +25,7 @@ if (TL_MODE === 'BE') {
 
 }
 
-$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('MadeYourDay\\Contao\\Slider', 'contentOnloadCallback');
+$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('MadeYourDay\\RockSolidSlider\\Slider', 'contentOnloadCallback');
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = 'rsts_import_settings';
 $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = 'rsts_content_type';
@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_id'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_id'],
 	'exclude' => true,
 	'inputType' => 'select',
-	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderIds'),
+	'options_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'getSliderIds'),
 	'eval' => array(
 		'includeBlankOption' => true,
 		'mandatory' => true,
@@ -77,7 +77,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_import_settings_from'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_import_settings_from'],
 	'exclude' => true,
 	'inputType' => 'select',
-	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderModuleIds'),
+	'options_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'getSliderModuleIds'),
 	'eval' => array(
 		'includeBlankOption' => true,
 		'mandatory' => true,
@@ -89,7 +89,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_template'] = array(
 	'default' => 'rsts_default',
 	'exclude' => true,
 	'inputType' => 'select',
-	'options_callback' => array('MadeYourDay\\Contao\\Slider', 'getSliderTemplates'),
+	'options_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'getSliderTemplates'),
 	'eval' => array('tl_class' => 'w50'),
 	'sql' => "varchar(32) NOT NULL default 'rsts_default'",
 );

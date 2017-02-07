@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'href' => 'table=tl_rocksolid_slide',
 				'icon' => 'edit.gif',
 				'attributes' => 'class="contextmenu"',
-				'button_callback' => array('MadeYourDay\\Contao\\Slider', 'editSliderIcon'),
+				'button_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'editSliderIcon'),
 			),
 			'editheader' => array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['editheader'],

@@ -6,8 +6,8 @@
  * file that was distributed with this source code.
  */
 
-if (!class_exists('MadeYourDay\\Contao\\SliderRunonce')) {
+if (!class_exists('MadeYourDay\\RockSolidSlider\\SliderRunonce')) {
 	include __DIR__ . '/../src/MadeYourDay/Contao/SliderRunonce.php';
 }
 
-MadeYourDay\Contao\SliderRunonce::run();
+MadeYourDay\RockSolidSlider\SliderRunonce::run();
