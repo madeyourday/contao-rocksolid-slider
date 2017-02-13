@@ -1,8 +1,8 @@
-<div class="<?php echo $this->class ?> block"<?php echo $this->cssID ?><?php if ($this->style): ?> style="<?php echo $this->style ?>"<?php endif ?>>
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif ?>>
 
 	<?php $this->block('headline') ?>
 	<?php if ($this->headline): ?>
-		<<?php echo $this->hl ?>><?php echo $this->headline ?></<?php echo $this->hl ?>>
+		<<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
 	<?php endif ?>
 	<?php $this->endblock() ?>
 
@@ -19,7 +19,7 @@
 		?>
 
 		<?php if ($loadLazy): ?>
-			<script type="text/html"<?php if ($image->alt): ?> data-rsts-name="<?php echo $image->alt ?>"<?php endif ?><?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?php echo $image->thumb->src ?>"<?php endif ?>>
+			<script type="text/html"<?php if ($image->alt): ?> data-rsts-name="<?= $image->alt ?>"<?php endif ?><?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?= $image->thumb->src ?>"<?php endif ?>>
 			<?php ob_start() ?>
 		<?php endif ?>
 
@@ -54,15 +54,15 @@
 			}
 		?>
 
-		<<?php echo $tagName ?> <?php echo implode(' ', $attributes) ?>>
+		<<?= $tagName ?> <?= implode(' ', $attributes) ?>>
 			<?php $this->insert('picture_default', $image->picture) ?>
 			<?php if ($image->caption): ?>
-				<p class="rsts-text"><?php echo $image->caption ?></p>
+				<p class="rsts-text"><?= $image->caption ?></p>
 			<?php endif ?>
-		</<?php echo $tagName ?>>
+		</<?= $tagName ?>>
 
 		<?php if ($loadLazy): ?>
-			<?php echo str_replace(array('\\', '</'), array('\\\\', '<\\/'), ob_get_clean()) ?>
+			<?= str_replace(array('\\', '</'), array('\\\\', '<\\/'), ob_get_clean()) ?>
 			</script>
 		<?php endif ?>
 
@@ -145,20 +145,20 @@
 		?>
 
 		<?php if ($loadLazy): ?>
-			<script type="text/html"<?php if (!empty($slide['title'])): ?> data-rsts-name="<?php echo $slide['title'] ?>"<?php endif ?><?php if (!empty($slide['thumb']->src)): ?> data-rsts-thumb="<?php echo $slide['thumb']->src ?>"<?php endif ?><?php if ($thumbHtml): ?> data-rsts-thumb-html="<?php echo $thumbHtml ?>"<?php endif ?>>
+			<script type="text/html"<?php if (!empty($slide['title'])): ?> data-rsts-name="<?= $slide['title'] ?>"<?php endif ?><?php if (!empty($slide['thumb']->src)): ?> data-rsts-thumb="<?= $slide['thumb']->src ?>"<?php endif ?><?php if ($thumbHtml): ?> data-rsts-thumb-html="<?= $thumbHtml ?>"<?php endif ?>>
 			<?php ob_start() ?>
 		<?php endif ?>
 
 		<?php if (! empty($slide['videoURL'])): ?>
 
-			<<?php echo $tagName ?> data-rsts-type="video" data-rsts-video="<?php echo $slide['videoURL'] ?>" <?php echo $attributes ?>>
+			<<?= $tagName ?> data-rsts-type="video" data-rsts-video="<?= $slide['videoURL'] ?>" <?= $attributes ?>>
 				<?php $this->insert('picture_default', array_merge($slide['image']->picture, ['attributes' => $slide['image']->picture['attributes'] . ' ' . $imageAttributes])) ?>
 
 		<?php elseif (!empty($slide['videos'])): ?>
-			<<?php echo $tagName ?> data-rsts-type="video" <?php echo $attributes ?>>
-				<video controls<?php if (!empty($slide['image'])): ?> poster="<?php echo $slide['image']->src ?>"<?php endif ?>>
+			<<?= $tagName ?> data-rsts-type="video" <?= $attributes ?>>
+				<video controls<?php if (!empty($slide['image'])): ?> poster="<?= $slide['image']->src ?>"<?php endif ?>>
 					<?php foreach ($slide['videos'] as $video): ?>
-						<source src="<?php echo TL_FILES_URL . $video->path ?>" type="video/<?php echo $video->extension ?>">
+						<source src="<?= TL_FILES_URL . $video->path ?>" type="video/<?= $video->extension ?>">
 					<?php endforeach ?>
 				</video>
 
@@ -178,37 +178,37 @@
 				}
 			} ?>
 
-			<<?php echo $tagName ?> data-rsts-type="image" <?php echo $attributes ?>>
+			<<?= $tagName ?> data-rsts-type="image" <?= $attributes ?>>
 				<?php $this->insert('picture_default', array_merge($slide['image']->picture, ['attributes' => $slide['image']->picture['attributes'] . ' ' . $imageAttributes])) ?>
 				<?php if ($slide['image']->caption): ?>
-					<p class="rsts-text"><?php echo $slide['image']->caption ?></p>
+					<p class="rsts-text"><?= $slide['image']->caption ?></p>
 				<?php endif ?>
 
 		<?php else: ?>
 
-			<<?php echo $tagName ?> <?php echo $attributes ?>>
+			<<?= $tagName ?> <?= $attributes ?>>
 				<?php if ($tagName === 'a') {
 					// Nested links aren't allowed in HTML
 					$slide['text'] = preg_replace('((</?)a(\s+[^>]*>|>))is', '$1span$2', $slide['text']);
 				} ?>
-				<?php echo $slide['text'] ?>
+				<?= $slide['text'] ?>
 
 		<?php endif ?>
 
 		<?php if (!empty($slide['backgroundVideos'])): ?>
-			<video<?php if (!empty($slide['backgroundImage'])): ?> poster="<?php echo $slide['backgroundImage']->src ?>"<?php endif ?> <?php echo $backgroundAttributes ?>>
+			<video<?php if (!empty($slide['backgroundImage'])): ?> poster="<?= $slide['backgroundImage']->src ?>"<?php endif ?> <?= $backgroundAttributes ?>>
 				<?php foreach ($slide['backgroundVideos'] as $video): ?>
-					<source src="<?php echo TL_FILES_URL . $video->path ?>" type="video/<?php echo $video->extension ?>">
+					<source src="<?= TL_FILES_URL . $video->path ?>" type="video/<?= $video->extension ?>">
 				<?php endforeach ?>
 			</video>
 		<?php elseif (!empty($slide['backgroundImage'])): ?>
 			<?php $this->insert('picture_default', array_merge($slide['backgroundImage']->picture, ['attributes' => $slide['backgroundImage']->picture['attributes'] . ' ' . $backgroundAttributes])) ?>
 		<?php endif ?>
 
-		</<?php echo $tagName ?>>
+		</<?= $tagName ?>>
 
 		<?php if ($loadLazy): ?>
-			<?php echo str_replace(array('\\', '</'), array('\\\\', '<\\/'), ob_get_clean()) ?>
+			<?= str_replace(array('\\', '</'), array('\\\\', '<\\/'), ob_get_clean()) ?>
 			</script>
 		<?php endif ?>
 
@@ -243,7 +243,7 @@ function init() {
 	});
 	<?php $this->endblock() ?>
 
-	slider.rstSlider(<?php echo json_encode($this->options); ?>);
+	slider.rstSlider(<?= json_encode($this->options); ?>);
 
 	<?php $this->block('script_lightbox') ?>
 	// Fix missing lightbox links
@@ -265,8 +265,8 @@ function init() {
 		};
 
 		<?php if (count($lightboxUrls)): ?>
-			var lightboxUrls = <?php echo json_encode($lightboxUrls) ?>;
-			var lightboxId = <?php echo json_encode(substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6)) ?>;
+			var lightboxUrls = <?= json_encode($lightboxUrls) ?>;
+			var lightboxId = <?= json_encode(substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6)) ?>;
 			var dummyLinksWrap = $('<div>').css('display', 'none');
 			var dummyLinks = $([]);
 			dummyLinksWrap.insertAfter(slider);
