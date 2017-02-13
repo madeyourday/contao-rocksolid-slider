@@ -46,7 +46,7 @@ abstract class SliderRunonce
 		}
 
 		// Update the multiSRC and orderSRC field from IDs to UUIDs
-		if ($database->tableExists('tl_rocksolid_slider')) {
+		if ($database->tableExists('tl_rocksolid_slider') && class_exists('Database\\Updater')) {
 
 			$needUpdate = true;
 			$result = $database->prepare('SELECT multiSRC FROM tl_rocksolid_slider WHERE multiSRC != \'\'')->execute();
@@ -72,7 +72,7 @@ abstract class SliderRunonce
 		}
 
 		// Update the singleSRC field from IDs to UUIDs
-		if ($database->tableExists('tl_rocksolid_slide')) {
+		if ($database->tableExists('tl_rocksolid_slide') && class_exists('Database\\Updater')) {
 			$fields = $database->listFields('tl_rocksolid_slide');
 			foreach ($fields as $field) {
 				if ($field['name'] === 'singleSRC' && $field['type'] !== 'binary') {
