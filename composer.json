@@ -21,13 +21,20 @@
 		"php":">=5.5",
 		"contao/core-bundle":"^4.3"
 	},
+	"require-dev": {
+		"contao/manager-plugin": "^2.0"
+	},
 	"conflict": {
-		"contao/core": "*"
+		"contao/core": "*",
+		"contao/manager-plugin": "<2.0 || >=3.0"
 	},
 	"autoload":{
 		"psr-4": {
 			"MadeYourDay\\RockSolidSlider\\": "src/"
 		}
+	},
+	"extra": {
+		 "contao-manager-plugin": "MadeYourDay\\RockSolidSlider\\ContaoManagerPlugin"
 	},
 	"replace":{
 		"contao-legacy/rocksolid-slider":"self.version",
