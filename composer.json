@@ -28,6 +28,9 @@
 		"contao-legacy/rocksolid-slider-pro":"self.version"
 	},
 	"extra":{
+		"branch-alias": {
+			"dev-develop": "2.0.x-dev"
+		},
 		"contao":{
 			"sources":{
 				"":"system/modules/rocksolid-slider"
