@@ -1,8 +1,12 @@
 # RockSolid Slider Contao Extension
 
-Install to */system/modules/rocksolid-slider/*
+## Installation
 
-More information: 
+```sh
+$ composer require madeyourday/contao-rocksolid-slider
+```
+
+## Documentation:
 
 * English: http://rocksolidthemes.com/en/contao/plugins/responsive-slider
 * German: http://rocksolidthemes.com/de/contao/plugins/responsive-slider
