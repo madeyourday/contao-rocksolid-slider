@@ -8,10 +8,10 @@ $ composer require madeyourday/contao-rocksolid-slider
 
 ## Documentation:
 
-* English: http://rocksolidthemes.com/en/contao/plugins/responsive-slider
-* German: http://rocksolidthemes.com/de/contao/plugins/responsive-slider
+* English: https://rocksolidthemes.com/en/contao/plugins/responsive-slider
+* German: https://rocksolidthemes.com/de/contao/plugins/responsive-slider
 
 ## License
 
-* English: http://rocksolidthemes.com/en/contao/license
-* German: http://rocksolidthemes.com/de/contao/lizenzbedigungen
+* English: https://rocksolidthemes.com/en/contao/license
+* German: https://rocksolidthemes.com/de/contao/lizenzbedigungen
