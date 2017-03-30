@@ -31,10 +31,13 @@ class SlideModel extends \Model
 	 */
 	public static function findPublishedByPid($id, $limit = 0, array $options = array())
 	{
-		$time = time();
 		$table = static::$strTable;
+		$columns = array("$table.pid=?");
 
-		$columns = array("$table.pid=? AND ($table.start='' OR $table.start<$time) AND ($table.stop='' OR $table.stop>$time) AND $table.published=1");
+		if (!empty($options['ignoreFePreview']) || !BE_USER_LOGGED_IN) {
+			$time = \Date::floorToMinute();
+			$columns[] = "($table.start='' OR $table.start<$time) AND ($table.stop='' OR $table.stop>$time) AND $table.published=1";
+		}
 
 		if (! isset($options['order'])) {
 			$options['order'] = "$table.sorting ASC";
