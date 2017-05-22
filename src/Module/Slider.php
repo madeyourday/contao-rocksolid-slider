@@ -60,14 +60,6 @@ class Slider extends \Module
 				return '';
 			}
 		}
-		else if ($this->rsts_content_type === 'rsts_events') {
-			$eventsModule = new SliderEvents($this->objModel, $this->strColumn);
-			$this->eventItems = $eventsModule->getEventItems();
-			if (!count($this->eventItems)) {
-				// Return if there are no events
-				return '';
-			}
-		}
 		else if ($this->rsts_content_type === 'rsts_settings') {
 			return '';
 		}
@@ -229,13 +221,6 @@ class Slider extends \Module
 		$slides = array();
 		if (isset($this->slides)) {
 			$slides = $this->slides;
-		}
-		else if (isset($this->eventItems)) {
-			foreach ($this->eventItems as $eventItem) {
-				$slides[] = array(
-					'text' => $eventItem,
-				);
-			}
 		}
 		else if (isset($this->slider->id) && $this->slider->type === 'content') {
 			$slides = $this->parseSlides(SlideModel::findPublishedByPid($this->slider->id));

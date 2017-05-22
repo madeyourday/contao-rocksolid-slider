@@ -7,6 +7,13 @@ services:
         class: Contao\CoreBundle\Framework\Adapter
         arguments: ['Contao\ModuleModel']
 
+    madeyourday.rocksolid_slider.slideprovider.events:
+        class: MadeYourDay\RockSolidSlider\SlideProvider\EventsSlideProvider
+        arguments:
+            - "@madeyourday.rocksolid_slider.slideprovider.module_model_adapter"
+        tags:
+            - { name: madeyourday.rocksolid_slider.slideprovider }
+
     madeyourday.rocksolid_slider.slideprovider.news:
         class: MadeYourDay\RockSolidSlider\SlideProvider\NewsSlideProvider
         arguments:
