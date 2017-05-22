@@ -48,7 +48,15 @@ class Slider extends \Module
 			return $template->parse();
 		}
 
-		if ($this->rsts_content_type === 'rsts_news') {
+		$registry = \System::getContainer()->get('madeyourday.rocksolid_slider.slideproviders');
+		/** @var \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry $registry */
+		if ($registry->hasProvider($this->rsts_content_type)) {
+			$this->slides = $registry->getProvider($this->rsts_content_type)->getSlides($this->objModel->row());
+			if (empty($this->slides)) {
+				return '';
+			}
+		}
+		else if ($this->rsts_content_type === 'rsts_news') {
 			$newsModule = new SliderNews($this->objModel, $this->strColumn);
 			$this->newsArticles = $newsModule->getNewsArticles();
 			if (!count($this->newsArticles)) {
