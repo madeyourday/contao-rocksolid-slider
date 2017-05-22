@@ -2,3 +2,14 @@ services:
     madeyourday.rocksolid_slider.slideproviders:
         class: MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry
         arguments: []
+
+    madeyourday.rocksolid_slider.slideprovider.module_model_adapter:
+        class: Contao\CoreBundle\Framework\Adapter
+        arguments: ['Contao\ModuleModel']
+
+    madeyourday.rocksolid_slider.slideprovider.news:
+        class: MadeYourDay\RockSolidSlider\SlideProvider\NewsSlideProvider
+        arguments:
+            - "@madeyourday.rocksolid_slider.slideprovider.module_model_adapter"
+        tags:
+            - { name: madeyourday.rocksolid_slider.slideprovider }

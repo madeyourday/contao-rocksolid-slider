@@ -16,6 +16,8 @@ use MadeYourDay\RockSolidSlider\Model\ContentModel;
  * Slider Frontend Module
  *
  * @author Martin Auswöger <martin@madeyourday.net>
+ *
+ * @property string rsts_content_type The slider content type.
  */
 class Slider extends \Module
 {
@@ -51,16 +53,10 @@ class Slider extends \Module
 		$registry = \System::getContainer()->get('madeyourday.rocksolid_slider.slideproviders');
 		/** @var \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry $registry */
 		if ($registry->hasProvider($this->rsts_content_type)) {
-			$this->slides = $registry->getProvider($this->rsts_content_type)->getSlides($this->objModel->row());
+			$this->slides = $registry
+				->getProvider($this->rsts_content_type)
+				->getSlides(array_merge(['slider-column' => $this->strColumn], $this->objModel->row()));
 			if (empty($this->slides)) {
-				return '';
-			}
-		}
-		else if ($this->rsts_content_type === 'rsts_news') {
-			$newsModule = new SliderNews($this->objModel, $this->strColumn);
-			$this->newsArticles = $newsModule->getNewsArticles();
-			if (!count($this->newsArticles)) {
-				// Return if there are no news articles
 				return '';
 			}
 		}
@@ -231,12 +227,8 @@ class Slider extends \Module
 
 		$this->Template->images = $images;
 		$slides = array();
-		if (isset($this->newsArticles)) {
-			foreach ($this->newsArticles as $newsArticle) {
-				$slides[] = array(
-					'text' => $newsArticle,
-				);
-			}
+		if (isset($this->slides)) {
+			$slides = $this->slides;
 		}
 		else if (isset($this->eventItems)) {
 			foreach ($this->eventItems as $eventItem) {
