@@ -29,4 +29,17 @@ class RockSolidSliderBundleTest extends TestCase
 
         $this->assertInstanceOf('MadeYourDay\RockSolidSlider\RockSolidSliderBundle', $bundle);
     }
+
+    /**
+     * Tests the getContainerExtension() method.
+     */
+    public function testGetContainerExtension()
+    {
+        $bundle = new RockSolidSliderBundle();
+
+        $this->assertInstanceOf(
+            'MadeYourDay\RockSolidSlider\DependencyInjection\RockSolidSliderExtension',
+            $bundle->getContainerExtension()
+        );
+    }
 }
