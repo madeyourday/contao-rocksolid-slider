@@ -22,7 +22,8 @@
 		"contao/core-bundle":"^4.3"
 	},
 	"require-dev": {
-		"contao/manager-plugin": "^2.0"
+		"contao/manager-plugin": "^2.0",
+		"phpunit/phpunit": "^6.1"
 	},
 	"conflict": {
 		"contao/core": "*",
@@ -31,6 +32,11 @@
 	"autoload":{
 		"psr-4": {
 			"MadeYourDay\\RockSolidSlider\\": "src/"
+		}
+	},
+	"autoload-dev":{
+		"psr-4": {
+			"MadeYourDay\\RockSolidSlider\\Test\\": "tests/"
 		}
 	},
 	"extra": {
