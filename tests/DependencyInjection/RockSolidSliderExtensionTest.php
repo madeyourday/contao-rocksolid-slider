@@ -44,5 +44,6 @@ class RockSolidSliderExtensionTest extends TestCase
             realpath(__DIR__ . '/../../src/Resources/config/services.yml'),
             (string) $container->getResources()[0]
         );
+        $this->assertTrue($container->has('madeyourday.rocksolid_slider.slideproviders'));
     }
 }

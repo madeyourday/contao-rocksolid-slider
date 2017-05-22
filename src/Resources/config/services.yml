@@ -1,1 +1,4 @@
 services:
+    madeyourday.rocksolid_slider.slideproviders:
+        class: MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry
+        arguments: []
