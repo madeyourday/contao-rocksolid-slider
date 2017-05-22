@@ -42,4 +42,29 @@ class RockSolidSliderBundleTest extends TestCase
             $bundle->getContainerExtension()
         );
     }
+
+    /**
+     * Tests the build() method.
+     */
+    public function testBuild()
+    {
+        $container = new ContainerBuilder();
+
+        $bundle = new RockSolidSliderBundle();
+        $bundle->build($container);
+
+        $classes = [];
+
+        foreach ($container->getCompilerPassConfig()->getBeforeOptimizationPasses() as $pass) {
+            $reflection = new \ReflectionClass($pass);
+            $classes[] = $reflection->getName();
+        }
+
+        $this->assertEquals(
+            [
+                'MadeYourDay\RockSolidSlider\DependencyInjection\Compiler\AddProvidersPass',
+            ],
+            $classes
+        );
+    }
 }
