@@ -22,8 +22,14 @@
 		"contao/core-bundle":"^4.3"
 	},
 	"require-dev": {
+		"contao/news-bundle":"^4.3",
+		"contao/calendar-bundle": "^4.3",
 		"contao/manager-plugin": "^2.0",
 		"phpunit/phpunit": "^6.1"
+	},
+	"suggest": {
+		"contao/news-bundle": "To create sliders from news entries (requires license key).",
+		"contao/calendar-bundle": "To create sliders from calendar events (requires license key)."
 	},
 	"conflict": {
 		"contao/core": "*",
