@@ -72,7 +72,6 @@ class DefaultSlidesProvider implements SlideProviderInterface
             return;
         }
 
-        // FIXME: image handling needs to be passed to image provider.
         if ($slider->type === 'image') {
             $content->addFiles(
                 deserialize($slider->multiSRC),
