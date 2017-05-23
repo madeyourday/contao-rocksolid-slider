@@ -14,6 +14,8 @@ use Contao\File;
 use Contao\FilesModel;
 use Contao\Frontend;
 use Contao\Model\Collection;
+use Contao\StringUtil;
+use Contao\Validator;
 
 /**
  * This class is a helper service for processing files.
@@ -52,9 +54,77 @@ class FileHelper
      *
      * @return Collection|FilesModel[]|FilesModel|null A collection of models or null if there are no files.
      */
-    public function findMultipleFilesByUuids($uuids, array $options=array())
+    public function findMultipleFilesByUuids($uuids, array $options = [])
     {
         return $this->filesModelAdapter->findMultipleByUuids($uuids, $options);
+    }
+
+    /**
+     * Find multiple files by their UUIDs.
+     *
+     * @param string[]|Collection|FilesModel[] $uuids   An array of UUIDs to be used as pid.
+     * @param array                            $options An optional options array.
+     *
+     * @return Collection|FilesModel[]|FilesModel|null A collection of models or null if there are no files.
+     */
+    public function findMultipleFilesByUuidRecursive($uuids, array $options = [])
+    {
+        $result = [];
+        $dirs   = [];
+        if (!$uuids instanceof Collection) {
+            $uuids = $this->findMultipleFilesByUuids($uuids, $options);
+        }
+
+        foreach ($uuids as $file) {
+            if ($file->type === 'file') {
+                $result[] = $file;
+                continue;
+            }
+
+            $dirs[] = $file->uuid;
+        }
+        if (empty($dirs)) {
+            return $result;
+        }
+
+        return array_merge($result, $this->findMultipleFilesByPidRecursive($dirs, $options));
+    }
+
+    /**
+     * Find multiple files by their UUID-pid.
+     *
+     * @param string[]|Collection|FilesModel[] $pids    An array of UUIDs to be used as pid.
+     * @param array                            $options An optional options array.
+     *
+     * @return Collection|FilesModel[]|FilesModel|null A collection of models or null if there are no files.
+     */
+    public function findMultipleFilesByPidRecursive($pids, array $options = [])
+    {
+        $result = [];
+        $dirs   = [];
+        if (!$pids instanceof Collection) {
+            $pids = $this->filesModelAdapter->findBy([
+                $this->filesModelAdapter->getTable() . '.pid IN (' .
+                implode(',', array_fill(0, count($pids), 'UNHEX(?)')) . ')'
+            ], array_map(function ($id) {
+                return Validator::isStringUuid($id) ? bin2hex(StringUtil::uuidToBin($id)) : bin2hex($id);
+            }, $pids), $options);
+        }
+
+        foreach ($pids as $file) {
+            if ($file->type === 'file') {
+                $result[] = $file;
+                continue;
+            }
+
+            $dirs[] = $file->uuid;
+        }
+
+        if (empty($dirs)) {
+            return $result;
+        }
+
+        return array_merge($result, $this->findMultipleFilesByPidRecursive($dirs, $options));
     }
 
     /**

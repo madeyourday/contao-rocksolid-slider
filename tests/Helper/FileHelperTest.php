@@ -71,6 +71,131 @@ class FileHelperTest extends TestCase
     }
 
     /**
+     * Test the findMultipleFilesByUuidRecursive method.
+     *
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::__construct()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::findMultipleFilesByUuids()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::findMultipleFilesByUuidRecursive()
+     *
+     * @return void
+     */
+    public function testFindMultipleFilesByUuidRecursive()
+    {
+        $filesModelAdapter = $this->mockAdapter(['findMultipleByUuids', 'getTable', 'findBy']);
+        $frontendAdapter   = $this->mockAdapter();
+
+        $filesModelAdapter->method('getTable')->willReturn('tl_files');
+
+        $initial = ['uuid1', 'uuid2'];
+
+        $helper = $this
+            ->getMockBuilder(FileHelper::class)
+            ->setConstructorArgs([$filesModelAdapter, $frontendAdapter])
+            ->setMethods(['findMultipleFilesByUuids', 'findMultipleFilesByPidRecursive'])
+            ->getMock();
+        $helper->expects($this->once())
+            ->method('findMultipleFilesByUuids')
+            ->with($initial)
+            ->willReturn([
+                $file1 = $this->mockFileModel(['uuid' => 'uuid1', 'pid' => null, 'type' => 'file']),
+                $this->mockFileModel(['uuid' => 'uuid2', 'pid' => null, 'type' => 'folder']),
+            ]);
+        $helper->expects($this->once())
+            ->method('findMultipleFilesByPidRecursive')
+            ->with(['uuid2'])
+            ->willReturn([
+                $file3 = $this->mockFileModel(['uuid' => 'uuid3', 'pid' => 'uuid2', 'type' => 'file']),
+                $file4 = $this->mockFileModel(['uuid' => 'uuid4', 'pid' => 'uuid2', 'type' => 'file']),
+            ]);
+
+        /** @var FileHelper $helper */
+        $this->assertEquals([$file1, $file3, $file4], $helper->findMultipleFilesByUuidRecursive($initial));
+    }
+
+    /**
+     * Test the findMultipleFilesByUuidRecursive method.
+     *
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::__construct()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::findMultipleFilesByUuids()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::findMultipleFilesByUuidRecursive()
+     *
+     * @return void
+     */
+    public function testFindMultipleFilesByUuidRecursive2()
+    {
+        $filesModelAdapter = $this->mockAdapter(['findMultipleByUuids', 'getTable', 'findBy']);
+        $frontendAdapter   = $this->mockAdapter();
+
+        $filesModelAdapter->method('getTable')->willReturn('tl_files');
+
+        $initial = ['uuid1', 'uuid2'];
+
+        $helper = $this
+            ->getMockBuilder(FileHelper::class)
+            ->setConstructorArgs([$filesModelAdapter, $frontendAdapter])
+            ->setMethods(['findMultipleFilesByUuids', 'findMultipleFilesByPidRecursive'])
+            ->getMock();
+        $helper->expects($this->once())
+            ->method('findMultipleFilesByUuids')
+            ->with($initial)
+            ->willReturn([
+                $file1 = $this->mockFileModel(['uuid' => 'uuid1', 'pid' => null, 'type' => 'file']),
+                $file2 = $this->mockFileModel(['uuid' => 'uuid2', 'pid' => null, 'type' => 'file']),
+            ]);
+        $helper->expects($this->never())
+            ->method('findMultipleFilesByPidRecursive');
+
+        /** @var FileHelper $helper */
+        $this->assertEquals([$file1, $file2], $helper->findMultipleFilesByUuidRecursive($initial));
+    }
+
+    /**
+     * Test the findMultipleFilesByPidRecursive method.
+     *
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::__construct()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::findMultipleFilesByUuids()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::findMultipleFilesByPidRecursive()
+     *
+     * @return void
+     */
+    public function testFindMultipleFilesByPidRecursive()
+    {
+        $filesModelAdapter = $this->mockAdapter(['getTable', 'findBy']);
+        $frontendAdapter   = $this->mockAdapter();
+
+        $file3 = $this->mockFileModel(['uuid' => 'uuid3', 'pid' => 'uuid1', 'type' => 'folder']);
+        $file4 = $this->mockFileModel(['uuid' => 'uuid4', 'pid' => 'uuid1', 'type' => 'file']);
+        $file5 = $this->mockFileModel(['uuid' => 'uuid4', 'pid' => 'uuid1', 'type' => 'file']);
+
+        $filesModelAdapter->method('getTable')->willReturn('tl_files');
+
+        $initial = ['uuid1', 'uuid2'];
+
+        $filesModelAdapter->method('findBy')
+            ->withConsecutive(
+                [
+                    ['tl_files.pid IN (UNHEX(?),UNHEX(?))'],
+                    [bin2hex('uuid1'), bin2hex('uuid2')],
+                    []
+                ],
+                [
+                    ['tl_files.pid IN (UNHEX(?))'],
+                    [bin2hex('uuid3')],
+                    []
+                ]
+            )
+            ->willReturnOnConsecutiveCalls(
+                [$file3, $file4],
+                [$file5]
+            );
+
+        $helper = new FileHelper($filesModelAdapter, $frontendAdapter);
+
+        /** @var FileHelper $helper */
+        $this->assertEquals([$file4, $file5], $helper->findMultipleFilesByPidRecursive($initial));
+    }
+
+    /**
      * Test the prepareImageForTemplate method.
      *
      * @return void
@@ -155,7 +280,7 @@ class FileHelperTest extends TestCase
                     'caption'    => 'File caption!'
                 ]
             )
-            ->willReturnCallback(function ($image, $data) { $image->result = 'Success!';});
+            ->willReturnCallback(function ($image) { $image->result = 'Success!';});
 
         $helper = $this
             ->getMockBuilder(FileHelper::class)
