@@ -25,7 +25,7 @@
 		"contao/news-bundle":"^4.3",
 		"contao/calendar-bundle": "^4.3",
 		"contao/manager-plugin": "^2.0",
-		"phpunit/phpunit": "^5.0 | ^6.1"
+		"phpunit/phpunit": "^5.7 | ^6.1"
 	},
 	"suggest": {
 		"contao/news-bundle": "To create sliders from news entries (requires license key).",
