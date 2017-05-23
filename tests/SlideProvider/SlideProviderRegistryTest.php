@@ -9,6 +9,7 @@
 
 namespace MadeYourDay\RockSolidSlider\Test\SlideProvider;
 
+use InvalidArgumentException;
 use MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderInterface;
 use MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry;
 use PHPUnit\Framework\TestCase;
@@ -65,9 +66,9 @@ class SlideProviderRegistryTest extends TestCase
      * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::__construct()
      * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::addProvider()
      * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::getProvider()
-     * covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::hasProvider()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::hasProvider()
      */
-    public function initWithProviders()
+    public function testInitWithProviders()
     {
         $mock1 = $this->getMockForAbstractClass(SlideProviderInterface::class);
         $mock1->method('getName')->willReturn('test-provider1');
@@ -80,5 +81,25 @@ class SlideProviderRegistryTest extends TestCase
         $this->assertSame($mock1, $registry->getProvider('test-provider1'));
         $this->assertTrue($registry->hasProvider('test-provider2'));
         $this->assertSame($mock2, $registry->getProvider('test-provider2'));
+    }
+
+
+    /**
+     * Test that the instance get's populated with constructor arguments.
+     *
+     * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::__construct()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::getProvider()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::hasProvider()
+     */
+    public function testRetrieveUnknownProvider()
+    {
+        $registry = new SlideProviderRegistry();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('No provider with the name slide-type');
+
+        $registry->getProvider('slide-type');
     }
 }
