@@ -328,14 +328,7 @@ class FileHelperTest extends TestCase
     {
         $filesModelAdapter = $this->mockAdapter(['findByUuid']);
         $frontendAdapter   = $this->mockAdapter(['getMetaData', 'addImageToTemplate']);
-
-        class_alias('Contao\Model', 'Model');
-        $fileModelMock = $this
-            ->getMockBuilder(FilesModel::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['__get'])
-            ->getMock();
-        $fileModelMock->method('__get')->with('path')->willReturn('some/path/file.ext');
+        $fileModelMock     = $this->mockFileModel(['path' => 'some/path/file.ext']);
 
         $fileMock      = (object) [
             'isGdImage' => false,
@@ -383,5 +376,35 @@ class FileHelperTest extends TestCase
             ->setMethods($methods)
             ->disableOriginalConstructor()
             ->getMock();
+    }
+
+    /**
+     * Mock a file model.
+     *
+     * @param array $data The data to return.
+     *
+     * @return FilesModel
+     */
+    private function mockFileModel($data)
+    {
+        if (!class_exists('Model')) {
+            class_alias('Contao\Model', 'Model');
+        }
+
+        $fileModelMock = $this
+            ->getMockBuilder(FilesModel::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__get'])
+            ->getMock();
+        $fileModelMock
+            ->method('__get')
+            ->willReturnCallback(function ($key) use ($data) {
+                if (isset($data[$key])) {
+                    return $data[$key];
+                }
+                return null;
+            });
+
+        return $fileModelMock;
     }
 }
