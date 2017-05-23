@@ -82,7 +82,7 @@ class FileHelper
      *                          'imageUrl' => meta['link'],
      *                          'caption'  => meta['caption']
      *
-     * @return null|\stdClass
+     * @return null|array
      */
     public function tryPrepareImage($uuid, $attributes, $addMeta = false)
     {
@@ -106,12 +106,33 @@ class FileHelper
             $attributes['caption']  = $meta['caption'];
         }
 
-        return $this->prepareImageForTemplate(array_merge([
+        return array_merge([
             'id'        => $file->id,
             'uuid'      => isset($file->uuid) ? $file->uuid : null,
             'name'      => $fileObject->basename,
             'singleSRC' => $file->path,
-        ], $attributes));
+        ], $attributes);
+    }
+
+    /**
+     * Try to prepare the file with the passed uuid.
+     *
+     * @param string $uuid       The uuid of the file.
+     * @param array  $attributes The attributes to pass to Frontend::addImageToTemplate().
+     * @param bool $addMeta      If true, the Meta information attributes will also get added
+     *                          'alt'      => meta['title']
+     *                          'imageUrl' => meta['link'],
+     *                          'caption'  => meta['caption']
+     *
+     * @return null|\stdClass
+     */
+    public function tryPrepareImageForTemplate($uuid, $attributes, $addMeta = false)
+    {
+        if (null === ($imageData = $this->tryPrepareImage($uuid, $attributes, $addMeta))) {
+            return null;
+        }
+
+        return $this->prepareImageForTemplate($imageData);
     }
 
     /**

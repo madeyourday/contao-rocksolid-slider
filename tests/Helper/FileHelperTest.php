@@ -99,8 +99,9 @@ class FileHelperTest extends TestCase
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::__construct()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::prepareImageForTemplate()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImage()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImageForTemplate()
      */
-    public function testTryPrepareImage()
+    public function testTryPrepareImageForTemplate()
     {
         $GLOBALS['objPage'] = (object) ['language' => 'en_EN'];
 
@@ -168,7 +169,7 @@ class FileHelperTest extends TestCase
         /** @var FileHelper $helper */
         $this->assertSame(
             'Success!',
-            $helper->tryPrepareImage('the-uuid', ['additional' => 'attribute'], true)->result
+            $helper->tryPrepareImageForTemplate('the-uuid', ['additional' => 'attribute'], true)->result
         );
     }
 
@@ -179,8 +180,9 @@ class FileHelperTest extends TestCase
      *
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::__construct()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImage()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImageForTemplate()
      */
-    public function testTryPrepareImageWithoutUuid()
+    public function testTryPrepareImageForTemplateWithoutUuid()
     {
 
         $filesModelAdapter = $this->mockAdapter(['findByUuid']);
@@ -206,7 +208,7 @@ class FileHelperTest extends TestCase
             ->method('getFileInstance');
 
         /** @var FileHelper $helper */
-        $this->assertNull($helper->tryPrepareImage('', []));
+        $this->assertNull($helper->tryPrepareImageForTemplate('', []));
     }
 
     /**
@@ -217,8 +219,9 @@ class FileHelperTest extends TestCase
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::__construct()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::prepareImageForTemplate()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImage()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImageForTemplate()
      */
-    public function testTryPrepareImageWithUnknownUuid()
+    public function testTryPrepareImageForTemplateWithUnknownUuid()
     {
 
         $filesModelAdapter = $this->mockAdapter(['findByUuid']);
@@ -247,7 +250,7 @@ class FileHelperTest extends TestCase
             ->method('getFileInstance');
 
         /** @var FileHelper $helper */
-        $this->assertNull($helper->tryPrepareImage('unknown-uuid', []));
+        $this->assertNull($helper->tryPrepareImageForTemplate('unknown-uuid', []));
     }
 
     /**
@@ -258,8 +261,9 @@ class FileHelperTest extends TestCase
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::__construct()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::prepareImageForTemplate()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImage()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImageForTemplate()
      */
-    public function testTryPrepareImageWithNonImageUuid()
+    public function testTryPrepareImageForTemplateWithNonImageUuid()
     {
         $filesModelAdapter = $this->mockAdapter(['findByUuid']);
         $frontendAdapter   = $this->mockAdapter(['getMetaData', 'addImageToTemplate']);
@@ -303,7 +307,7 @@ class FileHelperTest extends TestCase
             ->willReturn($fileMock);
 
         /** @var FileHelper $helper */
-        $this->assertNull($helper->tryPrepareImage('the-uuid', []));
+        $this->assertNull($helper->tryPrepareImageForTemplate('the-uuid', []));
     }
 
     /**
