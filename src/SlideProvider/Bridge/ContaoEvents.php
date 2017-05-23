@@ -47,9 +47,10 @@ class ContaoEvents extends \ModuleEventlist
         $this->compile();
 
         // Remove the hook
-        foreach ($GLOBALS['TL_HOOKS']['parseFrontendTemplate'] as $key => $hook) {
+        foreach (array_reverse($GLOBALS['TL_HOOKS']['parseFrontendTemplate']) as $key => $hook) {
             if ($hook[0] === $parseTemplateHook[0] && $hook[1] === $parseTemplateHook[1]) {
                 unset($GLOBALS['TL_HOOKS']['parseFrontendTemplate'][$key]);
+                break;
             }
         }
 
