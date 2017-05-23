@@ -12,6 +12,7 @@ namespace MadeYourDay\RockSolidSlider\SlideProvider;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\Frontend;
 use Contao\StringUtil;
+use MadeYourDay\RockSolidSlider\Helper\FileHelper;
 use MadeYourDay\RockSolidSlider\Model\ContentModel;
 use MadeYourDay\RockSolidSlider\Model\SlideModel;
 use MadeYourDay\RockSolidSlider\Model\SliderModel;
@@ -40,14 +41,25 @@ class DefaultSlidesProvider implements SlideProviderInterface
     private $frontendAdapter;
 
     /**
+     * @var FileHelper
+     */
+    private $fileHelper;
+
+    /**
      * Create a new instance.
      *
-     * @param Adapter $sliderModelAdapter
-     * @param Adapter $slideModelAdapter
-     * @param Adapter $frontendAdapter
+     * @param FileHelper $fileHelper
+     * @param Adapter    $sliderModelAdapter
+     * @param Adapter    $slideModelAdapter
+     * @param Adapter    $frontendAdapter
      */
-    public function __construct(Adapter $sliderModelAdapter, Adapter $slideModelAdapter, Adapter $frontendAdapter)
-    {
+    public function __construct(
+        FileHelper $fileHelper,
+        Adapter $sliderModelAdapter,
+        Adapter $slideModelAdapter,
+        Adapter $frontendAdapter
+    ) {
+        $this->fileHelper         = $fileHelper;
         $this->sliderModelAdapter = $sliderModelAdapter;
         $this->slideModelAdapter  = $slideModelAdapter;
         $this->frontendAdapter    = $frontendAdapter;
@@ -91,6 +103,8 @@ class DefaultSlidesProvider implements SlideProviderInterface
      * Parse slides
      *
      * @param  \Model\Collection $objSlides slides retrieved from the database
+     * @param array              $config  The configuration to process (refer to provider implementation for contents).
+     *
      * @return array                        parsed slides
      */
     private function parseSlides($objSlides, $config)
@@ -113,7 +127,7 @@ class DefaultSlidesProvider implements SlideProviderInterface
             }
 
             if (in_array($slide['type'], array('image', 'video'))) {
-                $slide['image'] = $this->tryPrepareImage(
+                $slide['image'] = $this->fileHelper->tryPrepareImage(
                     $slide['singleSRC'],
                     ['size' => isset($config['imgSize']) ? $config['imgSize'] : $config['size']],
                     true
@@ -166,7 +180,7 @@ class DefaultSlidesProvider implements SlideProviderInterface
                 $slide['videos'] = null;
             }
 
-            $slide['backgroundImage'] = $this->tryPrepareImage(
+            $slide['backgroundImage'] = $this->fileHelper->tryPrepareImage(
                 $slide['backgroundImage'],
                 ['size' => $slide['backgroundImageSize']],
                 true
@@ -203,63 +217,6 @@ class DefaultSlidesProvider implements SlideProviderInterface
     }
 
     /**
-     * Gateway to frontend adapter.
-     *
-     * @param array $data The image data as array.
-     *
-     * @return \stdClass
-     */
-    private function prepareImageForTemplate($data)
-    {
-        $image = new \stdClass;
-        $this->frontendAdapter->addImageToTemplate($image, $data);
-
-        return $image;
-    }
-
-    /**
-     * Try to prepare the file with the passed uuid.
-     *
-     * @param string $uuid       The uuid of the file.
-     * @param array  $attributes The attributes to pass to Frontend::addImageToTemplate().
-     * @param bool $addMeta      If true, the Meta information attributes will also get added
-     *                          'alt'      => meta['title']
-     *                          'imageUrl' => meta['link'],
-     *                          'caption'  => meta['caption']
-     *
-     * @return null|\stdClass
-     */
-    private function tryPrepareImage($uuid, $attributes, $addMeta = false)
-    {
-        if (!trim($uuid)) {
-            return null;
-        }
-        if (null === ($file = \FilesModel::findByUuid($uuid))) {
-            return null;
-        }
-        $fileObject = new \File($file->path, true);
-        // FIXME: Why check for isGdImage here? if isImage == true it is always also isGdImage == true?
-        if (!$fileObject->isGdImage && !$fileObject->isImage) {
-            return null;
-        }
-
-        if ($addMeta) {
-            global $objPage;
-            $meta                   = $this->frontendAdapter->getMetaData($file->meta, $objPage->language);
-            $attributes['alt']      = $meta['title'];
-            $attributes['imageUrl'] = $meta['link'];
-            $attributes['caption']  = $meta['caption'];
-        }
-
-        return $this->prepareImageForTemplate(array_merge([
-            'id'        => $file->id,
-            'uuid'      => isset($file->uuid) ? $file->uuid : null,
-            'name'      => $fileObject->basename,
-            'singleSRC' => $file->path,
-        ], $attributes));
-    }
-
-    /**
      * Generate the thumbnail for a slide.
      *
      * @param array $slide  The slide.
@@ -269,11 +226,11 @@ class DefaultSlidesProvider implements SlideProviderInterface
      */
     private function generateThumb($slide, $config)
     {
-        if ($thumb = $this->tryPrepareImage($slide['thumbImage'], ['size' => $config['rsts_thumbs_imgSize']])) {
+        if ($thumb = $this->fileHelper->tryPrepareImage($slide['thumbImage'], ['size' => $config['rsts_thumbs_imgSize']])) {
             return $thumb;
         }
         if (in_array($slide['type'], ['image', 'video']) &&
-            ($thumb = $this->tryPrepareImage($slide['singleSRC'], ['size' => $config['rsts_thumbs_imgSize']]))) {
+            ($thumb = $this->fileHelper->tryPrepareImage($slide['singleSRC'], ['size' => $config['rsts_thumbs_imgSize']]))) {
             return $thumb;
         }
         if (!empty($slide['image']->src)) {

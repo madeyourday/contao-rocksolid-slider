@@ -1,6 +1,10 @@
 imports:
     - { resource: model_adapter.yml }
 services:
+    madeyourday.rocksolid_slider.file_helper:
+        class: MadeYourDay\RockSolidSlider\Helper\FileHelper
+        arguments:
+
     madeyourday.rocksolid_slider.slideproviders:
         class: MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry
         arguments: []
@@ -12,6 +16,7 @@ services:
     madeyourday.rocksolid_slider.slideprovider.default:
         class: MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlidesProvider
         arguments:
+            - "@madeyourday.rocksolid_slider.file_helper"
             - "@madeyourday.rocksolid_slider.model_adapter.slider_model"
             - "@madeyourday.rocksolid_slider.model_adapter.slide_model"
             - "@madeyourday.rocksolid_slider.slideprovider.frontend_adapter"
