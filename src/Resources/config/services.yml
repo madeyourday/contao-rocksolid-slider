@@ -16,7 +16,7 @@ services:
         arguments: ['Contao\Frontend']
 
     madeyourday.rocksolid_slider.slideprovider.default:
-        class: MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlidesProvider
+        class: MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider
         arguments:
             - "@madeyourday.rocksolid_slider.file_helper"
             - "@madeyourday.rocksolid_slider.model_adapter.slider_model"

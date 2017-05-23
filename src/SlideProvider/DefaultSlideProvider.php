@@ -23,7 +23,7 @@ use MadeYourDay\RockSolidSlider\SliderContent;
  *
  * @author Christian Schiffler <c.schiffler@cyberspectrum.de>
  */
-class DefaultSlidesProvider implements SlideProviderInterface
+class DefaultSlideProvider implements SlideProviderInterface
 {
     /**
      * @var Adapter|SliderModel

@@ -11,7 +11,7 @@ namespace MadeYourDay\RockSolidSlider\Test\SlideProvider;
 
 use Contao\CoreBundle\Framework\Adapter;
 use MadeYourDay\RockSolidSlider\Helper\FileHelper;
-use MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlidesProvider;
+use MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider;
 use MadeYourDay\RockSolidSlider\SliderContent;
 use PHPUnit\Framework\TestCase;
 
@@ -25,8 +25,8 @@ class DefaultSlideProviderTest extends TestCase
     /**
      * Tests the object instantiation.
      *
-     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlidesProvider::__construct()
-     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlidesProvider::getName()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider::__construct()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider::getName()
      */
     public function testInstantiation()
     {
@@ -35,14 +35,14 @@ class DefaultSlideProviderTest extends TestCase
         $slideModelAdapter    = $this->getMockBuilder(Adapter::class)->disableOriginalConstructor()->getMock();
         $frontendAdapter      = $this->getMockBuilder(Adapter::class)->disableOriginalConstructor()->getMock();
 
-        $provider = new DefaultSlidesProvider(
+        $provider = new DefaultSlideProvider(
             $filesHelper,
             $sliderModelAdapter,
             $slideModelAdapter,
             $frontendAdapter
         );
 
-        $this->assertInstanceOf('MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlidesProvider', $provider);
+        $this->assertInstanceOf('MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider', $provider);
         $this->assertSame('rsts_default', $provider->getName());
     }
 
@@ -51,8 +51,8 @@ class DefaultSlideProviderTest extends TestCase
      *
      * @return void
      *
-     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlidesProvider::__construct()
-     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlidesProvider::process()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider::__construct()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider::process()
      * @uses \MadeYourDay\RockSolidSlider\SliderContent::addFiles()
      * @uses \MadeYourDay\RockSolidSlider\SliderContent::getFiles()
      * @uses \MadeYourDay\RockSolidSlider\SliderContent::hasFiles()
@@ -71,7 +71,7 @@ class DefaultSlideProviderTest extends TestCase
             ->method('findByPk')
             ->willReturn(null);
 
-        $provider = new DefaultSlidesProvider(
+        $provider = new DefaultSlideProvider(
             $filesHelper,
             $sliderModelAdapter,
             $slideModelAdapter,
@@ -92,8 +92,8 @@ class DefaultSlideProviderTest extends TestCase
      *
      * @return void
      *
-     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlidesProvider::__construct()
-     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlidesProvider::process()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider::__construct()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider::process()
      */
     public function testProcessWithImageSlides()
     {
@@ -112,7 +112,7 @@ class DefaultSlideProviderTest extends TestCase
                 'orderSRC' => serialize(['uuid1', 'uuid2', 'uuid3', 'uuid4']),
             ]);
 
-        $provider = new DefaultSlidesProvider(
+        $provider = new DefaultSlideProvider(
             $filesHelper,
             $sliderModelAdapter,
             $slideModelAdapter,
