@@ -48,9 +48,21 @@ class EventsSlideProvider implements SlideProviderInterface
      */
     public function process(array $config, SliderContent $content)
     {
-        // FIXME: unmockable ContaoEvents bridge in use here.
-        $bridge = new ContaoEvents($this->modelAdapter->findByPk($config['id']), $config['slider-column']);
+        $bridge = $this->getBridge($this->modelAdapter->findByPk($config['id']), $config['slider-column']);
 
         $content->addSlides($bridge->getSlides());
+    }
+
+    /**
+     * Initialize the bridge.
+     *
+     * @param \Contao\ModuleModel $module
+     * @param string              $column
+     *
+     * @return ContaoEvents
+     */
+    protected function getBridge($module, $column)
+    {
+        return new ContaoEvents($module, $column);
     }
 }

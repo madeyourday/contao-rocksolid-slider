@@ -48,9 +48,21 @@ class NewsSlideProvider implements SlideProviderInterface
      */
     public function process(array $config, SliderContent $content)
     {
-        // FIXME: unmockable ContaoNews bridge in use here.
-        $bridge = new ContaoNews($this->modelAdapter->findByPk($config['id']), $config['slider-column']);
+        $bridge = $this->getBridge($this->modelAdapter->findByPk($config['id']), $config['slider-column']);
 
         $content->addSlides($bridge->getSlides());
+    }
+
+    /**
+     * Initialize the bridge.
+     *
+     * @param \Contao\ModuleModel $module
+     * @param string              $column
+     *
+     * @return ContaoNews
+     */
+    protected function getBridge($module, $column)
+    {
+        return new ContaoNews($module, $column);
     }
 }
