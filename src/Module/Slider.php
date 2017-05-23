@@ -8,9 +8,7 @@
 
 namespace MadeYourDay\RockSolidSlider\Module;
 
-use MadeYourDay\RockSolidSlider\Model\SlideModel;
 use MadeYourDay\RockSolidSlider\Model\SliderModel;
-use MadeYourDay\RockSolidSlider\Model\ContentModel;
 
 /**
  * Slider Frontend Module
@@ -73,7 +71,6 @@ class Slider extends \Module
 
 		}
 		else {
-
 			$this->slider = SliderModel::findByPk($this->rsts_id);
 
 			// Return if there is no slider
@@ -218,15 +215,7 @@ class Slider extends \Module
 		}
 
 		$this->Template->images = $images;
-		$slides = array();
-		if (isset($this->slides)) {
-			$slides = $this->slides;
-		}
-		else if (isset($this->slider->id) && $this->slider->type === 'content') {
-			$slides = $this->parseSlides(SlideModel::findPublishedByPid($this->slider->id));
-		}
-
-		$this->Template->slides = $slides;
+		$this->Template->slides = $this->slides;
 
 		$options = array();
 
@@ -373,183 +362,5 @@ class Slider extends \Module
 		if (file_exists(TL_ROOT . '/' . $skinPath)) {
 			$GLOBALS['TL_CSS'][] = $skinPath . '||static';
 		}
-	}
-
-	/**
-	 * Parse slides
-	 *
-	 * @param  \Model\Collection $objSlides slides retrieved from the database
-	 * @return array                        parsed slides
-	 */
-	protected function parseSlides($objSlides)
-	{
-		global $objPage;
-
-		$slides = array();
-		$pids = array();
-		$idIndexes = array();
-
-		if (! $objSlides) {
-			return $slides;
-		}
-
-		while ($objSlides->next()) {
-
-			$slide = $objSlides->row();
-			$slide['text'] = '';
-			if ($slide['type'] === 'content') {
-				$pids[] = $slide['id'];
-				$idIndexes[(int)$slide['id']] = count($slides);
-			}
-
-			if (
-				in_array($slide['type'], array('image', 'video')) &&
-				trim($slide['singleSRC']) &&
-				($file = \FilesModel::findByUuid($slide['singleSRC'])) &&
-				($fileObject = new \File($file->path, true)) &&
-				($fileObject->isGdImage || $fileObject->isImage)
-			) {
-				$meta = $this->getMetaData($file->meta, $objPage->language);
-				$slide['image'] = new \stdClass;
-				$this->addImageToTemplate($slide['image'], array(
-					'id' => $file->id,
-					'name' => $fileObject->basename,
-					'singleSRC' => $file->path,
-					'alt' => $meta['title'],
-					'imageUrl' => $meta['link'],
-					'caption' => $meta['caption'],
-					'size' => isset($this->imgSize) ? $this->imgSize : $this->size,
-				));
-			}
-
-			if ($slide['type'] === 'video' && $slide['videoURL'] && empty($slide['image'])) {
-				$slide['image'] = new \stdClass;
-				if (preg_match(
-					'(^
-						https?://  # http or https
-						(?:
-							www\\.youtube\\.com/(?:watch\\?v=|v/|embed/)  # Different URL formats
-							| youtu\\.be/  # Short YouTube domain
-						)
-						([0-9a-z_\\-]{11})  # YouTube ID
-						(?:$|&|/)  # End or separator
-					)ix',
-					html_entity_decode($slide['videoURL']), $matches)
-				) {
-					$video = $matches[1];
-					$slide['image']->src = '//img.youtube.com/vi/' . $video . '/0.jpg';
-				}
-				else {
-					// Grey dummy image
-					$slide['image']->src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAJCAMAAAAM9FwAAAAAA1BMVEXGxsbd/8BlAAAAFUlEQVR42s3BAQEAAACAkP6vdiO6AgCZAAG/wrlvAAAAAElFTkSuQmCC';
-				}
-				$slide['image']->imgSize = '';
-				$slide['image']->alt = '';
-				$slide['image']->picture = array(
-					'img' => array('src' => $slide['image']->src, 'srcset' => $slide['image']->src),
-					'sources' => array(),
-				);
-			}
-
-			if ($slide['type'] !== 'video' && $slide['videoURL']) {
-				$slide['videoURL'] = '';
-			}
-
-			if ($slide['type'] === 'video' && $slide['videos']) {
-				$videoFiles = deserialize($slide['videos'], true);
-				$videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
-				$videos = array();
-				foreach ($videoFiles as $file) {
-					$videos[] = $file;
-				}
-				$slide['videos'] = $videos;
-			}
-			else {
-				$slide['videos'] = null;
-			}
-
-			if (
-				trim($slide['backgroundImage']) &&
-				($file = \FilesModel::findByUuid($slide['backgroundImage'])) &&
-				($fileObject = new \File($file->path, true)) &&
-				($fileObject->isGdImage || $fileObject->isImage)
-			) {
-				$meta = $this->getMetaData($file->meta, $objPage->language);
-				$slide['backgroundImage'] = new \stdClass;
-				$this->addImageToTemplate($slide['backgroundImage'], array(
-					'id' => $file->id,
-					'name' => $fileObject->basename,
-					'singleSRC' => $file->path,
-					'alt' => $meta['title'],
-					'imageUrl' => $meta['link'],
-					'caption' => $meta['caption'],
-					'size' => $slide['backgroundImageSize'],
-				));
-			}
-			else {
-				$slide['backgroundImage'] = null;
-			}
-
-			if ($slide['backgroundVideos']) {
-				$videoFiles = deserialize($slide['backgroundVideos'], true);
-				$videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
-				$videos = array();
-				foreach ($videoFiles as $file) {
-					$videos[] = $file;
-				}
-				$slide['backgroundVideos'] = $videos;
-			}
-
-			if ($this->rsts_navType === 'thumbs') {
-				$slide['thumb'] = new \stdClass;
-				if (
-					trim($slide['thumbImage']) &&
-					($file = \FilesModel::findByUuid($slide['thumbImage'])) &&
-					($fileObject = new \File($file->path, true)) &&
-					($fileObject->isGdImage || $fileObject->isImage)
-				) {
-					$this->addImageToTemplate($slide['thumb'], array(
-						'id' => $file->id,
-						'name' => $fileObject->basename,
-						'singleSRC' => $file->path,
-						'size' => $this->rsts_thumbs_imgSize,
-					));
-				}
-				elseif (
-					in_array($slide['type'], array('image', 'video')) &&
-					trim($slide['singleSRC']) &&
-					($file = \FilesModel::findByUuid($slide['singleSRC'])) &&
-					($fileObject = new \File($file->path, true)) &&
-					($fileObject->isGdImage || $fileObject->isImage)
-				) {
-					$this->addImageToTemplate($slide['thumb'], array(
-						'id' => $file->id,
-						'name' => $fileObject->basename,
-						'singleSRC' => $file->path,
-						'size' => $this->rsts_thumbs_imgSize,
-					));
-				}
-				elseif (!empty($slide['image']->src)) {
-					$slide['thumb'] = clone $slide['image'];
-				}
-				elseif (!empty($slide['backgroundImage']->src)) {
-					$slide['thumb'] = clone $slide['backgroundImage'];
-				}
-			}
-
-			$slides[] = $slide;
-
-		}
-
-		if (count($pids)) {
-			$slideContents = ContentModel::findPublishedByPidsAndTable($pids, SlideModel::getTable());
-			if ($slideContents) {
-				while ($slideContents->next()) {
-					$slides[$idIndexes[(int)$slideContents->pid]]['text'] .= $this->getContentElement($slideContents->current());
-				}
-			}
-		}
-
-		return $slides;
 	}
 }
