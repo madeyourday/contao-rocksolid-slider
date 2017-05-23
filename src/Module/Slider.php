@@ -8,6 +8,8 @@
 
 namespace MadeYourDay\RockSolidSlider\Module;
 
+use Contao\System;
+use MadeYourDay\RockSolidSlider\Helper\FileHelper;
 use MadeYourDay\RockSolidSlider\Model\SliderModel;
 use MadeYourDay\RockSolidSlider\SliderContent;
 
@@ -54,7 +56,7 @@ class Slider extends \Module
 			return $template->parse();
 		}
 
-		$registry = \System::getContainer()->get('madeyourday.rocksolid_slider.slideproviders');
+		$registry = System::getContainer()->get('madeyourday.rocksolid_slider.slideproviders');
 		/** @var \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry $registry */
 		if ($registry->hasProvider($this->rsts_content_type)) {
 			$this->content = new SliderContent();
@@ -97,29 +99,13 @@ class Slider extends \Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$images = array();
 
-		if ($this->files) {
+		/** @var FileHelper $helper */
+		$helper = System::getContainer()->get('madeyourday.rocksolid_slider.file_helper');
+		if ($files = $this->content->getFiles()) {
 
-			$files = $this->files;
-			$filesExpaned = array();
-
-			// Get all images
-			while ($files->next()) {
-				if ($files->type === 'file') {
-					$filesExpaned[] = $files->current();
-				}
-				else {
-					$subFiles = \FilesModel::findByPid($files->uuid);
-					while ($subFiles && $subFiles->next()) {
-						if ($subFiles->type === 'file'){
-							$filesExpaned[] = $subFiles->current();
-						}
-					}
-				}
-			}
+			$filesExpaned = $helper->findMultipleFilesByUuidRecursive($files);
 
 			foreach ($filesExpaned as $files) {
 
@@ -128,26 +114,10 @@ class Slider extends \Module
 					continue;
 				}
 
-				$file = new \File($files->path, true);
-
-				if (!$file->isGdImage && !$file->isImage) {
-					continue;
+				if (null !== ($imageData = $helper->tryPrepareImage($files, [], true))) {
+					// Add the image
+					$images[$files->path] = $imageData;
 				}
-
-				$arrMeta = $this->getMetaData($files->meta, $objPage->language);
-
-				// Add the image
-				$images[$files->path] = array
-				(
-					'id'        => $files->id,
-					'uuid'      => isset($files->uuid) ? $files->uuid : null,
-					'name'      => $file->basename,
-					'singleSRC' => $files->path,
-					'alt'       => $arrMeta['title'],
-					'imageUrl'  => $arrMeta['link'],
-					'caption'   => $arrMeta['caption'],
-				);
-
 			}
 
 			if ($this->orderSRC) {
