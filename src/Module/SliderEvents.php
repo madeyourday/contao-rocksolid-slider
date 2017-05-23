@@ -8,6 +8,8 @@
 
 namespace MadeYourDay\RockSolidSlider\Module;
 
+@trigger_error('Class MadeYourDay\RockSolidSlider\Module\SliderEvents is deprecated and will get removed.', E_USER_DEPRECATED);
+
 /**
  * Slider Events Module
  *
