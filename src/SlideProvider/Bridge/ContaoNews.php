@@ -14,6 +14,8 @@ namespace MadeYourDay\RockSolidSlider\SlideProvider\Bridge;
  *
  * @author Christian Schiffler <c.schiffler@cyberspectrum.de>
  * @author Martin Auswöger <martin@madeyourday.net>
+ *
+ * @codeCoverageIgnore - This is simply not testable. :-/
  */
 class ContaoNews extends \ModuleNewsList
 {
