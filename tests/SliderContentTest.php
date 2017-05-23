@@ -76,6 +76,19 @@ class SliderContentTest extends TestCase
     }
 
     /**
+     * Test that invalid slides can not get added.
+     *
+     * @return void
+     */
+    public function testAddInvalidSlide()
+    {
+        $content = new SliderContent();
+        $this->expectException('\InvalidArgumentException');
+        $this->expectExceptionMessage('Slide does not contain key "text".');
+        $content->addSlides([['invalid' => 'slide']]);
+    }
+
+    /**
      * Test that empty files are really empty.
      *
      * @return void
