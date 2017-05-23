@@ -22,6 +22,8 @@ class RockSolidSliderBundleTest extends TestCase
 {
     /**
      * Tests the object instantiation.
+     *
+     * @coversNothing
      */
     public function testInstantiation()
     {
@@ -32,6 +34,8 @@ class RockSolidSliderBundleTest extends TestCase
 
     /**
      * Tests the getContainerExtension() method.
+     *
+     * @covers \MadeYourDay\RockSolidSlider\RockSolidSliderBundle::getContainerExtension()
      */
     public function testGetContainerExtension()
     {
@@ -45,6 +49,8 @@ class RockSolidSliderBundleTest extends TestCase
 
     /**
      * Tests the build() method.
+     *
+     * @covers \MadeYourDay\RockSolidSlider\RockSolidSliderBundle::build()
      */
     public function testBuild()
     {

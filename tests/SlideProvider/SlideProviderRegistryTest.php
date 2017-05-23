@@ -22,6 +22,8 @@ class SlideProviderRegistryTest extends TestCase
 {
     /**
      * Tests the object instantiation.
+     *
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::__construct()
      */
     public function testInstantiation()
     {
@@ -34,6 +36,11 @@ class SlideProviderRegistryTest extends TestCase
      * Test adding providers.
      *
      * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::__construct()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::addProvider()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::getProvider()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::hasProvider()
      */
     public function testAddProvider()
     {
@@ -54,6 +61,11 @@ class SlideProviderRegistryTest extends TestCase
      * Test that the instance get's populated with constructor arguments.
      *
      * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::__construct()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::addProvider()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::getProvider()
+     * covers \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry::hasProvider()
      */
     public function initWithProviders()
     {

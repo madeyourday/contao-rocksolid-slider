@@ -22,6 +22,8 @@ class RockSolidSliderExtensionTest extends TestCase
 {
     /**
      * Tests the object instantiation.
+     *
+     * @coversNothing
      */
     public function testInstantiation()
     {
@@ -32,6 +34,8 @@ class RockSolidSliderExtensionTest extends TestCase
 
     /**
      * Tests adding the bundle services to the container.
+     *
+     * @covers \MadeYourDay\RockSolidSlider\DependencyInjection\RockSolidSliderExtension::load()
      */
     public function testLoad()
     {

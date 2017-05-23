@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace MadeYourDay\RockSolidSlider\Test\DependencyInjection\Compiler;
+namespace MadeYourDay\RockSolidSlider\Test;
 
 use MadeYourDay\RockSolidSlider\SliderContent;
 use PHPUnit\Framework\TestCase;
@@ -21,6 +21,8 @@ class SliderContentTest extends TestCase
 {
     /**
      * Tests the object instantiation.
+     *
+     * @coversNothing
      */
     public function testInstantiation()
     {
@@ -33,6 +35,9 @@ class SliderContentTest extends TestCase
      * Test that empty slides are really empty.
      *
      * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::hasSlides()
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::getSlides()
      */
     public function testEmptySlides()
     {
@@ -46,6 +51,10 @@ class SliderContentTest extends TestCase
      * Test that slides can get added and are returned correctly.
      *
      * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::addSlides()
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::hasSlides()
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::getSlides()
      */
     public function testAddSlides()
     {
@@ -79,6 +88,8 @@ class SliderContentTest extends TestCase
      * Test that invalid slides can not get added.
      *
      * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::addSlides()
      */
     public function testAddInvalidSlide()
     {
@@ -92,6 +103,9 @@ class SliderContentTest extends TestCase
      * Test that empty files are really empty.
      *
      * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::hasFiles()
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::getFiles()
      */
     public function testEmptyFiles()
     {
@@ -105,6 +119,11 @@ class SliderContentTest extends TestCase
      * Test that files can get added and are returned correctly.
      *
      * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::addFiles()
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::hasFiles()
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::getFiles()
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::getFilesOrder()
      */
     public function testAddFiles()
     {
@@ -127,6 +146,10 @@ class SliderContentTest extends TestCase
      * Test that files preserve order.
      *
      * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::addFiles()
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::hasFiles()
+     * @covers \MadeYourDay\RockSolidSlider\SliderContent::getFilesOrder()
      */
     public function testAddPreservesOrder()
     {

@@ -24,6 +24,8 @@ class AddProvidersPassTest extends TestCase
 {
     /**
      * Tests the object instantiation.
+     *
+     * @coversNothing
      */
     public function testInstantiation()
     {
@@ -36,6 +38,9 @@ class AddProvidersPassTest extends TestCase
      * Test the processing.
      *
      * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\DependencyInjection\Compiler\AddProvidersPass::process()
+     * @covers \MadeYourDay\RockSolidSlider\DependencyInjection\Compiler\AddProvidersPass::getProviders()
      */
     public function testProcess()
     {
@@ -73,6 +78,9 @@ class AddProvidersPassTest extends TestCase
      * Test the processing when no arguments have been provided so far.
      *
      * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\DependencyInjection\Compiler\AddProvidersPass::process()
+     * @covers \MadeYourDay\RockSolidSlider\DependencyInjection\Compiler\AddProvidersPass::getProviders()
      */
     public function testProcessWithoutArguments()
     {
