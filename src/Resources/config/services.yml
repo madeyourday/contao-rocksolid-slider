@@ -3,9 +3,9 @@ services:
         class: MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry
         arguments: []
 
-    madeyourday.rocksolid_slider.slideprovider.controller_adapter:
+    madeyourday.rocksolid_slider.slideprovider.frontend_adapter:
         class: Contao\CoreBundle\Framework\Adapter
-        arguments: ['Contao\ModuleModel']
+        arguments: ['Contao\Frontend']
 
     madeyourday.rocksolid_slider.slideprovider.module_model_adapter:
         class: Contao\CoreBundle\Framework\Adapter
@@ -24,7 +24,7 @@ services:
         arguments:
             - "@madeyourday.rocksolid_slider.slideprovider.slider_model_adapter"
             - "@madeyourday.rocksolid_slider.slideprovider.slide_model_adapter"
-            - "@madeyourday.rocksolid_slider.slideprovider.controller_adapter"
+            - "@madeyourday.rocksolid_slider.slideprovider.frontend_adapter"
         tags:
             - { name: madeyourday.rocksolid_slider.slideprovider }
 

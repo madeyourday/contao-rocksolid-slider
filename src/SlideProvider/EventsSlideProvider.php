@@ -11,6 +11,7 @@ namespace MadeYourDay\RockSolidSlider\SlideProvider;
 
 use Contao\CoreBundle\Framework\Adapter;
 use MadeYourDay\RockSolidSlider\SlideProvider\Bridge\ContaoEvents;
+use MadeYourDay\RockSolidSlider\SliderContent;
 
 /**
  * Provides slides from events archives.
@@ -45,11 +46,11 @@ class EventsSlideProvider implements SlideProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getSlides(array $config)
+    public function process(array $config, SliderContent $content)
     {
         // FIXME: unmockable ContaoEvents bridge in use here.
         $bridge = new ContaoEvents($this->modelAdapter->findByPk($config['id']), $config['slider-column']);
 
-        return $bridge->getSlides();
+        $content->addSlides($bridge->getSlides());
     }
 }

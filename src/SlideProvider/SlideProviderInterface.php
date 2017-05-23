@@ -9,6 +9,8 @@
 
 namespace MadeYourDay\RockSolidSlider\SlideProvider;
 
+use MadeYourDay\RockSolidSlider\SliderContent;
+
 /**
  * Describes a generic slide provider.
  *
@@ -24,14 +26,12 @@ interface SlideProviderInterface
     public function getName();
 
     /**
-     * Retrieve the slides for the passed config.
+     * Process the passed configuration.
      *
-     * The result will be the array of slide information.
-     * Each slide must at least contain the key 'text'.
+     * @param array         $config  The configuration to process (refer to provider implementation for contents).
+     * @param SliderContent $content The content to populate.
      *
-     * @param array $config The configuration to process (refer to provider implementation for contents).
-     *
-     * @return array
+     * @return void
      */
-    public function getSlides(array $config);
+    public function process(array $config, SliderContent $content);
 }

@@ -14,6 +14,7 @@ use Contao\Frontend;
 use MadeYourDay\RockSolidSlider\Model\ContentModel;
 use MadeYourDay\RockSolidSlider\Model\SlideModel;
 use MadeYourDay\RockSolidSlider\Model\SliderModel;
+use MadeYourDay\RockSolidSlider\SliderContent;
 
 /**
  * Provides slides from the embedded slide table.
@@ -62,13 +63,13 @@ class DefaultSlidesProvider implements SlideProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getSlides(array $config)
+    public function process(array $config, SliderContent $content)
     {
         $slider = $this->sliderModelAdapter->findByPk($config['rsts_id']);
 
         // Return if there is no slider
         if (!$slider || $slider->id !== $config['rsts_id']) {
-            return [];
+            return;
         }
 
         // FIXME: image handling needs to be passed to image provider.
@@ -77,12 +78,9 @@ class DefaultSlidesProvider implements SlideProviderInterface
             $this->orderSRC = $slider->orderSRC;
         }
 
-        $slides = [];
         if ($slider->type === 'content') {
-            $slides = $this->parseSlides(SlideModel::findPublishedByPid($slider->id), $config);
+            $content->addSlides($this->parseSlides(SlideModel::findPublishedByPid($slider->id), $config));
         }
-
-        return $slides;
     }
 
     /**

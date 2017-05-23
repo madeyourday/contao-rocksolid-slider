@@ -9,6 +9,7 @@
 namespace MadeYourDay\RockSolidSlider\Module;
 
 use MadeYourDay\RockSolidSlider\Model\SliderModel;
+use MadeYourDay\RockSolidSlider\SliderContent;
 
 /**
  * Slider Frontend Module
@@ -23,6 +24,11 @@ class Slider extends \Module
 	 * @var string Template
 	 */
 	protected $strTemplate = 'rsts_default';
+
+	/**
+	 * @var SliderContent
+	 */
+	private $content;
 
 	/**
 	 * @return string
@@ -51,10 +57,11 @@ class Slider extends \Module
 		$registry = \System::getContainer()->get('madeyourday.rocksolid_slider.slideproviders');
 		/** @var \MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry $registry */
 		if ($registry->hasProvider($this->rsts_content_type)) {
-			$this->slides = $registry
+			$this->content = new SliderContent();
+			$registry
 				->getProvider($this->rsts_content_type)
-				->getSlides(array_merge(['slider-column' => $this->strColumn], $this->objModel->row()));
-			if (empty($this->slides)) {
+				->process(array_merge(['slider-column' => $this->strColumn], $this->objModel->row()), $this->content);
+			if (!$this->content->hasSlides()) {
 				return '';
 			}
 		}
@@ -215,7 +222,7 @@ class Slider extends \Module
 		}
 
 		$this->Template->images = $images;
-		$this->Template->slides = $this->slides;
+		$this->Template->slides = $this->content->getSlides();
 
 		$options = array();
 
