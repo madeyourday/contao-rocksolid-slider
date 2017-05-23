@@ -95,8 +95,6 @@ class DefaultSlidesProvider implements SlideProviderInterface
      */
     private function parseSlides($objSlides, $config)
     {
-        global $objPage;
-
         $slides = array();
         $pids = array();
         $idIndexes = array();
@@ -114,24 +112,12 @@ class DefaultSlidesProvider implements SlideProviderInterface
                 $idIndexes[(int)$slide['id']] = count($slides);
             }
 
-            if (
-                in_array($slide['type'], array('image', 'video')) &&
-                trim($slide['singleSRC']) &&
-                ($file = \FilesModel::findByUuid($slide['singleSRC'])) &&
-                ($fileObject = new \File($file->path, true)) &&
-                ($fileObject->isGdImage || $fileObject->isImage)
-            ) {
-                $meta = $this->frontendAdapter->getMetaData($file->meta, $objPage->language);
-                $slide['image'] = new \stdClass;
-                $this->addImageToTemplate($slide['image'], array(
-                    'id' => $file->id,
-                    'name' => $fileObject->basename,
-                    'singleSRC' => $file->path,
-                    'alt' => $meta['title'],
-                    'imageUrl' => $meta['link'],
-                    'caption' => $meta['caption'],
-                    'size' => isset($config['imgSize']) ? $config['imgSize'] : $config['size'],
-                ));
+            if (in_array($slide['type'], array('image', 'video'))) {
+                $slide['image'] = $this->tryPrepareImage(
+                    $slide['singleSRC'],
+                    ['size' => isset($config['imgSize']) ? $config['imgSize'] : $config['size']],
+                    true
+                );
             }
 
             if ($slide['type'] === 'video' && $slide['videoURL'] && empty($slide['image'])) {
@@ -180,27 +166,11 @@ class DefaultSlidesProvider implements SlideProviderInterface
                 $slide['videos'] = null;
             }
 
-            if (
-                trim($slide['backgroundImage']) &&
-                ($file = \FilesModel::findByUuid($slide['backgroundImage'])) &&
-                ($fileObject = new \File($file->path, true)) &&
-                ($fileObject->isGdImage || $fileObject->isImage)
-            ) {
-                $meta = $this->frontendAdapter->getMetaData($file->meta, $objPage->language);
-                $slide['backgroundImage'] = new \stdClass;
-                $this->addImageToTemplate($slide['backgroundImage'], array(
-                    'id' => $file->id,
-                    'name' => $fileObject->basename,
-                    'singleSRC' => $file->path,
-                    'alt' => $meta['title'],
-                    'imageUrl' => $meta['link'],
-                    'caption' => $meta['caption'],
-                    'size' => $slide['backgroundImageSize'],
-                ));
-            }
-            else {
-                $slide['backgroundImage'] = null;
-            }
+            $slide['backgroundImage'] = $this->tryPrepareImage(
+                $slide['backgroundImage'],
+                ['size' => $slide['backgroundImageSize']],
+                true
+            );
 
             if ($slide['backgroundVideos']) {
                 $videoFiles = deserialize($slide['backgroundVideos'], true);
@@ -213,40 +183,7 @@ class DefaultSlidesProvider implements SlideProviderInterface
             }
 
             if ($config['rsts_navType'] === 'thumbs') {
-                $slide['thumb'] = new \stdClass;
-                if (
-                    trim($slide['thumbImage']) &&
-                    ($file = \FilesModel::findByUuid($slide['thumbImage'])) &&
-                    ($fileObject = new \File($file->path, true)) &&
-                    ($fileObject->isGdImage || $fileObject->isImage)
-                ) {
-                    $this->addImageToTemplate($slide['thumb'], array(
-                        'id' => $file->id,
-                        'name' => $fileObject->basename,
-                        'singleSRC' => $file->path,
-                        'size' => $config['rsts_thumbs_imgSize'],
-                    ));
-                }
-                elseif (
-                    in_array($slide['type'], array('image', 'video')) &&
-                    trim($slide['singleSRC']) &&
-                    ($file = \FilesModel::findByUuid($slide['singleSRC'])) &&
-                    ($fileObject = new \File($file->path, true)) &&
-                    ($fileObject->isGdImage || $fileObject->isImage)
-                ) {
-                    $this->addImageToTemplate($slide['thumb'], array(
-                        'id' => $file->id,
-                        'name' => $fileObject->basename,
-                        'singleSRC' => $file->path,
-                        'size' => $config['rsts_thumbs_imgSize'],
-                    ));
-                }
-                elseif (!empty($slide['image']->src)) {
-                    $slide['thumb'] = clone $slide['image'];
-                }
-                elseif (!empty($slide['backgroundImage']->src)) {
-                    $slide['thumb'] = clone $slide['backgroundImage'];
-                }
+                $slide['thumb'] = $this->generateThumb($slide, $config);
             }
 
             $slides[] = $slide;
@@ -268,13 +205,83 @@ class DefaultSlidesProvider implements SlideProviderInterface
     /**
      * Gateway to frontend adapter.
      *
-     * @param object $template The template object to add the image to.
-     * @param array  $data     The element or module as array.
+     * @param array $data The image data as array.
      *
-     * @return void
+     * @return \stdClass
      */
-    private function addImageToTemplate($template, $data)
+    private function prepareImageForTemplate($data)
     {
-        $this->frontendAdapter->addImageToTemplate($template, $data);
+        $image = new \stdClass;
+        $this->frontendAdapter->addImageToTemplate($image, $data);
+
+        return $image;
+    }
+
+    /**
+     * Try to prepare the file with the passed uuid.
+     *
+     * @param string $uuid       The uuid of the file.
+     * @param array  $attributes The attributes to pass to Frontend::addImageToTemplate().
+     * @param bool $addMeta      If true, the Meta information attributes will also get added
+     *                          'alt'      => meta['title']
+     *                          'imageUrl' => meta['link'],
+     *                          'caption'  => meta['caption']
+     *
+     * @return null|\stdClass
+     */
+    private function tryPrepareImage($uuid, $attributes, $addMeta = false)
+    {
+        if (!trim($uuid)) {
+            return null;
+        }
+        if (null === ($file = \FilesModel::findByUuid($uuid))) {
+            return null;
+        }
+        $fileObject = new \File($file->path, true);
+        // FIXME: Why check for isGdImage here? if isImage == true it is always also isGdImage == true?
+        if (!$fileObject->isGdImage && !$fileObject->isImage) {
+            return null;
+        }
+
+        if ($addMeta) {
+            global $objPage;
+            $meta                   = $this->frontendAdapter->getMetaData($file->meta, $objPage->language);
+            $attributes['alt']      = $meta['title'];
+            $attributes['imageUrl'] = $meta['link'];
+            $attributes['caption']  = $meta['caption'];
+        }
+
+        return $this->prepareImageForTemplate(array_merge([
+            'id'        => $file->id,
+            'uuid'      => isset($file->uuid) ? $file->uuid : null,
+            'name'      => $fileObject->basename,
+            'singleSRC' => $file->path,
+        ], $attributes));
+    }
+
+    /**
+     * Generate the thumbnail for a slide.
+     *
+     * @param array $slide  The slide.
+     * @param array $config The configuration.
+     *
+     * @return \stdClass
+     */
+    private function generateThumb($slide, $config)
+    {
+        if ($thumb = $this->tryPrepareImage($slide['thumbImage'], ['size' => $config['rsts_thumbs_imgSize']])) {
+            return $thumb;
+        }
+        if (in_array($slide['type'], ['image', 'video']) &&
+            ($thumb = $this->tryPrepareImage($slide['singleSRC'], ['size' => $config['rsts_thumbs_imgSize']]))) {
+            return $thumb;
+        }
+        if (!empty($slide['image']->src)) {
+            return clone $slide['image'];
+        }
+        if (!empty($slide['backgroundImage']->src)) {
+            return clone $slide['backgroundImage'];
+        }
+        return $thumb;
     }
 }
