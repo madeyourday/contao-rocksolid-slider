@@ -11,6 +11,7 @@ namespace MadeYourDay\RockSolidSlider\SlideProvider;
 
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\Frontend;
+use Contao\StringUtil;
 use MadeYourDay\RockSolidSlider\Model\ContentModel;
 use MadeYourDay\RockSolidSlider\Model\SlideModel;
 use MadeYourDay\RockSolidSlider\Model\SliderModel;
@@ -75,7 +76,7 @@ class DefaultSlidesProvider implements SlideProviderInterface
         if ($slider->type === 'image') {
             $content->addFiles(
                 deserialize($slider->multiSRC),
-                $slider->orderSRC ? deserialize($slider->multiSRC) : []
+                $slider->orderSRC ? StringUtil::deserialize($slider->multiSRC) : []
             );
 
             return;

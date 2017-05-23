@@ -9,6 +9,7 @@
 
 namespace MadeYourDay\RockSolidSlider\SlideProvider;
 
+use Contao\StringUtil;
 use MadeYourDay\RockSolidSlider\SliderContent;
 
 /**
@@ -31,6 +32,6 @@ class ImageSlideProvider implements SlideProviderInterface
      */
     public function process(array $config, SliderContent $content)
     {
-        $content->addFiles(deserialize($config['multiSRC']));
+        $content->addFiles(StringUtil::deserialize($config['multiSRC']));
     }
 }
