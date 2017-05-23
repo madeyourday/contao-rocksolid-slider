@@ -74,4 +74,57 @@ class SliderContentTest extends TestCase
             $content->getSlides()
         );
     }
+
+    /**
+     * Test that empty files are really empty.
+     *
+     * @return void
+     */
+    public function testEmptyFiles()
+    {
+        $content = new SliderContent();
+
+        $this->assertFalse($content->hasFiles());
+        $this->assertEquals([], $content->getFiles());
+    }
+
+    /**
+     * Test that files can get added and are returned correctly.
+     *
+     * @return void
+     */
+    public function testAddFiles()
+    {
+        $content = new SliderContent();
+        $content->addFiles(['file 1', 'file 2', 'file 3']);
+        $content->addFiles(['file 4', 'file 5', 'file 6']);
+
+        $this->assertTrue($content->hasFiles());
+        $this->assertEquals(
+            ['file 1', 'file 2', 'file 3', 'file 4', 'file 5', 'file 6'],
+            $content->getFiles()
+        );
+        $this->assertEquals(
+            ['file 1', 'file 2', 'file 3', 'file 4', 'file 5', 'file 6'],
+            $content->getFilesOrder()
+        );
+    }
+
+    /**
+     * Test that files preserve order.
+     *
+     * @return void
+     */
+    public function testAddPreservesOrder()
+    {
+        $content = new SliderContent();
+        $content->addFiles(['file 1', 'file 2', 'file 3']);
+        $content->addFiles(['file 4', 'file 5', 'file 6'], ['file 6', 'file 4', 'file 5']);
+
+        $this->assertEquals(
+            ['file 1', 'file 2', 'file 3', 'file 6', 'file 4', 'file 5'],
+            $content->getFilesOrder()
+        );
+    }
+
 }

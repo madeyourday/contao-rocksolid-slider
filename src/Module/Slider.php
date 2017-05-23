@@ -61,38 +61,12 @@ class Slider extends \Module
 			$registry
 				->getProvider($this->rsts_content_type)
 				->process(array_merge(['slider-column' => $this->strColumn], $this->objModel->row()), $this->content);
-			if (!$this->content->hasSlides()) {
+			if (!$this->content->hasSlides() && !$this->content->hasFiles()) {
 				return '';
 			}
 		}
-		else if ($this->rsts_content_type === 'rsts_settings') {
-			return '';
-		}
-		else if ($this->rsts_content_type === 'rsts_images' || !$this->rsts_id) {
 
-			$this->multiSRC = deserialize($this->multiSRC);
-			if (!is_array($this->multiSRC) || !count($this->multiSRC)) {
-				// Return if there are no images
-				return '';
-			}
-
-		}
-		else {
-			$this->slider = SliderModel::findByPk($this->rsts_id);
-
-			// Return if there is no slider
-			if (! $this->slider || $this->slider->id !== $this->rsts_id) {
-				return '';
-			}
-
-			if ($this->slider->type === 'image') {
-				$this->multiSRC = deserialize($this->slider->multiSRC);
-				$this->orderSRC = $this->slider->orderSRC;
-			}
-
-		}
-
-		$this->files = \FilesModel::findMultipleByUuids($this->multiSRC);
+		$this->files = \FilesModel::findMultipleByUuids($this->content->getFiles());
 
 		if (
 			$this->rsts_import_settings
@@ -178,7 +152,7 @@ class Slider extends \Module
 
 			if ($this->orderSRC) {
 				// Turn the order string into an array and remove all values
-				$order = deserialize($this->orderSRC);
+				$order = $this->content->getFilesOrder();
 				if (!$order || !is_array($order)) {
 					$order = array();
 				}
