@@ -19,6 +19,11 @@ use MadeYourDay\RockSolidSlider\SliderContent;
  * @author Martin Auswöger <martin@madeyourday.net>
  *
  * @property string rsts_content_type The slider content type.
+ * @property string rsts_thumbs_imgSize
+ * @property string rsts_navType
+ * @property string rsts_template
+ * @property string rsts_import_settings
+ * @property string rsts_import_settings_from
  */
 class Slider extends \Module
 {
