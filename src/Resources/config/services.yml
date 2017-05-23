@@ -1,3 +1,5 @@
+imports:
+    - { resource: model_adapter.yml }
 services:
     madeyourday.rocksolid_slider.slideproviders:
         class: MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry
@@ -7,23 +9,11 @@ services:
         class: Contao\CoreBundle\Framework\Adapter
         arguments: ['Contao\Frontend']
 
-    madeyourday.rocksolid_slider.slideprovider.module_model_adapter:
-        class: Contao\CoreBundle\Framework\Adapter
-        arguments: ['Contao\ModuleModel']
-
-    madeyourday.rocksolid_slider.slideprovider.slider_model_adapter:
-        class: Contao\CoreBundle\Framework\Adapter
-        arguments: ['MadeYourDay\RockSolidSlider\Model\SliderModel']
-
-    madeyourday.rocksolid_slider.slideprovider.slide_model_adapter:
-        class: Contao\CoreBundle\Framework\Adapter
-        arguments: ['MadeYourDay\RockSolidSlider\Model\SlideModel']
-
     madeyourday.rocksolid_slider.slideprovider.default:
         class: MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlidesProvider
         arguments:
-            - "@madeyourday.rocksolid_slider.slideprovider.slider_model_adapter"
-            - "@madeyourday.rocksolid_slider.slideprovider.slide_model_adapter"
+            - "@madeyourday.rocksolid_slider.model_adapter.slider_model"
+            - "@madeyourday.rocksolid_slider.model_adapter.slide_model"
             - "@madeyourday.rocksolid_slider.slideprovider.frontend_adapter"
         tags:
             - { name: madeyourday.rocksolid_slider.slideprovider }
@@ -31,13 +21,13 @@ services:
     madeyourday.rocksolid_slider.slideprovider.events:
         class: MadeYourDay\RockSolidSlider\SlideProvider\EventsSlideProvider
         arguments:
-            - "@madeyourday.rocksolid_slider.slideprovider.module_model_adapter"
+            - "@madeyourday.rocksolid_slider.model_adapter.module"
         tags:
             - { name: madeyourday.rocksolid_slider.slideprovider }
 
     madeyourday.rocksolid_slider.slideprovider.news:
         class: MadeYourDay\RockSolidSlider\SlideProvider\NewsSlideProvider
         arguments:
-            - "@madeyourday.rocksolid_slider.slideprovider.module_model_adapter"
+            - "@madeyourday.rocksolid_slider.model_adapter.module"
         tags:
             - { name: madeyourday.rocksolid_slider.slideprovider }
