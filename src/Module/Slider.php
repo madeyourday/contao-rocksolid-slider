@@ -33,6 +33,11 @@ class Slider extends \Module
 	private $content;
 
 	/**
+	 * @var string
+	 */
+	private $root;
+
+	/**
 	 * @return string
 	 */
 	public function generate()
@@ -68,8 +73,7 @@ class Slider extends \Module
 			}
 		}
 
-		$this->files = \FilesModel::findMultipleByUuids($this->content->getFiles());
-
+		$this->root = dirname(System::getContainer()->getParameter('kernel.root_dir'));
 		if (
 			$this->rsts_import_settings
 			&& $this->rsts_import_settings_from
@@ -99,73 +103,12 @@ class Slider extends \Module
 	 */
 	protected function compile()
 	{
-		$images = array();
-
-		/** @var FileHelper $helper */
-		$helper = System::getContainer()->get('madeyourday.rocksolid_slider.file_helper');
-		if ($files = $this->content->getFiles()) {
-
-			$filesExpaned = $helper->findMultipleFilesByUuidRecursive($files);
-
-			foreach ($filesExpaned as $files) {
-
-				// Continue if the files has been processed or does not exist
-				if (isset($images[$files->path]) || ! file_exists(TL_ROOT . '/' . $files->path)) {
-					continue;
-				}
-
-				if (null !== ($imageData = $helper->tryPrepareImage($files, [], true))) {
-					// Add the image
-					$images[$files->path] = $imageData;
-				}
-			}
-
-			if ($this->orderSRC) {
-				// Turn the order string into an array and remove all values
-				$order = $this->content->getFilesOrder();
-				if (!$order || !is_array($order)) {
-					$order = array();
-				}
-				$order = array_flip($order);
-				$order = array_map(function(){}, $order);
-
-				// Move the matching elements to their position in $order
-				foreach ($images as $k => $v) {
-					if (array_key_exists($v['uuid'], $order)) {
-						$order[$v['uuid']] = $v;
-						unset($images[$k]);
-					}
-				}
-
-				$order = array_merge($order, array_values($images));
-
-				// Remove empty (unreplaced) entries
-				$images = array_filter($order);
-				unset($order);
-			}
-
-			$images = array_values($images);
-
-			foreach ($images as $key => $image) {
-				$newImage = new \stdClass();
-				$image['size'] = isset($this->imgSize) ? $this->imgSize : $this->size;
-				$this->addImageToTemplate($newImage, $image);
-				if ($this->rsts_navType === 'thumbs') {
-					$newImage->thumb = new \stdClass;
-					$image['size'] = $this->rsts_thumbs_imgSize;
-					$this->addImageToTemplate($newImage->thumb, $image);
-				}
-				$images[$key] = $newImage;
-			}
-
-		}
-
 		// use custom skin if specified
 		if (trim($this->arrData['rsts_customSkin'])) {
 			$this->arrData['rsts_skin'] = trim($this->arrData['rsts_customSkin']);
 		}
 
-		$this->Template->images = $images;
+		$this->Template->images = $this->prepareFiles($this->content->getFiles(), $this->content->getFilesOrder());
 		$this->Template->slides = $this->content->getSlides();
 
 		$options = array();
@@ -310,8 +253,79 @@ class Slider extends \Module
 		$GLOBALS['TL_JAVASCRIPT'][] = $assetsDir . '/js/rocksolid-slider.min.js|static';
 		$GLOBALS['TL_CSS'][] = $assetsDir . '/css/rocksolid-slider.min.css||static';
 		$skinPath = $assetsDir . '/css/' . (empty($this->arrData['rsts_skin']) ? 'default' : $this->arrData['rsts_skin']) . '-skin.min.css';
-		if (file_exists(TL_ROOT . '/' . $skinPath)) {
+		if (file_exists($this->root . '/' . $skinPath)) {
 			$GLOBALS['TL_CSS'][] = $skinPath . '||static';
 		}
+	}
+
+	/**
+	 * Prepare the images.
+	 *
+	 * @param array $files The file list.
+	 * @param array $order The order list.
+	 *
+	 * @return array
+	 */
+	private function prepareFiles($files, $order)
+	{
+		if (empty($files)) {
+			return [];
+		}
+		/** @var FileHelper $helper */
+		$helper = System::getContainer()->get('madeyourday.rocksolid_slider.file_helper');
+		$images = [];
+		foreach ($helper->findMultipleFilesByUuidRecursive($files) as $files) {
+
+			// Continue if the files has been processed or does not exist
+			if (isset($images[$files->path]) || !file_exists($this->root . '/' . $files->path)) {
+				continue;
+			}
+
+			if (null !== ($imageData = $helper->tryPrepareImage($files, [], true))) {
+				// Add the image
+				$images[$files->path] = $imageData;
+			}
+		}
+
+		if ($order) {
+			// Turn the order string into an array and remove all values
+			if (!$order || !is_array($order)) {
+				$order = array();
+			}
+			$order = array_flip($order);
+			$order = array_map(
+				function () {
+				},
+				$order
+			);
+
+			// Move the matching elements to their position in $order
+			foreach ($images as $k => $v) {
+				if (array_key_exists($v['uuid'], $order)) {
+					$order[$v['uuid']] = $v;
+					unset($images[$k]);
+				}
+			}
+
+			$order = array_merge($order, array_values($images));
+
+			// Remove empty (unreplaced) entries
+			$images = array_filter($order);
+			unset($order);
+		}
+
+		$images = array_values($images);
+
+		foreach ($images as $key => $image) {
+			$image['size'] = isset($this->imgSize) ? $this->imgSize : $this->size;
+			$newImage = $helper->prepareImageForTemplate($image);
+			if ($this->rsts_navType === 'thumbs') {
+				$image['size']   = $this->rsts_thumbs_imgSize;
+				$newImage->thumb = $helper->prepareImageForTemplate($image);
+			}
+			$images[$key] = $newImage;
+		}
+
+		return $images;
 	}
 }
