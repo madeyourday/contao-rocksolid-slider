@@ -27,7 +27,7 @@ class EventsSlideProvider implements SlideProviderInterface
     /**
      * Create a new instance.
      *
-     * @param $modelAdapter
+     * @param Adapter $modelAdapter
      */
     public function __construct(Adapter $modelAdapter)
     {
