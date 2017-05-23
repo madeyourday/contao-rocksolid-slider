@@ -87,15 +87,15 @@ class DefaultSlidesProvider implements SlideProviderInterface
 
         if ($slider->type === 'image') {
             $content->addFiles(
-                deserialize($slider->multiSRC),
-                $slider->orderSRC ? StringUtil::deserialize($slider->multiSRC) : []
+                StringUtil::deserialize($slider->multiSRC),
+                StringUtil::deserialize($slider->orderSRC) ?: []
             );
 
             return;
         }
 
         if ($slider->type === 'content') {
-            $content->addSlides($this->parseSlides(SlideModel::findPublishedByPid($slider->id), $config));
+            $content->addSlides($this->parseSlides($this->slideModelAdapter->findPublishedByPid($slider->id), $config));
         }
     }
 
@@ -126,7 +126,7 @@ class DefaultSlidesProvider implements SlideProviderInterface
                 $idIndexes[(int)$slide['id']] = count($slides);
             }
 
-            if (in_array($slide['type'], array('image', 'video'))) {
+            if (in_array($slide['type'], ['image', 'video'])) {
                 $slide['image'] = $this->fileHelper->tryPrepareImage(
                     $slide['singleSRC'],
                     ['size' => isset($config['imgSize']) ? $config['imgSize'] : $config['size']],
@@ -157,10 +157,10 @@ class DefaultSlidesProvider implements SlideProviderInterface
                 }
                 $slide['image']->imgSize = '';
                 $slide['image']->alt = '';
-                $slide['image']->picture = array(
-                    'img' => array('src' => $slide['image']->src, 'srcset' => $slide['image']->src),
-                    'sources' => array(),
-                );
+                $slide['image']->picture = [
+                    'img' => ['src' => $slide['image']->src, 'srcset' => $slide['image']->src],
+                    'sources' => [],
+                ];
             }
 
             if ($slide['type'] !== 'video' && $slide['videoURL']) {
@@ -169,8 +169,8 @@ class DefaultSlidesProvider implements SlideProviderInterface
 
             if ($slide['type'] === 'video' && $slide['videos']) {
                 $videoFiles = deserialize($slide['videos'], true);
-                $videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
-                $videos = array();
+                $videoFiles = $this->fileHelper->findMultipleFilesByUuids($videoFiles);
+                $videos = [];
                 foreach ($videoFiles as $file) {
                     $videos[] = $file;
                 }
@@ -188,7 +188,7 @@ class DefaultSlidesProvider implements SlideProviderInterface
 
             if ($slide['backgroundVideos']) {
                 $videoFiles = deserialize($slide['backgroundVideos'], true);
-                $videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
+                $videoFiles = $this->fileHelper->findMultipleFilesByUuids($videoFiles);
                 $videos = array();
                 foreach ($videoFiles as $file) {
                     $videos[] = $file;
@@ -208,7 +208,8 @@ class DefaultSlidesProvider implements SlideProviderInterface
             $slideContents = ContentModel::findPublishedByPidsAndTable($pids, SlideModel::getTable());
             if ($slideContents) {
                 while ($slideContents->next()) {
-                    $slides[$idIndexes[(int)$slideContents->pid]]['text'] .= $this->frontendAdapter->getContentElement($slideContents->current());
+                    $slides[$idIndexes[(int)$slideContents->pid]]['text'] .=
+                        $this->frontendAdapter->getContentElement($slideContents->current());
                 }
             }
         }
@@ -226,11 +227,11 @@ class DefaultSlidesProvider implements SlideProviderInterface
      */
     private function generateThumb($slide, $config)
     {
-        if ($thumb = $this->fileHelper->tryPrepareImage($slide['thumbImage'], ['size' => $config['rsts_thumbs_imgSize']])) {
+        if ($thumb = $this->fileHelper->tryPrepareImageForTemplate($slide['thumbImage'], ['size' => $config['rsts_thumbs_imgSize']])) {
             return $thumb;
         }
         if (in_array($slide['type'], ['image', 'video']) &&
-            ($thumb = $this->fileHelper->tryPrepareImage($slide['singleSRC'], ['size' => $config['rsts_thumbs_imgSize']]))) {
+            ($thumb = $this->fileHelper->tryPrepareImageForTemplate($slide['singleSRC'], ['size' => $config['rsts_thumbs_imgSize']]))) {
             return $thumb;
         }
         if (!empty($slide['image']->src)) {
