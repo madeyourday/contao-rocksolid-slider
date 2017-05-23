@@ -75,21 +75,18 @@ class FileHelper
     /**
      * Try to prepare the file with the passed uuid.
      *
-     * @param string $uuid       The uuid of the file.
-     * @param array  $attributes The attributes to pass to Frontend::addImageToTemplate().
-     * @param bool $addMeta      If true, the Meta information attributes will also get added
-     *                          'alt'      => meta['title']
-     *                          'imageUrl' => meta['link'],
-     *                          'caption'  => meta['caption']
+     * @param string|FilesModel $uuidOrModel  The uuid of the file.
+     * @param array             $attributes   The attributes to pass to Frontend::addImageToTemplate().
+     * @param bool              $addMeta      If true, the Meta information attributes will also get added
+     *                                        'alt'      => meta['title']
+     *                                        'imageUrl' => meta['link'],
+     *                                        'caption'  => meta['caption']
      *
      * @return null|array
      */
-    public function tryPrepareImage($uuid, $attributes, $addMeta = false)
+    public function tryPrepareImage($uuidOrModel, $attributes, $addMeta = false)
     {
-        if (!trim($uuid)) {
-            return null;
-        }
-        if (null === ($file = $this->filesModelAdapter->findByUuid($uuid))) {
+        if (null === ($file = $this->ensureFileModel($uuidOrModel))) {
             return null;
         }
         $fileObject = $this->getFileInstance($file->path);
@@ -99,6 +96,7 @@ class FileHelper
         }
 
         if ($addMeta) {
+            // FIXME: this is only needed because of the language, we need it via another way!
             global $objPage;
             $meta                   = $this->frontendAdapter->getMetaData($file->meta, $objPage->language);
             $attributes['alt']      = $meta['title'];
@@ -117,18 +115,18 @@ class FileHelper
     /**
      * Try to prepare the file with the passed uuid.
      *
-     * @param string $uuid       The uuid of the file.
-     * @param array  $attributes The attributes to pass to Frontend::addImageToTemplate().
-     * @param bool $addMeta      If true, the Meta information attributes will also get added
-     *                          'alt'      => meta['title']
-     *                          'imageUrl' => meta['link'],
-     *                          'caption'  => meta['caption']
+     * @param string|FilesModel $uuidOrModel  The uuid of the file.
+     * @param array             $attributes   The attributes to pass to Frontend::addImageToTemplate().
+     * @param bool              $addMeta      If true, the Meta information attributes will also get added
+     *                                        'alt'      => meta['title']
+     *                                        'imageUrl' => meta['link'],
+     *                                        'caption'  => meta['caption']
      *
      * @return null|\stdClass
      */
-    public function tryPrepareImageForTemplate($uuid, $attributes, $addMeta = false)
+    public function tryPrepareImageForTemplate($uuidOrModel, $attributes, $addMeta = false)
     {
-        if (null === ($imageData = $this->tryPrepareImage($uuid, $attributes, $addMeta))) {
+        if (null === ($imageData = $this->tryPrepareImage($uuidOrModel, $attributes, $addMeta))) {
             return null;
         }
 
@@ -147,5 +145,25 @@ class FileHelper
     public function getFileInstance($path)
     {
         return new File($path);
+    }
+
+    /**
+     * Convert an uuid to a FilesModel instance if not one already.
+     *
+     * @param string|FilesModel $uuidOrModel
+     *
+     * @return FilesModel|null
+     */
+    private function ensureFileModel($uuidOrModel)
+    {
+        if ($uuidOrModel instanceof FilesModel) {
+            return $uuidOrModel;
+        }
+
+        if (!trim($uuidOrModel)) {
+            return null;
+        }
+
+        return $this->filesModelAdapter->findByUuid($uuidOrModel);
     }
 }

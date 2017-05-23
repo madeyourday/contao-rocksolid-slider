@@ -10,6 +10,7 @@
 namespace MadeYourDay\RockSolidSlider\Test\Helper;
 
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\FilesModel;
 use MadeYourDay\RockSolidSlider\Helper\FileHelper;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
@@ -100,6 +101,7 @@ class FileHelperTest extends TestCase
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::prepareImageForTemplate()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImage()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImageForTemplate()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::ensureFileModel()
      */
     public function testTryPrepareImageForTemplate()
     {
@@ -181,6 +183,7 @@ class FileHelperTest extends TestCase
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::__construct()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImage()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImageForTemplate()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::ensureFileModel()
      */
     public function testTryPrepareImageForTemplateWithoutUuid()
     {
@@ -220,6 +223,7 @@ class FileHelperTest extends TestCase
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::prepareImageForTemplate()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImage()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImageForTemplate()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::ensureFileModel()
      */
     public function testTryPrepareImageForTemplateWithUnknownUuid()
     {
@@ -262,6 +266,7 @@ class FileHelperTest extends TestCase
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::prepareImageForTemplate()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImage()
      * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImageForTemplate()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::ensureFileModel()
      */
     public function testTryPrepareImageForTemplateWithNonImageUuid()
     {
@@ -309,6 +314,60 @@ class FileHelperTest extends TestCase
         /** @var FileHelper $helper */
         $this->assertNull($helper->tryPrepareImageForTemplate('the-uuid', []));
     }
+
+    /**
+     * Test the ensureFileModel method does try to look up a passed files model again.
+     *
+     * @return void
+     *
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::__construct()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::tryPrepareImage()
+     * @covers \MadeYourDay\RockSolidSlider\Helper\FileHelper::ensureFileModel()
+     */
+    public function testEnsureFileModelDoesNotConvertModel()
+    {
+        $filesModelAdapter = $this->mockAdapter(['findByUuid']);
+        $frontendAdapter   = $this->mockAdapter(['getMetaData', 'addImageToTemplate']);
+
+        class_alias('Contao\Model', 'Model');
+        $fileModelMock = $this
+            ->getMockBuilder(FilesModel::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__get'])
+            ->getMock();
+        $fileModelMock->method('__get')->with('path')->willReturn('some/path/file.ext');
+
+        $fileMock      = (object) [
+            'isGdImage' => false,
+            'isImage'   => false,
+        ];
+
+        $filesModelAdapter
+            ->expects($this->never())
+            ->method('findByUuid');
+
+        $frontendAdapter
+            ->expects($this->never())
+            ->method('getMetaData');
+        $frontendAdapter
+            ->expects($this->never())
+            ->method('addImageToTemplate');
+
+        $helper = $this
+            ->getMockBuilder(FileHelper::class)
+            ->setConstructorArgs([$filesModelAdapter, $frontendAdapter])
+            ->setMethods(['getFileInstance'])
+            ->getMock();
+        $helper
+            ->expects($this->once())
+            ->method('getFileInstance')
+            ->with('some/path/file.ext')
+            ->willReturn($fileMock);
+
+        /** @var FileHelper $helper */
+        $this->assertNull($helper->tryPrepareImage($fileModelMock, []));
+    }
+
 
     /**
      * Mock an adapter
