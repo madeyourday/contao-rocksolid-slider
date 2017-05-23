@@ -1,6 +1,6 @@
 services:
 
-    madeyourday.rocksolid_slider.model_adapter.files_module:
+    madeyourday.rocksolid_slider.model_adapter.files_model:
         class: Contao\CoreBundle\Framework\Adapter
         arguments: ['Contao\FilesModel']
         public: false

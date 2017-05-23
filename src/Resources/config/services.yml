@@ -4,6 +4,8 @@ services:
     madeyourday.rocksolid_slider.file_helper:
         class: MadeYourDay\RockSolidSlider\Helper\FileHelper
         arguments:
+            - "@madeyourday.rocksolid_slider.model_adapter.files_model"
+            - "@madeyourday.rocksolid_slider.slideprovider.frontend_adapter"
 
     madeyourday.rocksolid_slider.slideproviders:
         class: MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry
