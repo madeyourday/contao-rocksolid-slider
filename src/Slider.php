@@ -208,7 +208,7 @@ class Slider extends \Backend
 		$objModules = $this->Database->execute("SELECT id, pid, name FROM tl_module WHERE type = 'rocksolid_slider' ORDER BY name");
 
 		while ($objModules->next()) {
-		    $objTheme = \ThemeModel::findById($objModules->pid);
+		    	$objTheme = \ThemeModel::findById($objModules->pid);
 			$arrModules[$objTheme->name][$objModules->id] = $objModules->name;
 		}
 
