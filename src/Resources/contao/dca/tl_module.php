@@ -81,7 +81,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_import_settings_from'] = array(
 	'eval' => array(
 		'includeBlankOption' => true,
 		'mandatory' => true,
-        'tl_class' => 'w50',
+        	'tl_class' => 'w50',
 	),
 	'sql' => "int(10) unsigned NOT NULL default '0'",
 );
