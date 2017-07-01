@@ -205,10 +205,15 @@ class Slider extends \Backend
 	public function getSliderModuleIds()
 	{
 		$arrModules = array();
-		$objModules = $this->Database->execute("SELECT id, name FROM tl_module WHERE type = 'rocksolid_slider' ORDER BY name");
+		$objModules = $this->Database->execute("SELECT id, pid, name FROM tl_module WHERE type = 'rocksolid_slider' ORDER BY name");
 
 		while ($objModules->next()) {
-			$arrModules[$objModules->id] = $objModules->name;
+			$objTheme = \ThemeModel::findById($objModules->pid);
+			$arrModules[$objTheme->name][$objModules->id] = $objModules->name;
+		}
+
+		if (count($arrModules) === 1) {
+			$arrModules = array_values($arrModules)[0];
 		}
 
 		return $arrModules;
