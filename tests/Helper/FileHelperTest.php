@@ -214,7 +214,7 @@ class FileHelperTest extends TestCase
 
         $helper = new FileHelper($filesModelAdapter, $frontendAdapter);
 
-        $helper->prepareImageForTemplate(['option1' => 'value1', 'option2' => 'value2']);
+        $helper->prepareImageForTemplate('uuid', ['option1' => 'value1', 'option2' => 'value2']);
     }
 
     /**
@@ -250,7 +250,7 @@ class FileHelperTest extends TestCase
         ];
 
         $filesModelAdapter
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('findByUuid')
             ->with('the-uuid')
             ->willReturn($fileModelMock);

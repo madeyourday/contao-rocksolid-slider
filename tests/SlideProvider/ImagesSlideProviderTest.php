@@ -11,29 +11,29 @@ namespace MadeYourDay\RockSolidSlider\Test\SlideProvider;
 
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\ModuleModel;
-use MadeYourDay\RockSolidSlider\SlideProvider\ImageSlideProvider;
+use MadeYourDay\RockSolidSlider\SlideProvider\ImagesSlideProvider;
 use MadeYourDay\RockSolidSlider\SliderContent;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests the ImageSlideProvider class.
+ * Tests the ImagesSlideProvider class.
  *
  * @author Christian Schiffler <c.schiffler@cyberspectrum.de>
  */
-class ImageSlideProviderTest extends TestCase
+class ImagesSlideProviderTest extends TestCase
 {
     /**
      * Tests the object instantiation.
      *
-     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\ImageSlideProvider::getName()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\ImagesSlideProvider::getName()
      */
     public function testInstantiation()
     {
-        $provider = new ImageSlideProvider(
+        $provider = new ImagesSlideProvider(
             $this->getMockBuilder(Adapter::class)->disableOriginalConstructor()->getMock()
         );
 
-        $this->assertInstanceOf('MadeYourDay\RockSolidSlider\SlideProvider\ImageSlideProvider', $provider);
+        $this->assertInstanceOf('MadeYourDay\RockSolidSlider\SlideProvider\ImagesSlideProvider', $provider);
         $this->assertSame('rsts_images', $provider->getName());
     }
 
@@ -42,21 +42,16 @@ class ImageSlideProviderTest extends TestCase
      *
      * @return void
      *
-     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\ImageSlideProvider::process()
-     * @uses \MadeYourDay\RockSolidSlider\SliderContent::addFiles()
-     * @uses \MadeYourDay\RockSolidSlider\SliderContent::getFiles()
-     * @uses \MadeYourDay\RockSolidSlider\SliderContent::hasFiles()
+     * @covers \MadeYourDay\RockSolidSlider\SlideProvider\ImagesSlideProvider::process()
      * @uses \MadeYourDay\RockSolidSlider\SliderContent::hasSlides()
      */
     public function testProcess()
     {
-        $provider = new ImageSlideProvider();
+        $provider = new ImagesSlideProvider();
         $content  = new SliderContent();
 
-        $provider->process(['multiSRC' => serialize(['uuid1', 'uuid2'])], $content);
+        $provider->process(['multiSRC' => serialize(['uuid1', 'uuid2']), 'orderSRC' => serialize(['uuid1', 'uuid2'])], $content);
 
         $this->assertFalse($content->hasSlides());
-        $this->assertTrue($content->hasFiles());
-        $this->assertSame(['uuid1', 'uuid2'], $content->getFiles());
     }
 }

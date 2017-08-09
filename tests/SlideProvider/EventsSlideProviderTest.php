@@ -47,7 +47,6 @@ class EventsSlideProviderTest extends TestCase
      * @covers \MadeYourDay\RockSolidSlider\SlideProvider\EventsSlideProvider::process()
      * @uses \MadeYourDay\RockSolidSlider\SliderContent::addSlides()
      * @uses \MadeYourDay\RockSolidSlider\SliderContent::getSlides()
-     * @uses \MadeYourDay\RockSolidSlider\SliderContent::hasFiles()
      * @uses \MadeYourDay\RockSolidSlider\SliderContent::hasSlides()
      */
     public function testProcess()
@@ -89,7 +88,6 @@ class EventsSlideProviderTest extends TestCase
         $provider->process(['id' => 42, 'slider-column' => 'main'], $content);
 
         $this->assertTrue($content->hasSlides());
-        $this->assertFalse($content->hasFiles());
         $this->assertSame([['text' => 'content']], $content->getSlides());
     }
 }

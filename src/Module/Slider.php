@@ -113,7 +113,6 @@ class Slider extends \Module
 			$this->arrData['rsts_skin'] = trim($this->arrData['rsts_customSkin']);
 		}
 
-		$this->Template->images = $this->prepareFiles($this->content->getFiles(), $this->content->getFilesOrder());
 		$this->Template->slides = $this->content->getSlides();
 
 		$options = array();
@@ -261,76 +260,5 @@ class Slider extends \Module
 		if (file_exists($this->root . '/' . $skinPath)) {
 			$GLOBALS['TL_CSS'][] = $skinPath . '||static';
 		}
-	}
-
-	/**
-	 * Prepare the images.
-	 *
-	 * @param array $files The file list.
-	 * @param array $order The order list.
-	 *
-	 * @return array
-	 */
-	private function prepareFiles($files, $order)
-	{
-		if (empty($files)) {
-			return [];
-		}
-		/** @var FileHelper $helper */
-		$helper = System::getContainer()->get('madeyourday.rocksolid_slider.file_helper');
-		$images = [];
-		foreach ($helper->findMultipleFilesByUuidRecursive($files) as $files) {
-
-			// Continue if the files has been processed or does not exist
-			if (isset($images[$files->path]) || !file_exists($this->root . '/' . $files->path)) {
-				continue;
-			}
-
-			if (null !== ($imageData = $helper->tryPrepareImage($files, [], true))) {
-				// Add the image
-				$images[$files->path] = $imageData;
-			}
-		}
-
-		if ($order) {
-			// Turn the order string into an array and remove all values
-			if (!$order || !is_array($order)) {
-				$order = array();
-			}
-			$order = array_flip($order);
-			$order = array_map(
-				function () {
-				},
-				$order
-			);
-
-			// Move the matching elements to their position in $order
-			foreach ($images as $k => $v) {
-				if (array_key_exists($v['uuid'], $order)) {
-					$order[$v['uuid']] = $v;
-					unset($images[$k]);
-				}
-			}
-
-			$order = array_merge($order, array_values($images));
-
-			// Remove empty (unreplaced) entries
-			$images = array_filter($order);
-			unset($order);
-		}
-
-		$images = array_values($images);
-
-		foreach ($images as $key => $image) {
-			$image['size'] = isset($this->imgSize) ? $this->imgSize : $this->size;
-			$newImage = $helper->prepareImageForTemplate($image);
-			if ($this->rsts_navType === 'thumbs') {
-				$image['size']   = $this->rsts_thumbs_imgSize;
-				$newImage->thumb = $helper->prepareImageForTemplate($image);
-			}
-			$images[$key] = $newImage;
-		}
-
-		return $images;
 	}
 }

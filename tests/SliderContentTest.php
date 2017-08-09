@@ -95,72 +95,7 @@ class SliderContentTest extends TestCase
     {
         $content = new SliderContent();
         $this->expectException('\InvalidArgumentException');
-        $this->expectExceptionMessage('Slide does not contain key "text".');
+        $this->expectExceptionMessage('Slide does not contain key "text" or "image".');
         $content->addSlides([['invalid' => 'slide']]);
     }
-
-    /**
-     * Test that empty files are really empty.
-     *
-     * @return void
-     *
-     * @covers \MadeYourDay\RockSolidSlider\SliderContent::hasFiles()
-     * @covers \MadeYourDay\RockSolidSlider\SliderContent::getFiles()
-     */
-    public function testEmptyFiles()
-    {
-        $content = new SliderContent();
-
-        $this->assertFalse($content->hasFiles());
-        $this->assertEquals([], $content->getFiles());
-    }
-
-    /**
-     * Test that files can get added and are returned correctly.
-     *
-     * @return void
-     *
-     * @covers \MadeYourDay\RockSolidSlider\SliderContent::addFiles()
-     * @covers \MadeYourDay\RockSolidSlider\SliderContent::hasFiles()
-     * @covers \MadeYourDay\RockSolidSlider\SliderContent::getFiles()
-     * @covers \MadeYourDay\RockSolidSlider\SliderContent::getFilesOrder()
-     */
-    public function testAddFiles()
-    {
-        $content = new SliderContent();
-        $content->addFiles(['file 1', 'file 2', 'file 3']);
-        $content->addFiles(['file 4', 'file 5', 'file 6']);
-
-        $this->assertTrue($content->hasFiles());
-        $this->assertEquals(
-            ['file 1', 'file 2', 'file 3', 'file 4', 'file 5', 'file 6'],
-            $content->getFiles()
-        );
-        $this->assertEquals(
-            ['file 1', 'file 2', 'file 3', 'file 4', 'file 5', 'file 6'],
-            $content->getFilesOrder()
-        );
-    }
-
-    /**
-     * Test that files preserve order.
-     *
-     * @return void
-     *
-     * @covers \MadeYourDay\RockSolidSlider\SliderContent::addFiles()
-     * @covers \MadeYourDay\RockSolidSlider\SliderContent::hasFiles()
-     * @covers \MadeYourDay\RockSolidSlider\SliderContent::getFilesOrder()
-     */
-    public function testAddPreservesOrder()
-    {
-        $content = new SliderContent();
-        $content->addFiles(['file 1', 'file 2', 'file 3']);
-        $content->addFiles(['file 4', 'file 5', 'file 6'], ['file 6', 'file 4', 'file 5']);
-
-        $this->assertEquals(
-            ['file 1', 'file 2', 'file 3', 'file 6', 'file 4', 'file 5'],
-            $content->getFilesOrder()
-        );
-    }
-
 }

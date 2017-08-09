@@ -25,6 +25,11 @@ services:
         tags:
             - { name: madeyourday.rocksolid_slider.slideprovider }
 
+    madeyourday.rocksolid_slider.slideprovider.images:
+        class: MadeYourDay\RockSolidSlider\SlideProvider\ImagesSlideProvider
+        tags:
+            - { name: madeyourday.rocksolid_slider.slideprovider }
+
     madeyourday.rocksolid_slider.slideprovider.events:
         class: MadeYourDay\RockSolidSlider\SlideProvider\EventsSlideProvider
         arguments:

@@ -134,10 +134,10 @@ class FileHelper
      *
      * @return \stdClass
      */
-    public function prepareImageForTemplate($data)
+    public function prepareImageForTemplate($uuidOrModel, $data)
     {
         $image = new \stdClass;
-        $this->frontendAdapter->addImageToTemplate($image, $data);
+        $this->frontendAdapter->addImageToTemplate($image, $data, null, null, $this->ensureFileModel($uuidOrModel));
 
         return $image;
     }
@@ -200,7 +200,7 @@ class FileHelper
             return null;
         }
 
-        return $this->prepareImageForTemplate($imageData);
+        return $this->prepareImageForTemplate($uuidOrModel, $imageData);
     }
 
     /**

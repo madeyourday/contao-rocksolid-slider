@@ -86,12 +86,10 @@ class DefaultSlideProvider implements SlideProviderInterface
         }
 
         if ($slider->type === 'image') {
-            $content->addFiles(
-                StringUtil::deserialize($slider->multiSRC),
-                StringUtil::deserialize($slider->orderSRC) ?: []
-            );
-
-            return;
+            return (new ImagesSlideProvider)->process(array_merge($config, [
+                'multiSRC' => $slider->multiSRC,
+                'orderSRC' => $slider->orderSRC,
+            ]), $content);
         }
 
         if ($slider->type === 'content') {

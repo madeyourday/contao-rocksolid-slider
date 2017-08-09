@@ -53,9 +53,6 @@ class DefaultSlideProviderTest extends TestCase
      *
      * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider::__construct()
      * @covers \MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider::process()
-     * @uses \MadeYourDay\RockSolidSlider\SliderContent::addFiles()
-     * @uses \MadeYourDay\RockSolidSlider\SliderContent::getFiles()
-     * @uses \MadeYourDay\RockSolidSlider\SliderContent::hasFiles()
      * @uses \MadeYourDay\RockSolidSlider\SliderContent::hasSlides()
      * @uses \MadeYourDay\RockSolidSlider\SliderContent::getSlides()
      */
@@ -82,9 +79,7 @@ class DefaultSlideProviderTest extends TestCase
         $provider->process(['rsts_id' => 42], $content);
 
         $this->assertFalse($content->hasSlides());
-        $this->assertFalse($content->hasFiles());
         $this->assertSame([], $content->getSlides());
-        $this->assertSame([], $content->getFiles());
     }
 
     /**
@@ -123,24 +118,12 @@ class DefaultSlideProviderTest extends TestCase
 
         $content  = $this->getMockBuilder(SliderContent::class)->setMethods(
             [
-                'addFiles',
-                'getFiles',
-                'hasFiles',
                 'hasSlides',
                 'getSlides',
-                'getFilesOrder',
             ]
         )->getMock();
-        $content->expects($this->once())->method('addFiles')->with(
-            ['uuid1', 'uuid2'],
-            ['uuid1', 'uuid2', 'uuid3', 'uuid4']
-        );
-        $content->expects($this->never())->method('hasFiles');
-        $content->expects($this->never())->method('getFiles');
-        $content->expects($this->never())->method('getFilesOrder');
         $content->expects($this->never())->method('hasSlides');
         $content->expects($this->never())->method('getSlides');
-        $content->expects($this->never())->method('getFiles');
 
         $provider->process(['rsts_id' => 42], $content);
     }
