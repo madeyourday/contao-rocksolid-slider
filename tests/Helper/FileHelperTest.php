@@ -257,15 +257,6 @@ class FileHelperTest extends TestCase
 
         $frontendAdapter
             ->expects($this->once())
-            ->method('getMetaData')
-            ->with(['file-meta-data'], 'en_EN')
-            ->willReturn([
-                'title'   => 'Title',
-                'link'    => 'https://example.org',
-                'caption' => 'File caption!'
-            ]);
-        $frontendAdapter
-            ->expects($this->once())
             ->method('addImageToTemplate')
             ->with(
                 new \stdClass,
@@ -274,10 +265,7 @@ class FileHelperTest extends TestCase
                     'uuid'       => 'the-uuid',
                     'name'       => 'file.ext',
                     'singleSRC'  => 'some/path/file.ext',
-                    'additional' => 'attribute',
-                    'alt'        => 'Title',
-                    'imageUrl'   => 'https://example.org',
-                    'caption'    => 'File caption!'
+                    'additional' => 'attribute'
                 ]
             )
             ->willReturnCallback(function ($image) { $image->result = 'Success!';});
@@ -296,7 +284,7 @@ class FileHelperTest extends TestCase
         /** @var FileHelper $helper */
         $this->assertSame(
             'Success!',
-            $helper->tryPrepareImageForTemplate('the-uuid', ['additional' => 'attribute'], true)->result
+            $helper->tryPrepareImageForTemplate('the-uuid', ['additional' => 'attribute'])->result
         );
     }
 

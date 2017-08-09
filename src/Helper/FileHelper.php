@@ -147,31 +147,17 @@ class FileHelper
      *
      * @param string|FilesModel $uuidOrModel  The uuid of the file.
      * @param array             $attributes   The attributes to pass to Frontend::addImageToTemplate().
-     * @param bool              $addMeta      If true, the Meta information attributes will also get added
-     *                                        'alt'      => meta['title']
-     *                                        'imageUrl' => meta['link'],
-     *                                        'caption'  => meta['caption']
      *
      * @return null|array
      */
-    public function tryPrepareImage($uuidOrModel, $attributes, $addMeta = false)
+    public function tryPrepareImage($uuidOrModel, $attributes)
     {
         if (null === ($file = $this->ensureFileModel($uuidOrModel))) {
             return null;
         }
         $fileObject = $this->getFileInstance($file->path);
-        // FIXME: Why check for isGdImage here? if isImage == true it is always also isGdImage == true?
-        if (!$fileObject->isGdImage && !$fileObject->isImage) {
+        if (!$fileObject->isImage) {
             return null;
-        }
-
-        if ($addMeta) {
-            // FIXME: this is only needed because of the language, we need it via another way!
-            global $objPage;
-            $meta                   = $this->frontendAdapter->getMetaData($file->meta, $objPage->language);
-            $attributes['alt']      = $meta['title'];
-            $attributes['imageUrl'] = $meta['link'];
-            $attributes['caption']  = $meta['caption'];
         }
 
         return array_merge([
@@ -187,16 +173,12 @@ class FileHelper
      *
      * @param string|FilesModel $uuidOrModel  The uuid of the file.
      * @param array             $attributes   The attributes to pass to Frontend::addImageToTemplate().
-     * @param bool              $addMeta      If true, the Meta information attributes will also get added
-     *                                        'alt'      => meta['title']
-     *                                        'imageUrl' => meta['link'],
-     *                                        'caption'  => meta['caption']
      *
      * @return null|\stdClass
      */
-    public function tryPrepareImageForTemplate($uuidOrModel, $attributes, $addMeta = false)
+    public function tryPrepareImageForTemplate($uuidOrModel, $attributes)
     {
-        if (null === ($imageData = $this->tryPrepareImage($uuidOrModel, $attributes, $addMeta))) {
+        if (null === ($imageData = $this->tryPrepareImage($uuidOrModel, $attributes))) {
             return null;
         }
 

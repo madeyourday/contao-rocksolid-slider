@@ -127,8 +127,7 @@ class DefaultSlideProvider implements SlideProviderInterface
             if (in_array($slide['type'], ['image', 'video'])) {
                 $slide['image'] = $this->fileHelper->tryPrepareImageForTemplate(
                     $slide['singleSRC'],
-                    ['size' => isset($config['imgSize']) ? $config['imgSize'] : $config['size']],
-                    true
+                    ['size' => isset($config['imgSize']) ? $config['imgSize'] : $config['size']]
                 );
             }
 
@@ -180,8 +179,7 @@ class DefaultSlideProvider implements SlideProviderInterface
 
             $slide['backgroundImage'] = $this->fileHelper->tryPrepareImageForTemplate(
                 $slide['backgroundImage'],
-                ['size' => $slide['backgroundImageSize']],
-                true
+                ['size' => $slide['backgroundImageSize']]
             );
 
             if ($slide['backgroundVideos']) {
