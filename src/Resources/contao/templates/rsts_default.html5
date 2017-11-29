@@ -239,7 +239,7 @@ function init() {
 	<?php $this->block('script_bgvideo') ?>
 	slider.find('video[data-rsts-background], [data-rsts-type=video] video').each(function() {
 		// Disable mejs for videos
-		this.player = false;
+		this.player = true;
 	});
 	<?php $this->endblock() ?>
 
