@@ -1,0 +1,40 @@
+imports:
+    - { resource: model_adapter.yml }
+services:
+    madeyourday.rocksolid_slider.file_helper:
+        class: MadeYourDay\RockSolidSlider\Helper\FileHelper
+        arguments:
+            - "@madeyourday.rocksolid_slider.model_adapter.files_model"
+            - "@madeyourday.rocksolid_slider.slideprovider.frontend_adapter"
+
+    madeyourday.rocksolid_slider.slideproviders:
+        class: MadeYourDay\RockSolidSlider\SlideProvider\SlideProviderRegistry
+        arguments: []
+
+    madeyourday.rocksolid_slider.slideprovider.frontend_adapter:
+        class: Contao\CoreBundle\Framework\Adapter
+        arguments: ['Contao\Frontend']
+
+    madeyourday.rocksolid_slider.slideprovider.default:
+        class: MadeYourDay\RockSolidSlider\SlideProvider\DefaultSlideProvider
+        arguments:
+            - "@madeyourday.rocksolid_slider.file_helper"
+            - "@madeyourday.rocksolid_slider.model_adapter.slider_model"
+            - "@madeyourday.rocksolid_slider.model_adapter.slide_model"
+            - "@madeyourday.rocksolid_slider.slideprovider.frontend_adapter"
+        tags:
+            - { name: madeyourday.rocksolid_slider.slideprovider }
+
+    madeyourday.rocksolid_slider.slideprovider.events:
+        class: MadeYourDay\RockSolidSlider\SlideProvider\EventsSlideProvider
+        arguments:
+            - "@madeyourday.rocksolid_slider.model_adapter.module"
+        tags:
+            - { name: madeyourday.rocksolid_slider.slideprovider }
+
+    madeyourday.rocksolid_slider.slideprovider.news:
+        class: MadeYourDay\RockSolidSlider\SlideProvider\NewsSlideProvider
+        arguments:
+            - "@madeyourday.rocksolid_slider.model_adapter.module"
+        tags:
+            - { name: madeyourday.rocksolid_slider.slideprovider }

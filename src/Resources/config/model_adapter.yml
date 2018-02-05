@@ -1,0 +1,21 @@
+services:
+
+    madeyourday.rocksolid_slider.model_adapter.files_model:
+        class: Contao\CoreBundle\Framework\Adapter
+        arguments: ['Contao\FilesModel']
+        public: false
+
+    madeyourday.rocksolid_slider.model_adapter.module:
+        class: Contao\CoreBundle\Framework\Adapter
+        arguments: ['Contao\ModuleModel']
+        public: false
+
+    madeyourday.rocksolid_slider.model_adapter.slide_model:
+        class: Contao\CoreBundle\Framework\Adapter
+        arguments: ['MadeYourDay\RockSolidSlider\Model\SlideModel']
+        public: false
+
+    madeyourday.rocksolid_slider.model_adapter.slider_model:
+        class: Contao\CoreBundle\Framework\Adapter
+        arguments: ['MadeYourDay\RockSolidSlider\Model\SliderModel']
+        public: false
