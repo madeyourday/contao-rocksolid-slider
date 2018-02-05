@@ -4,7 +4,7 @@
 	"keywords":["contao","slider","jquery"],
 	"type":"contao-bundle",
 	"homepage":"https://rocksolidthemes.com/de/contao/plugins/responsive-slider",
-	"license":"commercial",
+	"license":"proprietary",
 	"authors":[
 		{
 			"name":"RockSolid Themes",
