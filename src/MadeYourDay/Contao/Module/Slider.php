@@ -48,6 +48,15 @@ class Slider extends \Module
 			return $template->parse();
 		}
 
+		if (
+			$this->rsts_import_settings
+			&& $this->rsts_import_settings_from
+			&& ($settingsModule = \ModuleModel::findByPk($this->rsts_import_settings_from))
+		) {
+			$this->objModel->imgSize = $settingsModule->imgSize;
+			$this->objModel->fullsize = $settingsModule->fullsize;
+		}
+
 		if ($this->rsts_content_type === 'rsts_news') {
 			$newsModule = new SliderNews($this->objModel, $this->strColumn);
 			$this->newsArticles = $newsModule->getNewsArticles();
