@@ -296,15 +296,6 @@
   right: auto;
   left: 10px;
 }
-.rsts-skin-liquid .rsts-video-ipad > .rsts-video-iframe {
-  padding-top: 34px;
-  background-color: black;
-}
-.rsts-skin-liquid .rsts-video-ipad > .rsts-video-stop {
-  top: 1px;
-  right: 1px;
-  left: auto;
-}
 .rsts-skin-liquid .rsts-progress {
   position: absolute;
   top: 0;

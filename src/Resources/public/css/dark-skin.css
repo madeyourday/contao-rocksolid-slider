@@ -402,15 +402,6 @@
   right: auto;
   left: 10px;
 }
-.rsts-skin-dark .rsts-video-ipad > .rsts-video-iframe {
-  padding-top: 34px;
-  background-color: black;
-}
-.rsts-skin-dark .rsts-video-ipad > .rsts-video-stop {
-  top: 1px;
-  right: 1px;
-  left: auto;
-}
 .rsts-skin-dark .rsts-progress {
   position: absolute;
   right: 0;

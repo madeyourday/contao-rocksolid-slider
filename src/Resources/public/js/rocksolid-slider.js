@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.6.2 */
+/*! rocksolid-slider v1.6.3 */
 (function($, window, document) {
 
 var Rst = {};
@@ -108,7 +108,6 @@ Rst.Slide = (function() {
 			!document.createElement('video').canPlayType
 			// iPhone doesn't support background videos
 			|| this.slider.device === 'iPhone'
-			|| this.slider.device === 'iPod'
 		) {
 			this.element.find('video[data-rsts-background]').each(function() {
 				var $this = $(this);
@@ -261,7 +260,7 @@ Rst.Slide = (function() {
 			this.data.video = this.content.attr('data-rsts-video');
 			this.videoStartButton = $(document.createElement('a'))
 				.attr('href', this.data.video || '')
-				.text('play')
+				.text(this.slider.options.labels.play)
 				.addClass(this.slider.options.cssPrefix + 'video-play')
 				.on('click', function(event) {
 					event.preventDefault();
@@ -830,14 +829,9 @@ Rst.Slide = (function() {
 
 		}
 
-		// iPad needs a close button outside of the video
-		if (this.slider.device === 'iPad') {
-			this.element.addClass(this.slider.options.cssPrefix + 'video-ipad');
-		}
-
 		this.videoStopButton = $(document.createElement('a'))
 			.attr('href', this.data.video || '')
-			.text('stop')
+			.text(this.slider.options.labels.stop)
 			.addClass(this.slider.options.cssPrefix + 'video-stop')
 			.on('click', function(event) {
 				event.preventDefault();
@@ -1226,9 +1220,16 @@ Rst.Slider = (function() {
 		keyboard: true,
 		// true to enable caption elements inside slides
 		captions: true,
+		// key value pairs for button labels
+		labels: {
+			'prev': 'Previous',
+			'next': 'Next',
+			'play': 'Play',
+			'stop': 'Stop',
+		},
 		// options for the thumbnail slider (same as main slider options)
 		// the following options inherit from the main options:
-		// visibleArea, visibleAreaMax, visibleAreaAlign, loop, duration, controls
+		// visibleArea, visibleAreaMax, visibleAreaAlign, loop, duration, controls, labels
 		thumbs: {
 			cssPrefix: 'rsts-thumbs-',
 			navType: 'none',
@@ -1654,16 +1655,15 @@ Rst.Slider = (function() {
 		this.css3Supported = false;
 
 		// currently only detecting mozilla is needed
-		this.engine = 'mozInnerScreenX' in window ? 'moz' : 'unknown';
+		this.engine = 'mozInnerScreenX' in window ? 'moz' :
+			(navigator.vendor && navigator.vendor.indexOf('Apple') !== -1)
+			? 'apple' : 'unknown';
 		this.device = navigator.platform;
-		if (this.device && this.device.indexOf('iPad') === 0) {
-			this.device = 'iPad';
-		}
-		if (this.device && this.device.indexOf('iPhone') === 0) {
+		if (this.device && (
+			this.device.indexOf('iPhone') === 0
+			|| this.device.indexOf('iPod') === 0
+		)) {
 			this.device = 'iPhone';
-		}
-		if (this.device && this.device.indexOf('iPod') === 0) {
-			this.device = 'iPod';
 		}
 
 		var el = document.createElement('div');
@@ -1758,6 +1758,14 @@ Rst.Slider = (function() {
 		element.stop();
 
 		if (animate && this.css3Supported) {
+			// Fix Safari bug with invisible slides, see #41
+			if (this.engine === 'apple') {
+				var origDisplay = element[0].style.display || '';
+				element[0].style.display = 'none';
+				element.height();
+				element[0].style.display = '';
+				element.height();
+			}
 			css['transition-timing-function'] = timingFunction ?
 				timingFunction : fromDrag ?
 				'cubic-bezier(0.390, 0.575, 0.565, 1.000)' :
@@ -1765,13 +1773,6 @@ Rst.Slider = (function() {
 			css['transition-duration'] = duration ? duration + 'ms' :
 				this.options.duration * durationScale + 'ms';
 			element.css(css);
-			// Fix iOS Safari bug with invisible slides, see #41
-			if (['iPhone', 'iPad', 'iPod'].indexOf(this.device) !== -1) {
-				var origHeight = element[0].style.height || '';
-				element[0].style.height = '0';
-				element.height();
-				element[0].style.height = origHeight;
-			}
 		}
 		else if (animate) {
 			element.animate(css, {
@@ -2196,17 +2197,20 @@ Rst.Slider = (function() {
 		var gapSize = this.getGapSize();
 		var count = this.options.slideMaxCount;
 
-		if (
-			this.options.slideMinSize
-			&& (!count || (size - (gapSize * (count - 1))) / count < this.options.slideMinSize)
-		) {
+		if (this.options.slideMinSize && !count) {
 			count = Math.floor((size + gapSize) / (this.options.slideMinSize + gapSize));
 		}
-		else if (
+		if (
 			this.options.slideMaxSize
 			&& (!count || (size - (gapSize * (count - 1))) / count > this.options.slideMaxSize)
 		) {
 			count = Math.ceil((size + gapSize) / (this.options.slideMaxSize + gapSize));
+		}
+		if (
+			this.options.slideMinSize
+			&& (size - (gapSize * (count - 1))) / count < this.options.slideMinSize
+		) {
+			count = Math.floor((size + gapSize) / (this.options.slideMinSize + gapSize));
 		}
 
 		return Math.min(this.slides.length, Math.max(1, count));
@@ -2366,7 +2370,7 @@ Rst.Slider = (function() {
 			&& this.slideSize > this.options.slideMaxSize
 		)) {
 
-			this.slideSize = this.options.slideMinSize || this.options.slideMaxSize;
+			this.slideSize = this.options.slideMaxSize || this.options.slideMinSize;
 			this.slidesCutOff = true;
 			this.visibleAreaRate = (visibleCount
 				* (this.slideSize + gapSize)
@@ -3092,7 +3096,7 @@ Rst.SliderNav = (function() {
 				.attr('href', '')
 				.append($(document.createElement('span'))
 					.addClass(slider.options.cssPrefix + 'prev-label')
-					.text('prev')
+					.text(slider.options.labels.prev)
 				)
 				.addClass(slider.options.cssPrefix + 'prev')
 				.on('click', function(event){
@@ -3104,7 +3108,7 @@ Rst.SliderNav = (function() {
 				.attr('href', '')
 				.append($(document.createElement('span'))
 					.addClass(slider.options.cssPrefix + 'next-label')
-					.text('next')
+					.text(slider.options.labels.next)
 				)
 				.on('click', function(event){
 					event.preventDefault();
@@ -3153,7 +3157,8 @@ Rst.SliderNav = (function() {
 						visibleAreaAlign: slider.options.visibleAreaAlign,
 						loop: slider.options.loop,
 						duration: slider.options.duration,
-						controls: slider.options.controls
+						controls: slider.options.controls,
+						labels: slider.options.labels
 					}, slider.options.thumbs || {})
 				);
 				this.setActive([0]);
@@ -3163,7 +3168,7 @@ Rst.SliderNav = (function() {
 
 				this.elements.mainPrev = $(document.createElement('a'))
 					.attr('href', '')
-					.text('prev')
+					.text(slider.options.labels.prev)
 					.on('click', function(event){
 						event.preventDefault();
 						self.slider.prev();
@@ -3175,7 +3180,7 @@ Rst.SliderNav = (function() {
 
 				this.elements.mainNext = $(document.createElement('a'))
 					.attr('href', '')
-					.text('next')
+					.text(slider.options.labels.next)
 					.on('click', function(event){
 						event.preventDefault();
 						self.slider.next();
@@ -3337,37 +3342,46 @@ Rst.SliderNav = (function() {
 			this.css('display', '');
 		});
 
-		if (visibleCount < 2 || !this.slider.options.combineNavItems) {
-			return;
-		}
+		if (visibleCount >= 2 && this.slider.options.combineNavItems) {
 
-		var lastIndex;
-		for (var i = 0; this.elements[i]; i++) {
-			if (
-				(i - Math.floor((visibleCount - 1) / 2)) % visibleCount
-				|| (i - Math.floor((visibleCount - 1) / 2)) > slides.length - visibleCount
-			) {
-				this.elements[i].css('display', 'none');
+			var lastIndex;
+			for (var i = 0; this.elements[i]; i++) {
+				if (
+					(i - Math.floor((visibleCount - 1) / 2)) % visibleCount
+					|| (i - Math.floor((visibleCount - 1) / 2)) > slides.length - visibleCount
+				) {
+					this.elements[i].css('display', 'none');
+				}
+				else {
+					lastIndex = i;
+				}
+			}
+
+			if (slides.length % visibleCount === 0) {
+				this.elements[
+					slides.length - visibleCount
+					+ Math.floor((visibleCount - 1) / 2)
+				].css('display', '');
 			}
 			else {
-				lastIndex = i;
+				var newIndex = slides.length
+					- (slides.length % visibleCount || visibleCount)
+					+ Math.floor((visibleCount - 1) / 2);
+				this.elements[slides.length] = this.createNavItem(
+					newIndex,
+					slides[newIndex >= slides.length ? slides.length - 1 : newIndex].getData()
+				).insertAfter(this.elements[slides.length - 1]);
 			}
+
 		}
 
-		if (slides.length % visibleCount === 0) {
-			this.elements[
-				slides.length - visibleCount
-				+ Math.floor((visibleCount - 1) / 2)
-			].css('display', '');
-		}
-		else {
-			var newIndex = slides.length
-				- (slides.length % visibleCount || visibleCount)
-				+ Math.floor((visibleCount - 1) / 2);
-			this.elements[slides.length] = this.createNavItem(
-				newIndex,
-				slides[newIndex >= slides.length ? slides.length - 1 : newIndex].getData()
-			).insertAfter(this.elements[slides.length - 1]);
+		if (this.slider.options.navType === 'numbers') {
+			for (var j = 0, count = 0; this.elements[j]; j++) {
+				if (this.elements[j][0].style.display !== 'none') {
+					count++;
+					this.elements[j].children().text(count);
+				}
+			}
 		}
 
 	};
