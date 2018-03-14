@@ -178,7 +178,8 @@ class Slider extends \Module
 					'uuid'      => isset($files->uuid) ? $files->uuid : null,
 					'name'      => $file->basename,
 					'singleSRC' => $files->path,
-					'alt'       => $arrMeta['title'],
+					'alt'       => $arrMeta['alt'],
+					'title'     => $arrMeta['title'],
 					'imageUrl'  => $arrMeta['link'],
 					'caption'   => $arrMeta['caption'],
 				);
@@ -439,7 +440,8 @@ class Slider extends \Module
 					'id' => $file->id,
 					'name' => $fileObject->basename,
 					'singleSRC' => $file->path,
-					'alt' => $meta['title'],
+					'alt' => $meta['alt'],
+					'title' => $meta['title'],
 					'imageUrl' => $meta['link'],
 					'caption' => $meta['caption'],
 					'size' => isset($this->imgSize) ? $this->imgSize : $this->size,
@@ -469,6 +471,7 @@ class Slider extends \Module
 				}
 				$slide['image']->imgSize = '';
 				$slide['image']->alt = '';
+				$slide['image']->title = '';
 				$slide['image']->picture = array(
 					'img' => array('src' => $slide['image']->src, 'srcset' => $slide['image']->src),
 					'sources' => array(),
@@ -504,7 +507,8 @@ class Slider extends \Module
 					'id' => $file->id,
 					'name' => $fileObject->basename,
 					'singleSRC' => $file->path,
-					'alt' => $meta['title'],
+					'alt' => $meta['alt'],
+					'title' => $meta['title'],
 					'imageUrl' => $meta['link'],
 					'caption' => $meta['caption'],
 					'size' => $slide['backgroundImageSize'],

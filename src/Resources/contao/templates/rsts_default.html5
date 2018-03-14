@@ -19,12 +19,12 @@
 		?>
 
 		<?php if ($loadLazy): ?>
-			<script type="text/html"<?php if ($image->picture['alt']): ?> data-rsts-name="<?= $image->picture['alt'] ?>"<?php endif ?><?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?= $image->thumb->src ?>"<?php endif ?>>
+			<script type="text/html"<?php if ($image->linkTitle || $image->picture['alt']): ?> data-rsts-name="<?= $image->linkTitle ?: $image->picture['alt'] ?>"<?php endif ?><?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?= $image->thumb->src ?>"<?php endif ?>>
 			<?php ob_start() ?>
 		<?php endif ?>
 
 		<?php if ($this->fullsize && !$image->href) {
-			$lightboxUrls[] = array(TL_FILES_URL . $image->singleSRC, $image->picture['alt']);
+			$lightboxUrls[] = array(TL_FILES_URL . $image->singleSRC, $image->linkTitle ?: $image->picture['alt']);
 		} ?>
 
 		<?php
@@ -34,7 +34,7 @@
 			);
 			if ($image->href || $this->fullsize) {
 				$tagName = 'a';
-				$attributes[] = 'title="' . $image->picture['alt'] . '"';
+				$attributes[] = 'title="' . ($image->linkTitle ?: $image->picture['alt']) . '"';
 			}
 			if ($image->href) {
 				$attributes[] = 'href="' . $image->href . '"';
@@ -168,6 +168,9 @@
 				$tagName = 'a';
 				if ($slide['image']->href) {
 					$attributes .= ' href="' . $slide['image']->href . '"';
+					if ($slide['image']->linkTitle) {
+						$attributes .= ' title="' . $slide['image']->linkTitle . '"';
+					}
 					if ($this->fullsize) {
 						$attributes .= ' target="_blank"';
 					}
