@@ -34,6 +34,8 @@
 			);
 			if ($image->href || $this->fullsize) {
 				$tagName = 'a';
+			}
+			if ($image->href || $this->fullsize || $image->linkTitle) {
 				$attributes[] = 'title="' . ($image->linkTitle ?: $image->picture['alt']) . '"';
 			}
 			if ($image->href) {
