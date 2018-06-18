@@ -395,7 +395,7 @@ class Slider extends \Module
 		$GLOBALS['TL_JAVASCRIPT'][] = $assetsDir . '/js/rocksolid-slider.min.js|static';
 		$GLOBALS['TL_CSS'][] = $assetsDir . '/css/rocksolid-slider.min.css||static';
 		$skinPath = $assetsDir . '/css/' . (empty($this->arrData['rsts_skin']) ? 'default' : $this->arrData['rsts_skin']) . '-skin.min.css';
-		if (file_exists(TL_ROOT . '/web/' . $skinPath)) {
+		if (file_exists(\System::getContainer()->getParameter('contao.web_dir') . '/' . $skinPath)) {
 			$GLOBALS['TL_CSS'][] = $skinPath . '||static';
 		}
 	}
