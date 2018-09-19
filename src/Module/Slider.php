@@ -118,6 +118,12 @@ class Slider extends \Module
 					$this->arrData[$key] = $value;
 				}
 			}
+			$settingsCssId = \StringUtil::deserialize($settingsModule->cssID, true);
+			if (!empty($settingsCssId[1])) {
+				$this->arrData['cssID'][1] = (
+					empty($this->arrData['cssID'][1]) ? '' : $this->arrData['cssID'][1] . ' '
+				) . $settingsCssId[1];
+			}
 		}
 
 		if ($this->rsts_template) {
