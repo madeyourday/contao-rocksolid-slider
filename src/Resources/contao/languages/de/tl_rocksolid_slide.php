@@ -45,6 +45,8 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slide']['videoURL'][0] = 'Video-URL';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['videoURL'][1] = 'YouTube- oder Vimeo-Video-URL (http://www.youtube.com/watch?v=XXXX oder http://vimeo.com/XXXX).';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['videos'][0] = 'Video';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['videos'][1] = 'Wählen Sie eine oder mehrere Videodateien aus.';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['muteVideos'][0] = 'Video stummschalten';
+$GLOBALS['TL_LANG']['tl_rocksolid_slide']['muteVideos'][1] = 'Deaktiviert die Tonspur des Videos. Wird von einigen Browsern für Video-Autoplay vorrausgesetzt.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['singleSRC'][0] = 'Bild';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['singleSRC'][1] = 'Wählen Sie hier ein Bild für den Bild- oder Video-Slide (Vorschaubild) aus.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slide']['thumbImage'][0] = 'Thumbnail-Bild';
