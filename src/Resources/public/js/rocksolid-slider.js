@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.6.4 */
+/*! rocksolid-slider v1.6.5 */
 (function($, window, document) {
 
 var Rst = {};
@@ -228,12 +228,12 @@ Rst.Slide = (function() {
 
 			// Fix safari bug with invisible images, see #9
 			if (self.slider.css3Supported) {
-				// Remove 3d transforms
-				self.slider.elements.crop.css('transform', '');
+				// Apply 3d transform
+				self.slider.elements.crop.css('transform', 'translateZ(0)');
 				// Get the css value to ensure the engine applies the styles
 				self.slider.elements.crop.css('transform');
 				// Restore the original value
-				self.slider.elements.crop.css('transform', 'translateZ(0)');
+				self.slider.elements.crop.css('transform', '');
 			}
 
 		};
@@ -283,8 +283,8 @@ Rst.Slide = (function() {
 	 * @var object regular expressions for video URLs
 	 */
 	Slide.prototype.videoRegExp = {
-		youtube: /^https?:\/\/(?:(?:www\.)?youtube\.com\/(?:watch\?v=|v\/|embed\/)|youtu\.be\/)([0-9a-z_\-]{11})(?:$|&|\?|#|\/)(?:(?:.*[?&#]|)t=([0-9hms]+))?/i,
-		youtubePlayer: /^https?:\/\/(?:www\.)?youtube\.com\/embed\/[0-9a-z_\-]{11}/i,
+		youtube: /^https?:\/\/(?:(?:www\.)?youtube(?:-nocookie)?\.com\/(?:watch\?v=|v\/|embed\/)|youtu\.be\/)([0-9a-z_\-]{11})(?:$|&|\?|#|\/)(?:(?:.*[?&#]|)t=([0-9hms]+))?/i,
+		youtubePlayer: /^https?:\/\/(?:www\.)?youtube(?:-nocookie)?\.com\/embed\/[0-9a-z_\-]{11}/i,
 		vimeo: /^https?:\/\/(?:player\.)?vimeo\.com\/(?:video\/)?([0-9]+)(?:.*#t=([0-9hms]+))?/i,
 		vimeoPlayer: /^https?:\/\/player\.vimeo\.com\/video\/[0-9]+/i
 	};
@@ -717,7 +717,11 @@ Rst.Slide = (function() {
 				time = time[0] + (time[1] * 60) + (time[2] * 60 * 60);
 			}
 
-			src = 'https://www.youtube.com/embed/' + videoId;
+			src = 'https://www.youtube'+(
+				this.data.video.indexOf('youtube-nocookie.com') === -1
+					? ''
+					: '-nocookie'
+			)+'.com/embed/' + videoId;
 			if (this.data.video.match(this.videoRegExp.youtubePlayer)) {
 				src = this.data.video;
 			}
@@ -1083,9 +1087,6 @@ Rst.Slider = (function() {
 					}
 				}
 			);
-			this.elements.crop.css({
-				transform: 'translateZ(0)'
-			});
 		}
 
 		if (this.options.pauseAutoplayOnHover) {
@@ -1379,6 +1380,15 @@ Rst.Slider = (function() {
 		}
 
 		if (this.options.type === 'slide') {
+			// Fix Safari bug with invisible slides, see #41
+			if (this.engine === 'apple') {
+				// Apply 3d transform
+				this.elements.crop.css('transform', 'translateZ(0)');
+				// Get the css value to ensure the engine applies the styles
+				this.elements.crop.css('transform');
+				// Restore the original value
+				this.elements.crop.css('transform', '');
+			}
 			this.modify(this.elements.slides, {
 				offset: targetPos
 			}, true, durationScale, fromDrag, !fromDrag && overflow);
@@ -1758,14 +1768,6 @@ Rst.Slider = (function() {
 		element.stop();
 
 		if (animate && this.css3Supported) {
-			// Fix Safari bug with invisible slides, see #41
-			if (this.engine === 'apple' && css.transform) {
-				var origDisplay = element[0].style.display || '';
-				element[0].style.display = 'none';
-				element.height();
-				element[0].style.display = '';
-				element.height();
-			}
 			css['transition-timing-function'] = timingFunction ?
 				timingFunction : fromDrag ?
 				'cubic-bezier(0.390, 0.575, 0.565, 1.000)' :
