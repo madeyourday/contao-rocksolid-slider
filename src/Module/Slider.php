@@ -221,7 +221,7 @@ class Slider extends \Module
 			foreach ($images as $key => $image) {
 				$newImage = new \stdClass();
 				$image['size'] = isset($this->imgSize) ? $this->imgSize : $this->size;
-				$this->addImageToTemplate($newImage, $image);
+				$this->addImageToTemplate($newImage, $image, null, null, \FilesModel::findByPk($image['id']));
 				if ($this->rsts_navType === 'thumbs') {
 					$newImage->thumb = new \stdClass;
 					$image['size'] = $this->rsts_thumbs_imgSize;
