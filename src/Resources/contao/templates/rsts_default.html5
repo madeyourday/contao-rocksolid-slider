@@ -158,7 +158,7 @@
 
 		<?php elseif (!empty($slide['videos'])): ?>
 			<<?= $tagName ?> data-rsts-type="video" <?= $attributes ?>>
-				<video controls<?php if (!empty($slide['image'])): ?> poster="<?= $slide['image']->src ?>"<?php endif ?><?php if (!empty($slide['muteVideos'])): ?> muted<?php endif ?>>
+				<video<?php if (empty($slide['hideVideoControls'])): ?> controls<?php endif ?><?php if (!empty($slide['image'])): ?> poster="<?= $slide['image']->src ?>"<?php endif ?><?php if (!empty($slide['muteVideos'])): ?> muted<?php endif ?><?php if (!empty($slide['videosPlayInline'])): ?> playsinline webkit-playsinline<?php endif ?>>
 					<?php foreach ($slide['videos'] as $video): ?>
 						<source src="<?= TL_FILES_URL . $video->path ?>" type="video/<?= $video->extension ?>">
 					<?php endforeach ?>
@@ -201,7 +201,7 @@
 		<?php endif ?>
 
 		<?php if (!empty($slide['backgroundVideos'])): ?>
-			<video<?php if (!empty($slide['backgroundImage'])): ?> poster="<?= $slide['backgroundImage']->src ?>"<?php endif ?><?php if (!empty($slide['muteVideos'])): ?> muted<?php endif ?> <?= $backgroundAttributes ?>>
+			<video<?php if (!empty($slide['backgroundImage'])): ?> poster="<?= $slide['backgroundImage']->src ?>"<?php endif ?><?php if (!empty($slide['muteVideos'])): ?> muted<?php endif ?> playsinline webkit-playsinline <?= $backgroundAttributes ?>>
 				<?php foreach ($slide['backgroundVideos'] as $video): ?>
 					<source src="<?= TL_FILES_URL . $video->path ?>" type="video/<?= $video->extension ?>">
 				<?php endforeach ?>

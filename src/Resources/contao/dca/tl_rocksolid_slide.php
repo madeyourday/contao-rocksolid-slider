@@ -95,9 +95,9 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 	'palettes' => array(
 		'__selector__' => array('type'),
 		'default' => '{title_legend},title,type',
-		'content' => '{title_legend},title,type,thumbImage,thumbTitle,thumbClass,thumbText,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,muteVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
-		'image' => '{title_legend},title,type,singleSRC,thumbImage,thumbTitle,thumbClass,thumbText,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,muteVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
-		'video' => '{title_legend},title,type,videoURL,videos,muteVideos,singleSRC,thumbImage,thumbTitle,thumbClass,thumbText,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'content' => '{title_legend},title,type,thumbImage,thumbTitle,thumbClass,thumbText,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,muteVideos,hideVideoControls,videosPlayInline,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'image' => '{title_legend},title,type,singleSRC,thumbImage,thumbTitle,thumbClass,thumbText,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,muteVideos,hideVideoControls,videosPlayInline,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
+		'video' => '{title_legend},title,type,videoURL,videos,muteVideos,hideVideoControls,videosPlayInline,singleSRC,thumbImage,thumbTitle,thumbClass,thumbText,scaleMode,imagePosition,centerContent,invertControls,autoplay,linkUrl,linkNewWindow;{background_legend},backgroundImage,backgroundVideos,backgroundImageSize,backgroundScaleMode,backgroundPosition;{expert_legend},slideClass,sliderClass;{publish_legend},published,start,stop',
 	),
 
 	'fields' => array(
@@ -175,6 +175,20 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 		),
 		'muteVideos' => array(
 			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['muteVideos'],
+			'exclude' => true,
+			'inputType' => 'checkbox',
+			'eval' => array('tl_class' => 'clr w50'),
+			'sql' => "char(1) NOT NULL default ''",
+		),
+		'hideVideoControls' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['hideVideoControls'],
+			'exclude' => true,
+			'inputType' => 'checkbox',
+			'eval' => array('tl_class' => 'w50'),
+			'sql' => "char(1) NOT NULL default ''",
+		),
+		'videosPlayInline' => array(
+			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['videosPlayInline'],
 			'exclude' => true,
 			'inputType' => 'checkbox',
 			'eval' => array('tl_class' => 'clr'),
