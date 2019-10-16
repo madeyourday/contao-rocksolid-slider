@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.6.7 */
+/*! rocksolid-slider v1.6.8 */
 (function($, window, document) {
 
 var Rst = {};
@@ -106,8 +106,8 @@ Rst.Slide = (function() {
 		if (
 			// Check if video element is supported
 			!document.createElement('video').canPlayType
-			// iPhone doesn't support background videos
-			|| this.slider.device === 'iPhone'
+			// Old iPhones don’t support background videos
+			|| (/^iPhone|^iPod/.test(navigator.platform) && !window.matchMedia('(-webkit-video-playable-inline)').matches)
 		) {
 			this.element.find('video[data-rsts-background]').each(function() {
 				var $this = $(this);
@@ -150,7 +150,7 @@ Rst.Slide = (function() {
 				element = element.parent();
 			}
 			if (element.is('video')) {
-				element.attr('autoplay', true).attr('loop', true);
+				element.attr('autoplay', true).attr('loop', true).attr('playsinline', true).attr('webkit-playsinline', true);
 			}
 			element.css({
 				position: 'absolute',
@@ -221,7 +221,7 @@ Rst.Slide = (function() {
 
 		var mediaLoadEventFired = false;
 		var loadedSources = {};
-		var mediaLoadEvent = function() {
+		var mediaLoadEvent = function(event) {
 
 			mediaLoadEventFired = true;
 
@@ -229,10 +229,11 @@ Rst.Slide = (function() {
 			// fixes bug in Chrome https://crbug.com/984121
 			var src = event && event.target && (event.target.currentSrc || event.target.src);
 			if (src) {
-				if (loadedSources[src]) {
+				var srcKey = ((event && event.type) || 'none') + '\n' + src;
+				if (loadedSources[srcKey]) {
 					return;
 				}
-				loadedSources[src] = true;
+				loadedSources[srcKey] = true;
 			}
 
 			self.slider.resize(self.data.index);
@@ -250,7 +251,7 @@ Rst.Slide = (function() {
 		};
 
 		this.element.find('img').on('load', mediaLoadEvent);
-		this.element.find('video').on('loadedmetadata', mediaLoadEvent);
+		this.element.find('video').on('loadedmetadata loadeddata', mediaLoadEvent);
 
 		// Fix IE11 bug with missing load event, see #33
 		if (this.element.find('img').length && !this.element.find('img')[0].complete) {
@@ -1395,7 +1396,7 @@ Rst.Slider = (function() {
 
 		if (this.options.type === 'slide') {
 			// Fix Safari bug with invisible slides, see #41
-			if (this.engine === 'apple') {
+			if (/Apple/.test(navigator.vendor)) {
 				// Apply 3d transform
 				this.elements.crop.css('transform', 'translateZ(0)');
 				// Get the css value to ensure the engine applies the styles
@@ -1677,18 +1678,6 @@ Rst.Slider = (function() {
 		var self = this;
 
 		this.css3Supported = false;
-
-		// currently only detecting mozilla is needed
-		this.engine = 'mozInnerScreenX' in window ? 'moz' :
-			(navigator.vendor && navigator.vendor.indexOf('Apple') !== -1)
-			? 'apple' : 'unknown';
-		this.device = navigator.platform;
-		if (this.device && (
-			this.device.indexOf('iPhone') === 0
-			|| this.device.indexOf('iPod') === 0
-		)) {
-			this.device = 'iPhone';
-		}
 
 		var el = document.createElement('div');
 		document.body.appendChild(el);
