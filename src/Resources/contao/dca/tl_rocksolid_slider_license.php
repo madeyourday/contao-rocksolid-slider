@@ -18,6 +18,12 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider_license'] = array(
 		'closed' => true,
 	),
 
+	'list' => array(
+		'sorting' => array(
+			'mode' => 5,
+		),
+	),
+
 	'palettes' => array(
 		'default' => '{license_legend},rocksolid_slider_license',
 	),
