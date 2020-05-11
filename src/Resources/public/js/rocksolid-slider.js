@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.6.8 */
+/*! rocksolid-slider v1.6.9 */
 (function($, window, document) {
 
 var Rst = {};
@@ -2533,6 +2533,10 @@ Rst.Slider = (function() {
 					'margin-bottom',
 					this.elements.main.outerHeight(true) + 100 + 'px'
 				);
+				document.documentElement.style.overflowAnchor = document.body.style.overflowAnchor = 'none';
+				setTimeout(function() {
+					document.documentElement.style.overflowAnchor = document.body.style.overflowAnchor = '';
+				});
 			}
 			this.elements.view.css({display: 'none'});
 			if (this.nav.elements.main) {
