@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.6.9 */
+/*! rocksolid-slider v1.6.10 */
 (function($, window, document) {
 
 var Rst = {};
@@ -178,6 +178,10 @@ Rst.Slide = (function() {
 			if (this.pause) {
 				this.pause();
 			}
+		});
+
+		this.element.find('img[loading=lazy]').each(function() {
+			this.loading = 'eager';
 		});
 
 		if (this.content.attr('data-rsts-thumb')) {
