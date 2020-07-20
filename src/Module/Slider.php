@@ -451,7 +451,7 @@ class Slider extends \Module
 					'imageUrl' => $meta['link'],
 					'caption' => $meta['caption'],
 					'size' => isset($this->imgSize) ? $this->imgSize : $this->size,
-				));
+				), null, null, $file);
 			}
 
 			if ($slide['type'] === 'video' && $slide['videoURL'] && empty($slide['image'])) {
