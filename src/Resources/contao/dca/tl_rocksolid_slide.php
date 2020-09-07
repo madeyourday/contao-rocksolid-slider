@@ -314,10 +314,9 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'rgxp' => 'url',
 				'decodeEntities' => true,
 				'maxlength' => 255,
-				'tl_class' => 'clr w50 wizard',
-			),
-			'wizard' => array(
-				array('MadeYourDay\\RockSolidSlider\\Slider', 'pagePickerWizard'),
+				'tl_class' => 'clr w50',
+				'dcaPicker' => true,
+				'addWizardClass' => false,
 			),
 			'sql' => "varchar(255) NOT NULL default ''",
 		),
