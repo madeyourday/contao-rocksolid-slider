@@ -16,12 +16,20 @@ class ContaoManagerPlugin implements BundlePluginInterface
 	 */
 	public function getBundles(ParserInterface $parser)
 	{
+		$bundleConfig = BundleConfig::create(RockSolidSliderBundle::class)
+			->setLoadAfter([ContaoCoreBundle::class])
+			->setReplace(['rocksolid-slider']);
+
+		if (class_exists(ContaoNewsBundle::class)) {
+			$bundleConfig->setLoadAfter([ContaoNewsBundle::class]);
+		}
+		
+		if (class_exists(ContaoCalendarBundle::class)) {
+			$bundleConfig->setLoadAfter([ContaoCalendarBundle::class]);
+		}
+		
 		return [
-			BundleConfig::create(RockSolidSliderBundle::class)
-				->setLoadAfter([ContaoCoreBundle::class])
-				->setLoadAfter([ContaoNewsBundle::class])
-				->setLoadAfter([ContaoCalendarBundle::class])
-				->setReplace(['rocksolid-slider']),
+			$bundleConfig,
 		];
 	}
 }
