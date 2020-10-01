@@ -18,9 +18,11 @@ class ContaoManagerPlugin implements BundlePluginInterface
 	{
 		return [
 			BundleConfig::create(RockSolidSliderBundle::class)
-				->setLoadAfter([ContaoCoreBundle::class])
-				->setLoadAfter([ContaoNewsBundle::class])
-				->setLoadAfter([ContaoCalendarBundle::class])
+				->setLoadAfter([
+					ContaoCoreBundle::class,
+					ContaoNewsBundle::class,
+					ContaoCalendarBundle::class,
+				])
 				->setReplace(['rocksolid-slider']),
 		];
 	}
