@@ -90,7 +90,7 @@
 				}
 			}
 			if (!empty($slide['title'])) {
-				$attributes[] = 'data-rsts-name="' . $slide['title'] . '"';
+				$attributes[] = 'data-rsts-name="' . \Contao\StringUtil::specialchars($slide['title']) . '"';
 			}
 			if (!empty($slide['centerContent'])) {
 				if ($slide['centerContent'] === 'false') {
@@ -147,7 +147,7 @@
 		?>
 
 		<?php if ($loadLazy): ?>
-			<script type="text/html"<?php if (!empty($slide['title'])): ?> data-rsts-name="<?= $slide['title'] ?>"<?php endif ?><?php if (!empty($slide['thumb']->src)): ?> data-rsts-thumb="<?= $slide['thumb']->src ?>"<?php endif ?><?php if ($thumbHtml): ?> data-rsts-thumb-html="<?= $thumbHtml ?>"<?php endif ?>>
+			<script type="text/html"<?php if (!empty($slide['title'])): ?> data-rsts-name="<?= \Contao\StringUtil::specialchars($slide['title']) ?>"<?php endif ?><?php if (!empty($slide['thumb']->src)): ?> data-rsts-thumb="<?= $slide['thumb']->src ?>"<?php endif ?><?php if ($thumbHtml): ?> data-rsts-thumb-html="<?= $thumbHtml ?>"<?php endif ?>>
 			<?php ob_start() ?>
 		<?php endif ?>
 
@@ -179,7 +179,7 @@
 				}
 				else {
 					$lightboxUrls[] = array(TL_FILES_URL . $slide['image']->singleSRC, $slide['title']);
-					$attributes .= ' href="' . TL_FILES_URL . $slide['image']->singleSRC . '" data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6) . '" title="' . $slide['title'] . '"';
+					$attributes .= ' href="' . TL_FILES_URL . $slide['image']->singleSRC . '" data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6) . '" title="' . \Contao\StringUtil::specialchars($slide['title']) . '"';
 				}
 			} ?>
 
