@@ -13,8 +13,15 @@ namespace MadeYourDay\RockSolidSlider;
  *
  * @author Martin Auswöger <martin@madeyourday.net>
  */
-abstract class SliderRunonce
+class SliderRunonce
 {
+	public function onSqlCompileCommands($sql)
+	{
+		static::run();
+
+		return $sql;
+	}
+
 	/**
 	 * Run database migrations
 	 *

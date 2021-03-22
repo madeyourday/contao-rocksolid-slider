@@ -32,3 +32,6 @@ array_insert($GLOBALS['FE_MOD'], 2, array(
 		'rocksolid_slider' => 'MadeYourDay\\RockSolidSlider\\Module\\Slider',
 	)
 ));
+
+// TODO: Replace with migration services
+$GLOBALS['TL_HOOKS']['sqlCompileCommands'][] = array('MadeYourDay\\RockSolidSlider\\SliderRunonce', 'onSqlCompileCommands');
