@@ -23,8 +23,8 @@
 			<?php ob_start() ?>
 		<?php endif ?>
 
-		<?php if ($this->fullsize && !$image->href) {
-			$lightboxUrls[] = array(TL_FILES_URL . \Contao\System::urlEncode($image->singleSRC), $image->linkTitle ?: $image->picture['alt']);
+		<?php if (strpos($image->attributes, 'data-lightbox') !== false) {
+			$lightboxUrls[] = array($image->href, $image->linkTitle ?: $image->picture['alt']);
 		} ?>
 
 		<?php
@@ -32,21 +32,15 @@
 			$attributes = array(
 				'data-rsts-type="image"',
 			);
-			if ($image->href || $this->fullsize) {
+			if ($image->href) {
 				$tagName = 'a';
 			}
-			if ($image->href || $this->fullsize || $image->linkTitle) {
+			if ($image->href || $image->linkTitle) {
 				$attributes[] = 'title="' . ($image->linkTitle ?: $image->picture['alt']) . '"';
 			}
 			if ($image->href) {
 				$attributes[] = 'href="' . $image->href . '"';
-				if ($this->fullsize) {
-					$attributes[] = 'target="_blank"';
-				}
-			}
-			elseif ($this->fullsize) {
-				$attributes[] = 'href="' . TL_FILES_URL . \Contao\System::urlEncode($image->singleSRC) . '"';
-				$attributes[] = 'data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6) . '"';
+				$attributes[] = $image->attributes;
 			}
 			if (!empty($this->rsts_invertControls)) {
 				$attributes[] = 'data-rsts-class="' . (empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix']) . 'invert-controls"';
@@ -166,20 +160,15 @@
 
 		<?php elseif (! empty($slide['image'])): ?>
 
-			<?php if (($this->fullsize || $slide['image']->href) && $tagName !== 'a') {
+			<?php if ($slide['image']->href && $tagName !== 'a') {
 				$tagName = 'a';
-				if ($slide['image']->href) {
-					$attributes .= ' href="' . $slide['image']->href . '"';
-					if ($slide['image']->linkTitle) {
-						$attributes .= ' title="' . $slide['image']->linkTitle . '"';
-					}
-					if ($this->fullsize) {
-						$attributes .= ' target="_blank"';
-					}
+				$attributes .= ' href="' . $slide['image']->href . '"';
+				if ($slide['image']->linkTitle) {
+					$attributes .= ' title="' . $slide['image']->linkTitle . '"';
 				}
-				else {
-					$lightboxUrls[] = array(TL_FILES_URL . \Contao\System::urlEncode($slide['image']->singleSRC), $slide['title']);
-					$attributes .= ' href="' . TL_FILES_URL . \Contao\System::urlEncode($slide['image']->singleSRC) . '" data-lightbox="' . substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6) . '" title="' . \Contao\StringUtil::specialchars($slide['title']) . '"';
+				$attributes .= ' '.$slide['image']->attributes;
+				if (strpos($slide['image']->attributes, 'data-lightbox') !== false) {
+					$lightboxUrls[] = array($slide['image']->href, $slide['title']);
 				}
 			} ?>
 

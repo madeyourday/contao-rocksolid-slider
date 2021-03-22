@@ -188,6 +188,7 @@ class Slider extends \Module
 					'title'     => $arrMeta['title'],
 					'imageUrl'  => $arrMeta['link'],
 					'caption'   => $arrMeta['caption'],
+					'fullsize'  => $this->fullsize,
 				);
 
 			}
@@ -221,7 +222,7 @@ class Slider extends \Module
 			foreach ($images as $key => $image) {
 				$newImage = new \stdClass();
 				$image['size'] = isset($this->imgSize) ? $this->imgSize : $this->size;
-				$this->addImageToTemplate($newImage, $image, null, null, \FilesModel::findByPk($image['id']));
+				$this->addImageToTemplate($newImage, $image, null, substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6), \FilesModel::findByPk($image['id']));
 				if ($this->rsts_navType === 'thumbs') {
 					$newImage->thumb = new \stdClass;
 					$image['size'] = $this->rsts_thumbs_imgSize;
@@ -451,7 +452,8 @@ class Slider extends \Module
 					'imageUrl' => $meta['link'],
 					'caption' => $meta['caption'],
 					'size' => isset($this->imgSize) ? $this->imgSize : $this->size,
-				), null, null, $file);
+					'fullsize' => $this->fullsize,
+				), null, substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6), $file);
 			}
 
 			if ($slide['type'] === 'video' && $slide['videoURL'] && empty($slide['image'])) {
