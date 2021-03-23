@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.6.10 */
+/*! rocksolid-slider v1.6.11 */
 (function($, window, document) {
 
 var Rst = {};
@@ -756,12 +756,7 @@ Rst.Slide = (function() {
 				src += '&start=' + time;
 			}
 
-			this.videoElement = $(document.createElement('iframe'))
-				.addClass(this.slider.options.cssPrefix + 'video-iframe')
-				.attr('src', src)
-				.attr('frameborder', 0)
-				.attr('allowfullscreen', 'allowfullscreen')
-				.appendTo(this.element);
+			this.videoElement = this.createVideoIframe(src).appendTo(this.element);
 
 			apiCallback = function() {
 				if (self.videoElement && window.YT) {
@@ -813,12 +808,7 @@ Rst.Slide = (function() {
 				src += '#t=' + time;
 			}
 
-			this.videoElement = $(document.createElement('iframe'))
-				.addClass(this.slider.options.cssPrefix + 'video-iframe')
-				.attr('src', src)
-				.attr('frameborder', 0)
-				.attr('allowfullscreen', 'allowfullscreen')
-				.appendTo(this.element);
+			this.videoElement = this.createVideoIframe(src).appendTo(this.element);
 
 			this.eventNamespace = 'rsts' + new Date().getTime();
 			$(window).on('message.' + this.eventNamespace, function(event) {
@@ -841,12 +831,7 @@ Rst.Slide = (function() {
 
 			this.element.addClass(this.slider.options.cssPrefix + 'video-unknown');
 
-			this.videoElement = $(document.createElement('iframe'))
-				.addClass(this.slider.options.cssPrefix + 'video-iframe')
-				.attr('src', this.data.video)
-				.attr('frameborder', 0)
-				.attr('allowfullscreen', 'allowfullscreen')
-				.appendTo(this.element);
+			this.videoElement = this.createVideoIframe(this.data.video).appendTo(this.element);
 
 		}
 
@@ -864,6 +849,18 @@ Rst.Slide = (function() {
 			this.slider.options.cssPrefix + 'video-playing'
 		);
 
+	};
+
+	/**
+	 * @return {jQuery.<HTMLIFrameElement>}
+	 */
+	Slide.prototype.createVideoIframe = function(src) {
+		return $(document.createElement('iframe'))
+			.addClass(this.slider.options.cssPrefix + 'video-iframe')
+			.attr('frameborder', 0)
+			.attr('allowfullscreen', 'allowfullscreen')
+			.attr('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen')
+			.attr('src', src);
 	};
 
 	/**
@@ -2568,6 +2565,12 @@ Rst.Slider = (function() {
 				this.playAutoplay();
 			}
 		}
+
+		// Fix issues with min-content contribution in grid and flex layouts
+		this.modify(this.elements.crop, {
+			width: '',
+			height: ''
+		});
 
 		this.nav.resize();
 
