@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.6.11 */
+/*! rocksolid-slider v1.6.12 */
 (function($, window, document) {
 
 var Rst = {};
@@ -2568,8 +2568,7 @@ Rst.Slider = (function() {
 
 		// Fix issues with min-content contribution in grid and flex layouts
 		this.modify(this.elements.crop, {
-			width: '',
-			height: ''
+			width: '100%'
 		});
 
 		this.nav.resize();
