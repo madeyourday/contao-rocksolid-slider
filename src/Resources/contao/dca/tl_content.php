@@ -469,14 +469,14 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_visibleArea'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50 clr'),
-	'sql' => "double NOT NULL default '0'",
+	'sql' => "double unsigned NOT NULL default '0'",
 );
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_visibleAreaMax'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_visibleAreaMax'],
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "double NOT NULL default '0'",
+	'sql' => "double unsigned NOT NULL default '0'",
 );
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_slideMinSize'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_slideMinSize'],
@@ -538,7 +538,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_visibleArea'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50 clr'),
-	'sql' => "double NOT NULL default '0'",
+	'sql' => "double unsigned NOT NULL default '0'",
 );
 // maximum size of the area for the visible slide in px
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_visibleAreaMax'] = array(
@@ -546,7 +546,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_visibleAreaMax'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "double NOT NULL default '0'",
+	'sql' => "double unsigned NOT NULL default '0'",
 );
 // Alignment of the visible area (0 = start, 0.5 = center, 1 = end)
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_visibleAreaAlign'] = array(
@@ -556,7 +556,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_visibleAreaAlign'] = array(
 	'options' => array('0', '50', '100'),
 	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_visibleAreaAligns'],
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "double NOT NULL default '50'",
+	'sql' => "double unsigned NOT NULL default '50'",
 );
 // minimal size of one slide in px
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_slideMinSize'] = array(
