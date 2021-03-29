@@ -30,7 +30,9 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['rocksolid_sliderrsts_import_setting
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'rsts_thumbs';
 $GLOBALS['TL_DCA']['tl_module']['subpalettes']['rsts_thumbs'] = 'rsts_thumbs_width,rsts_thumbs_height,rsts_thumbs_gapSize,rsts_thumbs_duration,rsts_thumbs_scaleMode,rsts_thumbs_imagePosition,rsts_thumbs_controls,rsts_thumbs_slideMaxCount,rsts_thumbs_slideMinSize,rsts_thumbs_slideMaxSize,rsts_thumbs_rowMaxCount,rsts_thumbs_rowMinSize,rsts_thumbs_rowSlideRatio,rsts_thumbs_prevNextSteps,rsts_thumbs_visibleArea,rsts_thumbs_visibleAreaMax';
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['news_metaFields']['eval']['tl_class'] .= ' clr';
+if (isset($GLOBALS['TL_DCA']['tl_module']['fields']['news_metaFields'])) {
+	$GLOBALS['TL_DCA']['tl_module']['fields']['news_metaFields']['eval']['tl_class'] = ($GLOBALS['TL_DCA']['tl_module']['fields']['news_metaFields']['eval']['tl_class'] ?? '') . ' clr';
+}
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_content_type'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_content_type'],
