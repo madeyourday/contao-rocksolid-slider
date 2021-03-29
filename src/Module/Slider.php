@@ -184,10 +184,10 @@ class Slider extends \Module
 					'uuid'      => isset($files->uuid) ? $files->uuid : null,
 					'name'      => $file->basename,
 					'singleSRC' => $files->path,
-					'alt'       => $arrMeta['alt'],
-					'title'     => $arrMeta['title'],
-					'imageUrl'  => $arrMeta['link'],
-					'caption'   => $arrMeta['caption'],
+					'alt'       => $arrMeta['alt'] ?? null,
+					'title'     => $arrMeta['title'] ?? null,
+					'imageUrl'  => $arrMeta['link'] ?? null,
+					'caption'   => $arrMeta['caption'] ?? null,
 					'fullsize'  => $this->fullsize,
 				);
 
@@ -447,10 +447,10 @@ class Slider extends \Module
 					'id' => $file->id,
 					'name' => $fileObject->basename,
 					'singleSRC' => $file->path,
-					'alt' => $meta['alt'],
-					'title' => $meta['title'],
-					'imageUrl' => $meta['link'],
-					'caption' => $meta['caption'],
+					'alt' => $meta['alt'] ?? null,
+					'title' => $meta['title'] ?? null,
+					'imageUrl' => $meta['link'] ?? null,
+					'caption' => $meta['caption'] ?? null,
 					'size' => isset($this->imgSize) ? $this->imgSize : $this->size,
 					'fullsize' => $this->fullsize,
 				), null, substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6), $file);
@@ -515,11 +515,11 @@ class Slider extends \Module
 					'id' => $file->id,
 					'name' => $fileObject->basename,
 					'singleSRC' => $file->path,
-					'alt' => $meta['alt'],
-					'title' => $meta['title'],
-					'imageUrl' => $meta['link'],
-					'caption' => $meta['caption'],
-					'size' => $slide['backgroundImageSize'],
+					'alt' => $meta['alt'] ?? null,
+					'title' => $meta['title'] ?? null,
+					'imageUrl' => $meta['link'] ?? null,
+					'caption' => $meta['caption'] ?? null,
+					'size' => $slide['backgroundImageSize'] ?? null,
 				));
 			}
 			else {

@@ -19,12 +19,12 @@
 		?>
 
 		<?php if ($loadLazy): ?>
-			<script type="text/html"<?php if ($image->linkTitle || $image->picture['alt']): ?> data-rsts-name="<?= $image->linkTitle ?: $image->picture['alt'] ?>"<?php endif ?><?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?= $image->thumb->src ?>"<?php endif ?>>
+			<script type="text/html"<?php if (!empty($image->linkTitle) || !empty($image->picture['alt'])): ?> data-rsts-name="<?= ($image->linkTitle ?? null) ?: $image->picture['alt'] ?>"<?php endif ?><?php if (!empty($image->thumb->src)): ?> data-rsts-thumb="<?= $image->thumb->src ?>"<?php endif ?>>
 			<?php ob_start() ?>
 		<?php endif ?>
 
-		<?php if (strpos($image->attributes, 'data-lightbox') !== false) {
-			$lightboxUrls[] = array($image->href, $image->linkTitle ?: $image->picture['alt']);
+		<?php if (strpos($image->attributes ?? '', 'data-lightbox') !== false) {
+			$lightboxUrls[] = array($image->href, ($image->linkTitle ?? null) ?: ($image->picture['alt'] ?? null));
 		} ?>
 
 		<?php
@@ -32,15 +32,15 @@
 			$attributes = array(
 				'data-rsts-type="image"',
 			);
-			if ($image->href) {
+			if (!empty($image->href)) {
 				$tagName = 'a';
 			}
-			if ($image->href || $image->linkTitle) {
-				$attributes[] = 'title="' . ($image->linkTitle ?: $image->picture['alt']) . '"';
+			if (!empty($image->href) || !empty($image->linkTitle)) {
+				$attributes[] = 'title="' . (($image->linkTitle ?? null) ?: ($image->picture['alt'] ?? '')) . '"';
 			}
-			if ($image->href) {
+			if (!empty($image->href)) {
 				$attributes[] = 'href="' . $image->href . '"';
-				$attributes[] = $image->attributes;
+				$attributes[] = $image->attributes ?? '';
 			}
 			if (!empty($this->rsts_invertControls)) {
 				$attributes[] = 'data-rsts-class="' . (empty($this->options['cssPrefix']) ? 'rsts-' : $this->options['cssPrefix']) . 'invert-controls"';
@@ -148,7 +148,7 @@
 		<?php if (! empty($slide['videoURL'])): ?>
 
 			<<?= $tagName ?> data-rsts-type="video" data-rsts-video="<?= $slide['videoURL'] ?>" <?= $attributes ?>>
-				<?php $this->insert('picture_default', array_merge($slide['image']->picture, ['attributes' => $slide['image']->picture['attributes'] . ' ' . $imageAttributes])) ?>
+				<?php $this->insert('picture_default', array_merge($slide['image']->picture, ['attributes' => ($slide['image']->picture['attributes'] ?? '') . ' ' . $imageAttributes])) ?>
 
 		<?php elseif (!empty($slide['videos'])): ?>
 			<<?= $tagName ?> data-rsts-type="video" <?= $attributes ?>>
@@ -166,8 +166,8 @@
 				if ($slide['image']->linkTitle) {
 					$attributes .= ' title="' . $slide['image']->linkTitle . '"';
 				}
-				$attributes .= ' '.$slide['image']->attributes;
-				if (strpos($slide['image']->attributes, 'data-lightbox') !== false) {
+				$attributes .= ' '.($slide['image']->attributes ?? '');
+				if (strpos($slide['image']->attributes ?? '', 'data-lightbox') !== false) {
 					$lightboxUrls[] = array($slide['image']->href, $slide['title']);
 				}
 			} ?>
@@ -196,7 +196,7 @@
 				<?php endforeach ?>
 			</video>
 		<?php elseif (!empty($slide['backgroundImage'])): ?>
-			<?php $this->insert('picture_default', array_merge($slide['backgroundImage']->picture, ['attributes' => $slide['backgroundImage']->picture['attributes'] . ' ' . $backgroundAttributes])) ?>
+			<?php $this->insert('picture_default', array_merge($slide['backgroundImage']->picture, ['attributes' => ($slide['backgroundImage']->picture['attributes'] ?? '') . ' ' . $backgroundAttributes])) ?>
 		<?php endif ?>
 
 		</<?= $tagName ?>>
