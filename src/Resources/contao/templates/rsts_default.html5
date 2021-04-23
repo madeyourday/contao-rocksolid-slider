@@ -160,7 +160,7 @@
 
 		<?php elseif (! empty($slide['image'])): ?>
 
-			<?php if ($slide['image']->href && $tagName !== 'a') {
+			<?php if (!empty($slide['image']->href) && $tagName !== 'a') {
 				$tagName = 'a';
 				$attributes .= ' href="' . $slide['image']->href . '"';
 				if ($slide['image']->linkTitle) {
@@ -173,7 +173,7 @@
 			} ?>
 
 			<<?= $tagName ?> data-rsts-type="image" <?= $attributes ?>>
-				<?php $this->insert('picture_default', array_merge($slide['image']->picture, ['attributes' => $slide['image']->picture['attributes'] . ' ' . $imageAttributes])) ?>
+				<?php $this->insert('picture_default', array_merge($slide['image']->picture, ['attributes' => ($slide['image']->picture['attributes'] ?? '') . ' ' . $imageAttributes])) ?>
 				<?php if ($slide['image']->caption): ?>
 					<p class="rsts-text"><?= $slide['image']->caption ?></p>
 				<?php endif ?>
