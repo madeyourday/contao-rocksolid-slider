@@ -16,6 +16,9 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider_license'] = array(
 	'config' => array(
 		'dataContainer' => 'File',
 		'closed' => true,
+		'onload_callback' => array(
+			array('MadeYourDay\\RockSolidSlider\\Slider', 'licenseOnloadCallback'),
+		),
 	),
 
 	'list' => array(

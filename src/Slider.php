@@ -8,6 +8,11 @@
 
 namespace MadeYourDay\RockSolidSlider;
 
+use Contao\BackendUser;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
 use MadeYourDay\RockSolidSlider\Module\SliderEvents;
 
 /**
@@ -65,6 +70,15 @@ class Slider extends \Backend
 		$this->createNewVersion('tl_rocksolid_slide', $intId);
 	}
 
+	public function sliderLicenseButton($href, $label, $title, $class, $attributes)
+	{
+		if (!($user = BackendUser::getInstance()) || !$user->isAdmin) {
+			return '';
+		}
+
+		return '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
+	}
+
 	/**
 	 * Return the "edit slider" button
 	 */
@@ -74,6 +88,32 @@ class Slider extends \Backend
 			return '';
 		}
 		$href .= '&amp;id=' . $row['id'];
+		return '<a href="' . $this->addToUrl($href) . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label) . '</a> ';
+	}
+
+	/**
+	 * Return the "copy slider" button
+	 */
+	public function copySliderIcon($row, $href, $label, $title, $icon, $attributes)
+	{
+		$href .= '&amp;id=' . $row['id'];
+		if (!($user = BackendUser::getInstance()) || !(static::canSkipPermissionCheck($user) || $user->hasAccess('create', 'rsts_permissions'))) {
+			return \Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon), $label) . ' ';
+		}
+
+		return '<a href="' . $this->addToUrl($href) . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label) . '</a> ';
+	}
+
+	/**
+	 * Return the "delete slider" button
+	 */
+	public function deleteSliderIcon($row, $href, $label, $title, $icon, $attributes)
+	{
+		$href .= '&amp;id=' . $row['id'];
+		if (!($user = BackendUser::getInstance()) || !(static::canSkipPermissionCheck($user) || $user->hasAccess('delete', 'rsts_permissions'))) {
+			return \Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon), $label) . ' ';
+		}
+
 		return '<a href="' . $this->addToUrl($href) . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label) . '</a> ';
 	}
 
@@ -136,6 +176,37 @@ class Slider extends \Backend
 	}
 
 	/**
+	 * Check access to a particular content element
+	 *
+	 * @param integer $id
+	 * @param array   $root
+	 * @param boolean $blnIsPid
+	 *
+	 * @throws AccessDeniedException
+	 */
+	protected function checkAccessToContentElement($id, $root, $blnIsPid=false)
+	{
+		if ($blnIsPid) {
+			$objArchive = $this->Database->prepare("SELECT a.id, n.id AS nid FROM tl_rocksolid_slide n, tl_rocksolid_slider a WHERE n.id=? AND n.pid=a.id")
+				->limit(1)
+				->execute($id);
+		} else {
+			$objArchive = $this->Database->prepare("SELECT a.id, n.id AS nid FROM tl_content c, tl_rocksolid_slide n, tl_rocksolid_slider a WHERE c.id=? AND c.pid=n.id AND n.pid=a.id")
+				->limit(1)
+				->execute($id);
+		}
+
+		// Invalid ID
+		if ($objArchive->numRows < 1) {
+			throw new AccessDeniedException('Invalid slider content element ID ' . $id . '.');
+		}
+
+		if (!in_array($objArchive->id, $root)) {
+			throw new AccessDeniedException('Not enough permissions to modify slide ID ' . $objArchive->nid . ' in slider ID ' . $objArchive->id . '.');
+		}
+	}
+
+	/**
 	 * Add the type of input field
 	 *
 	 * @return string
@@ -157,6 +228,11 @@ class Slider extends \Backend
 
 		while ($objSliders->next()) {
 			$arrSliders[$objSliders->id] = $objSliders->name;
+		}
+
+		if (($user = BackendUser::getInstance()) && !static::canSkipPermissionCheck($user)) {
+			$userSliders = StringUtil::deserialize($user->rsts_sliders, true);
+			$arrSliders = array_intersect_key($arrSliders, array_combine($userSliders, $userSliders));
 		}
 
 		return $arrSliders;
@@ -226,12 +302,193 @@ class Slider extends \Backend
 			}
 			$GLOBALS['TL_DCA'][$table]['fields']['rsts_getPro'] = array(
 				'input_field_callback' => function() {
-					return '<div class="tl_message">'
+					return '<div class="tl_message" style="padding: 15px">'
 						. sprintf($GLOBALS['TL_LANG']['tl_rocksolid_slider']['proLegendDescription'], 'contao/main.php?do=rocksolid_slider&amp;table=tl_rocksolid_slider_license&amp;ref=' . TL_REFERER_ID)
 						. '</div>';
 				},
 			);
 		}
+	}
+
+	/**
+	 * On load callback for tl_rocksolid_slider
+	 *
+	 * @param \DataContainer $dc
+	 * @return void
+	 */
+	public function onloadCallback($dc)
+	{
+		$user = BackendUser::getInstance();
+
+		if (static::canSkipPermissionCheck($user)) {
+			return;
+		}
+
+		// Set root IDs
+		if (empty($user->rsts_sliders) || !is_array($user->rsts_sliders)) {
+			$root = array(0);
+		} else {
+			$root = $user->rsts_sliders;
+		}
+
+		$GLOBALS['TL_DCA']['tl_rocksolid_slider']['list']['sorting']['root'] = $root;
+
+		// Check permissions to add archives
+		if (!$user->hasAccess('create', 'rsts_permissions')) {
+			$GLOBALS['TL_DCA']['tl_rocksolid_slider']['config']['closed'] = true;
+			$GLOBALS['TL_DCA']['tl_rocksolid_slider']['config']['notCreatable'] = true;
+			$GLOBALS['TL_DCA']['tl_rocksolid_slider']['config']['notCopyable'] = true;
+		}
+
+		// Check permissions to delete calendars
+		if (!$user->hasAccess('delete', 'rsts_permissions')) {
+			$GLOBALS['TL_DCA']['tl_rocksolid_slider']['config']['notDeletable'] = true;
+		}
+
+		/** @var SessionInterface $objSession */
+		$objSession = System::getContainer()->get('session');
+
+		// Check current action
+		switch (Input::get('act')) {
+			case 'select':
+				// Allow
+				break;
+
+			case 'create':
+				if (!$user->hasAccess('create', 'rsts_permissions')) {
+					throw new AccessDeniedException('Not enough permissions to create sliders.');
+				}
+				break;
+
+			case 'edit':
+			case 'copy':
+			case 'delete':
+			case 'show':
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$user->hasAccess('delete', 'rsts_permissions'))) {
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' slider ID ' . Input::get('id') . '.');
+				}
+				break;
+
+			case 'editAll':
+			case 'deleteAll':
+			case 'overrideAll':
+			case 'copyAll':
+				$session = $objSession->all();
+
+				if (Input::get('act') == 'deleteAll' && !$user->hasAccess('delete', 'rsts_permissions')) {
+					$session['CURRENT']['IDS'] = array();
+				} else {
+					$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $root);
+				}
+				$objSession->replace($session);
+				break;
+
+			default:
+				if (Input::get('act')) {
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' sliders.');
+				}
+				break;
+		}
+	}
+
+	/**
+	 * On create callback for tl_rocksolid_slider
+	 *
+	 * @param \DataContainer $dc
+	 * @return void
+	 */
+	public function oncreateCallback($table, $insertId, $row, $dc)
+	{
+		$user = BackendUser::getInstance();
+
+		if (static::canSkipPermissionCheck($user)) {
+			return;
+		}
+
+		// Set root IDs
+		if (empty($user->rsts_sliders) || !is_array($user->rsts_sliders)) {
+			$root = array(0);
+		} else {
+			$root = $user->rsts_sliders;
+		}
+
+		// The archive is enabled already
+		if (in_array($insertId, $root)) {
+			return;
+		}
+
+		/** @var AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+
+		$arrNew = $objSessionBag->get('new_records');
+
+		if (is_array($arrNew['tl_rocksolid_slider']) && in_array($insertId, $arrNew['tl_rocksolid_slider'])) {
+			// Add the permissions on group level
+			if ($user->inherit != 'custom') {
+				$objGroup = $this->Database->execute("SELECT id, rsts_sliders, rsts_permissions FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
+
+				while ($objGroup->next()) {
+					$arrPermissions = StringUtil::deserialize($objGroup->rsts_permissions);
+
+					if (is_array($arrPermissions) && in_array('create', $arrPermissions)) {
+						$arrSliders = StringUtil::deserialize($objGroup->rsts_sliders, true);
+						$arrSliders[] = $insertId;
+
+						$this->Database->prepare("UPDATE tl_user_group SET rsts_sliders=? WHERE id=?")
+							->execute(serialize($arrSliders), $objGroup->id);
+					}
+				}
+			}
+
+			// Add the permissions on user level
+			if ($user->inherit != 'group') {
+				$objUser = $this->Database->prepare("SELECT rsts_sliders, rsts_permissions FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
+
+				$arrPermissions = StringUtil::deserialize($objUser->rsts_permissions);
+
+				if (is_array($arrPermissions) && in_array('create', $arrPermissions)) {
+					$arrSliders = StringUtil::deserialize($objUser->rsts_sliders, true);
+					$arrSliders[] = $insertId;
+
+					$this->Database->prepare("UPDATE tl_user SET rsts_sliders=? WHERE id=?")
+						->execute(serialize($arrSliders), $user->id);
+				}
+			}
+
+			// Add the new element to the user object
+			$root[] = $insertId;
+			$user->rsts_sliders = $root;
+		}
+	}
+
+	/**
+	 * On copy callback for tl_rocksolid_slider
+	 *
+	 * @param \DataContainer $dc
+	 * @return void
+	 */
+	public function oncopyCallback($insertId, $dc)
+	{
+		return $this->oncreateCallback($dc->table, $insertId, [], $dc);
+	}
+
+	/**
+	 * On load callback for tl_rocksolid_slider_license
+	 *
+	 * @param \DataContainer $dc
+	 * @return void
+	 */
+	public function licenseOnloadCallback($dc)
+	{
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin) {
+			return;
+		}
+
+		throw new AccessDeniedException('Not enough permissions to access slider license key settings.');
 	}
 
 	/**
@@ -244,6 +501,107 @@ class Slider extends \Backend
 	{
 		if (!static::checkLicense()) {
 			$this->removeProFields($dc->table, array('videos', 'centerContent', 'autoplay'), array('background_legend'));
+		}
+
+		$user = BackendUser::getInstance();
+
+		if (static::canSkipPermissionCheck($user)) {
+			return;
+		}
+
+		// Set the root IDs
+		if (empty($user->rsts_sliders) || !is_array($user->rsts_sliders)) {
+			$root = array(0);
+		} else {
+			$root = $user->rsts_sliders;
+		}
+
+		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+
+		// Check current action
+		switch (Input::get('act')) {
+			case 'paste':
+			case 'select':
+				if (!in_array(CURRENT_ID, $root)) {
+					throw new AccessDeniedException('Not enough permissions to access slider ID ' . $id . '.');
+				}
+				break;
+
+			case 'create':
+				if (!Input::get('pid') || !in_array(Input::get('pid'), $root)) {
+					throw new AccessDeniedException('Not enough permissions to create slides in slider ID ' . Input::get('pid') . '.');
+				}
+				break;
+
+			case 'cut':
+			case 'copy':
+				if (Input::get('act') == 'cut' && Input::get('mode') == 1) {
+					$objArchive = $this->Database->prepare("SELECT pid FROM tl_rocksolid_slide WHERE id=?")
+						->limit(1)
+						->execute(Input::get('pid'));
+
+					if ($objArchive->numRows < 1)
+					{
+						throw new AccessDeniedException('Invalid slide ID ' . Input::get('pid') . '.');
+					}
+
+					$pid = $objArchive->pid;
+				} else {
+					$pid = Input::get('pid');
+				}
+
+				if (!in_array($pid, $root)) {
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' slide ID ' . $id . ' to slider ID ' . $pid . '.');
+				}
+			// no break
+
+			case 'edit':
+			case 'show':
+			case 'delete':
+			case 'toggle':
+			case 'feature':
+				$objArchive = $this->Database->prepare("SELECT pid FROM tl_rocksolid_slide WHERE id=?")
+					->limit(1)
+					->execute($id);
+
+				if ($objArchive->numRows < 1) {
+					throw new AccessDeniedException('Invalid slide ID ' . $id . '.');
+				}
+
+				if (!in_array($objArchive->pid, $root)) {
+					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' slide ID ' . $id . ' of slider ID ' . $objArchive->pid . '.');
+				}
+				break;
+
+			case 'editAll':
+			case 'deleteAll':
+			case 'overrideAll':
+			case 'cutAll':
+			case 'copyAll':
+				if (!in_array($id, $root)) {
+					throw new AccessDeniedException('Not enough permissions to access slider ID ' . $id . '.');
+				}
+
+				$objArchive = $this->Database->prepare("SELECT id FROM tl_rocksolid_slide WHERE pid=?")
+					->execute($id);
+
+				/** @var SessionInterface $objSession */
+				$objSession = System::getContainer()->get('session');
+
+				$session = $objSession->all();
+				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objArchive->fetchEach('id'));
+				$objSession->replace($session);
+				break;
+
+			default:
+				if (Input::get('act')) {
+					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
+				}
+
+				if (!in_array($id, $root)) {
+					throw new AccessDeniedException('Not enough permissions to access slider ID ' . $id . '.');
+				}
+				break;
 		}
 	}
 
@@ -259,6 +617,8 @@ class Slider extends \Backend
 			$this->removeProFields($dc->table, array('rsts_content_type', 'rsts_direction', 'rsts_centerContent'), array('rsts_carousel_legend'));
 		}
 
+		$this->contentCheckPermission();
+
 		if (!$dc->id) {
 			return;
 		}
@@ -272,6 +632,68 @@ class Slider extends \Backend
 		if ($contentElement->type === 'rocksolid_slider') {
 			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['isGallery'] = true;
 			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['extensions'] = \Config::get('validImageTypes');
+		}
+	}
+
+	private function contentCheckPermission()
+	{
+		if (Input::get('do') !== 'rocksolid_slider') {
+			return;
+		}
+
+		$user = BackendUser::getInstance();
+
+		if (static::canSkipPermissionCheck($user)) {
+			return;
+		}
+
+		// Set the root IDs
+		if (empty($user->rsts_sliders) || !is_array($user->rsts_sliders)) {
+			$root = array(0);
+		} else {
+			$root = $user->rsts_sliders;
+		}
+
+		// Check the current action
+		switch (Input::get('act')) {
+			case '': // empty
+			case 'paste':
+			case 'create':
+			case 'select':
+				$this->checkAccessToContentElement(CURRENT_ID, $root, true);
+				break;
+
+			case 'editAll':
+			case 'deleteAll':
+			case 'overrideAll':
+			case 'cutAll':
+			case 'copyAll':
+				// Check access to the parent element if a content element is moved
+				if (in_array(Input::get('act'), array('cutAll', 'copyAll'))) {
+					$this->checkAccessToContentElement(Input::get('pid'), $root, (Input::get('mode') == 2));
+				}
+
+				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_rocksolid_slide' AND pid=?")
+					->execute(CURRENT_ID);
+
+				/** @var SessionInterface $objSession */
+				$objSession = System::getContainer()->get('session');
+
+				$session = $objSession->all();
+				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCes->fetchEach('id'));
+				$objSession->replace($session);
+				break;
+
+			case 'cut':
+			case 'copy':
+				// Check access to the parent element if a content element is moved
+				$this->checkAccessToContentElement(Input::get('pid'), $root, (Input::get('mode') == 2));
+			// no break
+
+			default:
+				// Check access to the content element
+				$this->checkAccessToContentElement(Input::get('id'), $root);
+				break;
 		}
 	}
 
@@ -300,6 +722,32 @@ class Slider extends \Backend
 		if ($module->type === 'rocksolid_slider') {
 			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['isGallery'] = true;
 			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['extensions'] = \Config::get('validImageTypes');
+		}
+	}
+
+	/**
+	 * On load callback for tl_user
+	 *
+	 * @param \DataContainer $dc
+	 * @return void
+	 */
+	public function userOnloadCallback($dc)
+	{
+		if (!static::checkLicense()) {
+			$this->removeProFields($dc->table, array(), array('rsts_slider_legend'));
+		}
+	}
+
+	/**
+	 * On load callback for tl_user_group
+	 *
+	 * @param \DataContainer $dc
+	 * @return void
+	 */
+	public function userGroupOnloadCallback($dc)
+	{
+		if (!static::checkLicense()) {
+			$this->removeProFields($dc->table, array(), array('rsts_slider_legend'));
 		}
 	}
 
@@ -364,5 +812,24 @@ class Slider extends \Backend
 		}
 
 		return false;
+	}
+
+	public static function canSkipPermissionCheck(BackendUser $user): bool
+	{
+		if ($user->isAdmin) {
+			return true;
+		}
+
+		// Active license means permissions feature is enabled
+		if (static::checkLicense()) {
+			return false;
+		}
+
+		// Still check permissions if set previously with an active license
+		if (!empty($user->rsts_permissions) || !empty($user->rsts_sliders)) {
+			return false;
+		}
+
+		return true;
 	}
 }
