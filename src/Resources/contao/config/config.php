@@ -35,3 +35,6 @@ array_insert($GLOBALS['FE_MOD'], 2, array(
 
 // TODO: Replace with migration services
 $GLOBALS['TL_HOOKS']['sqlCompileCommands'][] = array('MadeYourDay\\RockSolidSlider\\SliderRunonce', 'onSqlCompileCommands');
+
+$GLOBALS['TL_PERMISSIONS'][] = 'rsts_sliders';
+$GLOBALS['TL_PERMISSIONS'][] = 'rsts_permissions';

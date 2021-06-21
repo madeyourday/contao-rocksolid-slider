@@ -17,17 +17,15 @@ class SliderRunonce
 {
 	public function onSqlCompileCommands($sql)
 	{
-		static::run();
-
-		return $sql;
+		return static::run($sql);
 	}
 
 	/**
 	 * Run database migrations
 	 *
-	 * @return void
+	 * @return array
 	 */
-	public static function run()
+	public static function run($sql = [])
 	{
 		$database = \Database::getInstance();
 
@@ -137,5 +135,34 @@ class SliderRunonce
 				");
 			}
 		}
+
+		// Initialize the permissions fields
+		if (
+			Slider::checkLicense()
+			&& $database->tableExists('tl_rocksolid_slider')
+			&& $database->tableExists('tl_user')
+			&& $database->tableExists('tl_user_group')
+			&& !$database->fieldExists('rsts_sliders', 'tl_user')
+			&& !$database->fieldExists('rsts_permissions', 'tl_user')
+			&& !$database->fieldExists('rsts_sliders', 'tl_user_group')
+			&& !$database->fieldExists('rsts_permissions', 'tl_user_group')
+		) {
+			$defaultPermissions = serialize(['create', 'delete']);
+			$defaultSliders = serialize(array_values($database->query("SELECT id FROM tl_rocksolid_slider")->fetchEach('id')));
+			foreach (['tl_user', 'tl_user_group'] as $table) {
+				foreach ([
+					"ALTER TABLE $table ADD rsts_permissions BLOB DEFAULT NULL",
+					"ALTER TABLE $table ADD rsts_sliders BLOB DEFAULT NULL",
+				] as $query) {
+					if (($key = array_search($query, $sql['ALTER_ADD'] ?? [], true)) !== false) {
+						unset($sql['ALTER_ADD'][$key]);
+					}
+					$database->query($query);
+				}
+				$database->prepare("UPDATE $table SET rsts_permissions = ?, rsts_sliders = ?")->execute($defaultPermissions, $defaultSliders);
+			}
+		}
+
+		return $sql;
 	}
 }

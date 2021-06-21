@@ -18,6 +18,15 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 		'ctable' => array('tl_rocksolid_slide'),
 		'switchToEdit' => true,
 		'enableVersioning' => true,
+		'onload_callback' => array(
+			array('MadeYourDay\\RockSolidSlider\\Slider', 'onloadCallback'),
+		),
+		'oncreate_callback' => array(
+			array('MadeYourDay\\RockSolidSlider\\Slider', 'oncreateCallback')
+		),
+		'oncopy_callback' => array(
+			array('MadeYourDay\\RockSolidSlider\\Slider', 'oncopyCallback')
+		),
 		'sql' => array(
 			'keys' => array(
 				'id' => 'primary',
@@ -42,6 +51,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'href' => 'table=tl_rocksolid_slider_license',
 				'class' => 'header_icon',
 				'icon' => 'system/themes/' . \Backend::getTheme() . '/images/settings.gif',
+				'button_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'sliderLicenseButton'),
 			),
 			'all' => array(
 				'label' => &$GLOBALS['TL_LANG']['MSC']['all'],
@@ -67,13 +77,15 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 			'copy' => array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['copy'],
 				'href' => 'act=copy',
-				'icon' => 'copy.gif',
+				'icon' => 'copy.svg',
+				'button_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'copySliderIcon'),
 			),
 			'delete' => array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['delete'],
 				'href' => 'act=delete',
-				'icon' => 'delete.gif',
+				'icon' => 'delete.svg',
 				'attributes' => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\'))return false;Backend.getScrollOffset()"',
+				'button_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'deleteSliderIcon'),
 			),
 			'show' => array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['show'],
