@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    MadeYourDay\RockSolidSlider\Migration\SliderPermissionsMigration:
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
