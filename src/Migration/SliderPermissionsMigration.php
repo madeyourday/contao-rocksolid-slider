@@ -12,6 +12,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Types\BlobType;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
@@ -70,22 +71,39 @@ class SliderPermissionsMigration extends AbstractMigration
 	public function run(): MigrationResult
 	{
 		$defaultPermissions = serialize(['create', 'delete']);
-		$defaultSliders = serialize(array_values(array_map(function ($row) {
-			return $row['id'];
-		}, $this->connection->fetchAllAssociative("SELECT id FROM tl_rocksolid_slider"))));
+
+		if (method_exists($this->connection, 'fetchFirstColumn')) {
+			$defaultSliders = serialize(array_values($this->connection->fetchFirstColumn("SELECT id FROM tl_rocksolid_slider")));
+		}
+		else {
+			$defaultSliders = serialize(array_values($this->connection->executeQuery("SELECT id FROM tl_rocksolid_slider")->fetchAll(FetchMode::COLUMN)));
+		}
 
 		foreach (['tl_user', 'tl_user_group'] as $table) {
 			foreach ([
 				"ALTER TABLE $table ADD rsts_permissions BLOB DEFAULT NULL",
 				"ALTER TABLE $table ADD rsts_sliders BLOB DEFAULT NULL",
 			] as $query) {
-				$this->connection->executeStatement($query);
+				if (method_exists($this->connection, 'executeStatement')) {
+					$this->connection->executeStatement($query);
+				}
+				else {
+					$this->connection->query($query);
+				}
 			}
-			$this->connection->executeStatement(
-				"UPDATE $table SET rsts_permissions = ?, rsts_sliders = ?",
-				[$defaultPermissions, $defaultSliders],
-				[Types::BLOB, Types::BLOB]
-			);
+			if (method_exists($this->connection, 'executeStatement')) {
+				$this->connection->executeStatement(
+					"UPDATE $table SET rsts_permissions = ?, rsts_sliders = ?",
+					[$defaultPermissions, $defaultSliders],
+					[Types::BLOB, Types::BLOB]
+				);
+			}
+			else {
+				$this->connection
+					->prepare("UPDATE $table SET rsts_permissions = ?, rsts_sliders = ?")
+					->execute([$defaultPermissions, $defaultSliders])
+				;
+			}
 		}
 
 		return $this->createResult(true);
