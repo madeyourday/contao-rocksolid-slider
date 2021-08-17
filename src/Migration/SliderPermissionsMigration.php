@@ -70,7 +70,9 @@ class SliderPermissionsMigration extends AbstractMigration
 	public function run(): MigrationResult
 	{
 		$defaultPermissions = serialize(['create', 'delete']);
-		$defaultSliders = serialize(array_values($this->connection->fetchFirstColumn("SELECT id FROM tl_rocksolid_slider")));
+		$defaultSliders = serialize(array_values(array_map(function ($row) {
+			return $row['id'];
+		}, $this->connection->fetchAllAssociative("SELECT id FROM tl_rocksolid_slider"))));
 
 		foreach (['tl_user', 'tl_user_group'] as $table) {
 			foreach ([
