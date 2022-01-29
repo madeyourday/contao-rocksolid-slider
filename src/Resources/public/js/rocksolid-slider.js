@@ -1,4 +1,4 @@
-/*! rocksolid-slider v1.6.14 */
+/*! rocksolid-slider v1.6.15 */
 (function($, window, document) {
 
 var Rst = {};
@@ -66,6 +66,8 @@ Rst.Slide = (function() {
 		}
 
 		this.content = $(element);
+
+		this.element.addClass(this.content.attr('data-rsts-slide-class'));
 
 		var sliderClasses = this.content.attr('data-rsts-class');
 

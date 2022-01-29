@@ -93,7 +93,7 @@
 				$attributes[] = 'data-rsts-center="' . $slide['centerContent'] . '"';
 			}
 			if (!empty($slide['slideClass'])) {
-				$attributes[] = 'class="' . $slide['slideClass'] . '"';
+				$attributes[] = 'data-rsts-slide-class="' . $slide['slideClass'] . '"';
 			}
 			if (
 				(!empty($slide['invertControls']) && empty($this->rsts_invertControls))
