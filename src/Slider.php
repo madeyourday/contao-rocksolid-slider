@@ -522,14 +522,9 @@ class Slider extends \Backend
 		switch (Input::get('act')) {
 			case 'paste':
 			case 'select':
+			case 'create':
 				if (!in_array(CURRENT_ID, $root)) {
 					throw new AccessDeniedException('Not enough permissions to access slider ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-				if (!Input::get('pid') || !in_array(Input::get('pid'), $root)) {
-					throw new AccessDeniedException('Not enough permissions to create slides in slider ID ' . Input::get('pid') . '.');
 				}
 				break;
 
