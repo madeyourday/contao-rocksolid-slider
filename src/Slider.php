@@ -530,7 +530,7 @@ class Slider extends \Backend
 
 			case 'cut':
 			case 'copy':
-				if (Input::get('act') == 'cut' && Input::get('mode') == 1) {
+				if (Input::get('mode') == 1) {
 					$objArchive = $this->Database->prepare("SELECT pid FROM tl_rocksolid_slide WHERE id=?")
 						->limit(1)
 						->execute(Input::get('pid'));
