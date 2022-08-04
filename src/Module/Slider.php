@@ -8,16 +8,25 @@
 
 namespace MadeYourDay\RockSolidSlider\Module;
 
+use Contao\BackendTemplate;
+use Contao\File;
+use Contao\FilesModel;
+use Contao\Model\Collection;
+use Contao\Module;
+use Contao\ModuleModel;
+use Contao\StringUtil;
+use Contao\System;
 use MadeYourDay\RockSolidSlider\Model\SlideModel;
 use MadeYourDay\RockSolidSlider\Model\SliderModel;
 use MadeYourDay\RockSolidSlider\Model\ContentModel;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Slider Frontend Module
  *
  * @author Martin Auswöger <martin@madeyourday.net>
  */
-class Slider extends \Module
+class Slider extends Module
 {
 	/**
 	 * @var string Template
@@ -30,19 +39,19 @@ class Slider extends \Module
 	public function generate()
 	{
 		// Display a wildcard in the back end
-		if (TL_MODE === 'BE') {
-			$template = new \BackendTemplate('be_wildcard');
+		if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create(''))) {
+			$template = new BackendTemplate('be_wildcard');
 
 			$template->wildcard = '### ROCKSOLID SLIDER ###';
 			$template->title = $this->name;
 			$template->id = $this->id;
 			$template->link = $this->name;
-			$template->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$template->href = 'contao?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
 			if ($this->objModel->rsts_id && ($slider = SliderModel::findByPk($this->objModel->rsts_id)) !== null) {
 				$template->id = $slider->id;
 				$template->link = $slider->name;
-				$template->href = 'contao/main.php?do=rocksolid_slider&amp;table=tl_rocksolid_slide&amp;id=' . $slider->id;
+				$template->href = 'contao?do=rocksolid_slider&amp;table=tl_rocksolid_slide&amp;id=' . $slider->id;
 			}
 
 			return $template->parse();
@@ -51,7 +60,7 @@ class Slider extends \Module
 		if (
 			$this->rsts_import_settings
 			&& $this->rsts_import_settings_from
-			&& ($settingsModule = \ModuleModel::findByPk($this->rsts_import_settings_from))
+			&& ($settingsModule = ModuleModel::findByPk($this->rsts_import_settings_from))
 		) {
 			$this->objModel->imgSize = $settingsModule->imgSize;
 			$this->objModel->fullsize = $settingsModule->fullsize;
@@ -78,7 +87,7 @@ class Slider extends \Module
 		}
 		else if ($this->rsts_content_type === 'rsts_images' || !$this->rsts_id) {
 
-			$this->multiSRC = deserialize($this->multiSRC);
+			$this->multiSRC = StringUtil::deserialize($this->multiSRC);
 			if (!is_array($this->multiSRC) || !count($this->multiSRC)) {
 				// Return if there are no images
 				return '';
@@ -95,18 +104,17 @@ class Slider extends \Module
 			}
 
 			if ($this->slider->type === 'image') {
-				$this->multiSRC = deserialize($this->slider->multiSRC);
-				$this->orderSRC = $this->slider->orderSRC;
+				$this->multiSRC = StringUtil::deserialize($this->slider->multiSRC);
 			}
 
 		}
 
-		$this->files = \FilesModel::findMultipleByUuids($this->multiSRC);
+		$this->files = FilesModel::findMultipleByUuids($this->multiSRC);
 
 		if (
 			$this->rsts_import_settings
 			&& $this->rsts_import_settings_from
-			&& ($settingsModule = \ModuleModel::findByPk($this->rsts_import_settings_from))
+			&& ($settingsModule = ModuleModel::findByPk($this->rsts_import_settings_from))
 		) {
 			$exclude = array('rsts_import_settings', 'rsts_import_settings_from', 'rsts_content_type', 'rsts_id');
 			$include = array('imgSize', 'fullsize');
@@ -118,7 +126,7 @@ class Slider extends \Module
 					$this->arrData[$key] = $value;
 				}
 			}
-			$settingsCssId = \StringUtil::deserialize($settingsModule->cssID, true);
+			$settingsCssId = StringUtil::deserialize($settingsModule->cssID, true);
 			if (!empty($settingsCssId[1])) {
 				$this->arrData['cssID'][1] = (
 					empty($this->arrData['cssID'][1]) ? '' : $this->arrData['cssID'][1] . ' '
@@ -153,7 +161,7 @@ class Slider extends \Module
 					$filesExpaned[] = $files->current();
 				}
 				else {
-					$subFiles = \FilesModel::findByPid($files->uuid);
+					$subFiles = FilesModel::findByPid($files->uuid);
 					while ($subFiles && $subFiles->next()) {
 						if ($subFiles->type === 'file'){
 							$filesExpaned[] = $subFiles->current();
@@ -165,11 +173,11 @@ class Slider extends \Module
 			foreach ($filesExpaned as $files) {
 
 				// Continue if the files has been processed or does not exist
-				if (isset($images[$files->path]) || ! file_exists(TL_ROOT . '/' . $files->path)) {
+				if (isset($images[$files->path]) || ! file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $files->path)) {
 					continue;
 				}
 
-				$file = new \File($files->path, true);
+				$file = new File($files->path, true);
 
 				if (!$file->isGdImage && !$file->isImage) {
 					continue;
@@ -193,36 +201,12 @@ class Slider extends \Module
 
 			}
 
-			if ($this->orderSRC) {
-				// Turn the order string into an array and remove all values
-				$order = deserialize($this->orderSRC);
-				if (!$order || !is_array($order)) {
-					$order = array();
-				}
-				$order = array_flip($order);
-				$order = array_map(function(){}, $order);
-
-				// Move the matching elements to their position in $order
-				foreach ($images as $k => $v) {
-					if (array_key_exists($v['uuid'], $order)) {
-						$order[$v['uuid']] = $v;
-						unset($images[$k]);
-					}
-				}
-
-				$order = array_merge($order, array_values($images));
-
-				// Remove empty (unreplaced) entries
-				$images = array_filter($order);
-				unset($order);
-			}
-
 			$images = array_values($images);
 
 			foreach ($images as $key => $image) {
 				$newImage = new \stdClass();
 				$image['size'] = isset($this->imgSize) ? $this->imgSize : $this->size;
-				$this->addImageToTemplate($newImage, $image, null, substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6), \FilesModel::findByPk($image['id']));
+				$this->addImageToTemplate($newImage, $image, null, substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6), FilesModel::findByPk($image['id']));
 				if ($this->rsts_navType === 'thumbs') {
 					$newImage->thumb = new \stdClass;
 					$image['size'] = $this->rsts_thumbs_imgSize;
@@ -402,7 +386,7 @@ class Slider extends \Module
 		$GLOBALS['TL_JAVASCRIPT'][] = $assetsDir . '/js/rocksolid-slider.min.js|static';
 		$GLOBALS['TL_CSS'][] = $assetsDir . '/css/rocksolid-slider.min.css||static';
 		$skinPath = $assetsDir . '/css/' . (empty($this->arrData['rsts_skin']) ? 'default' : $this->arrData['rsts_skin']) . '-skin.min.css';
-		if (file_exists(\System::getContainer()->getParameter('contao.web_dir') . '/' . $skinPath)) {
+		if (file_exists(System::getContainer()->getParameter('contao.web_dir') . '/' . $skinPath)) {
 			$GLOBALS['TL_CSS'][] = $skinPath . '||static';
 		}
 	}
@@ -410,7 +394,7 @@ class Slider extends \Module
 	/**
 	 * Parse slides
 	 *
-	 * @param  \Model\Collection $objSlides slides retrieved from the database
+	 * @param  Collection $objSlides slides retrieved from the database
 	 * @return array                        parsed slides
 	 */
 	protected function parseSlides($objSlides)
@@ -437,8 +421,8 @@ class Slider extends \Module
 			if (
 				in_array($slide['type'], array('image', 'video')) &&
 				trim($slide['singleSRC']) &&
-				($file = \FilesModel::findByUuid($slide['singleSRC'])) &&
-				($fileObject = new \File($file->path, true)) &&
+				($file = FilesModel::findByUuid($slide['singleSRC'])) &&
+				($fileObject = new File($file->path, true)) &&
 				($fileObject->isGdImage || $fileObject->isImage)
 			) {
 				$meta = $this->getMetaData($file->meta, $objPage->language);
@@ -491,8 +475,8 @@ class Slider extends \Module
 			}
 
 			if ($slide['type'] === 'video' && $slide['videos']) {
-				$videoFiles = deserialize($slide['videos'], true);
-				$videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
+				$videoFiles = StringUtil::deserialize($slide['videos'], true);
+				$videoFiles = FilesModel::findMultipleByUuids($videoFiles);
 				$videos = array();
 				foreach ($videoFiles as $file) {
 					$videos[] = $file;
@@ -505,8 +489,8 @@ class Slider extends \Module
 
 			if (
 				trim($slide['backgroundImage']) &&
-				($file = \FilesModel::findByUuid($slide['backgroundImage'])) &&
-				($fileObject = new \File($file->path, true)) &&
+				($file = FilesModel::findByUuid($slide['backgroundImage'])) &&
+				($fileObject = new File($file->path, true)) &&
 				($fileObject->isGdImage || $fileObject->isImage)
 			) {
 				$meta = $this->getMetaData($file->meta, $objPage->language);
@@ -527,8 +511,8 @@ class Slider extends \Module
 			}
 
 			if ($slide['backgroundVideos']) {
-				$videoFiles = deserialize($slide['backgroundVideos'], true);
-				$videoFiles = \FilesModel::findMultipleByUuids($videoFiles);
+				$videoFiles = StringUtil::deserialize($slide['backgroundVideos'], true);
+				$videoFiles = FilesModel::findMultipleByUuids($videoFiles);
 				$videos = array();
 				foreach ($videoFiles as $file) {
 					$videos[] = $file;
@@ -540,8 +524,8 @@ class Slider extends \Module
 				$slide['thumb'] = new \stdClass;
 				if (
 					trim($slide['thumbImage']) &&
-					($file = \FilesModel::findByUuid($slide['thumbImage'])) &&
-					($fileObject = new \File($file->path, true)) &&
+					($file = FilesModel::findByUuid($slide['thumbImage'])) &&
+					($fileObject = new File($file->path, true)) &&
 					($fileObject->isGdImage || $fileObject->isImage)
 				) {
 					$this->addImageToTemplate($slide['thumb'], array(
@@ -554,8 +538,8 @@ class Slider extends \Module
 				elseif (
 					in_array($slide['type'], array('image', 'video')) &&
 					trim($slide['singleSRC']) &&
-					($file = \FilesModel::findByUuid($slide['singleSRC'])) &&
-					($fileObject = new \File($file->path, true)) &&
+					($file = FilesModel::findByUuid($slide['singleSRC'])) &&
+					($fileObject = new File($file->path, true)) &&
 					($fileObject->isGdImage || $fileObject->isImage)
 				) {
 					$this->addImageToTemplate($slide['thumb'], array(

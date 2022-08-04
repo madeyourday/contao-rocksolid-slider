@@ -27,7 +27,7 @@ $GLOBALS['BE_MOD']['content']['rocksolid_slider'] = array(
 	'icon' => 'bundles/rocksolidslider/img/icon.png',
 );
 
-array_insert($GLOBALS['FE_MOD'], 2, array(
+Contao\ArrayUtil::arrayInsert($GLOBALS['FE_MOD'], 2, array(
 	'miscellaneous' => array(
 		'rocksolid_slider' => 'MadeYourDay\\RockSolidSlider\\Module\\Slider',
 	)

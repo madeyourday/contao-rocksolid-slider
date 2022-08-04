@@ -8,11 +8,19 @@
 
 namespace MadeYourDay\RockSolidSlider;
 
+use Contao\Backend;
 use Contao\BackendUser;
+use Contao\Config;
+use Contao\ContentModel;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Environment;
+use Contao\Image;
 use Contao\Input;
+use Contao\ModuleModel;
 use Contao\StringUtil;
 use Contao\System;
+use Contao\ThemeModel;
 use MadeYourDay\RockSolidSlider\Module\SliderEvents;
 
 /**
@@ -22,7 +30,7 @@ use MadeYourDay\RockSolidSlider\Module\SliderEvents;
  *
  * @author Martin Auswöger <martin@madeyourday.net>
  */
-class Slider extends \Backend
+class Slider extends Backend
 {
 	/**
 	 * Return the "toggle visibility" button
@@ -31,21 +39,21 @@ class Slider extends \Backend
 	 */
 	public function toggleSlideIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (strlen(\Input::get('tid'))) {
-			$this->toggleVisibility(\Input::get('tid'), (\Input::get('state') == 1));
-			if (\Environment::get('isAjaxRequest')) {
+		if (strlen(Input::get('tid'))) {
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1));
+			if (Environment::get('isAjaxRequest')) {
 				exit;
 			}
 			$this->redirect($this->getReferer());
 		}
 
-		$href .= '&amp;id=' . \Input::get('id') . '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
+		$href .= '&amp;id=' . Input::get('id') . '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
 
 		if (! $row['published']) {
 			$icon = 'invisible.gif';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -88,7 +96,7 @@ class Slider extends \Backend
 			return '';
 		}
 		$href .= '&amp;id=' . $row['id'];
-		return '<a href="' . $this->addToUrl($href) . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -98,10 +106,10 @@ class Slider extends \Backend
 	{
 		$href .= '&amp;id=' . $row['id'];
 		if (!($user = BackendUser::getInstance()) || !(static::canSkipPermissionCheck($user) || $user->hasAccess('create', 'rsts_permissions'))) {
-			return \Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon), $label) . ' ';
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon), $label) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -111,10 +119,10 @@ class Slider extends \Backend
 	{
 		$href .= '&amp;id=' . $row['id'];
 		if (!($user = BackendUser::getInstance()) || !(static::canSkipPermissionCheck($user) || $user->hasAccess('delete', 'rsts_permissions'))) {
-			return \Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon), $label) . ' ';
+			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon), $label) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -126,7 +134,7 @@ class Slider extends \Backend
 			return '';
 		}
 		$href .= '&amp;id=' . $row['id'];
-		return '<a href="' . $this->addToUrl($href) . '" title="' . \StringUtil::specialchars($title) . '"' . $attributes . '>' . \Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
@@ -135,7 +143,7 @@ class Slider extends \Backend
 	 * Redirects to the parent slider if type is not "content"
 	 *
 	 * @param  array          $headerFields label value pairs of header fields
-	 * @param  \DataContainer $dc           data container
+	 * @param  DataContainer  $dc           data container
 	 * @return array
 	 */
 	public function headerCallback($headerFields, $dc)
@@ -143,10 +151,10 @@ class Slider extends \Backend
 		$sliderData = $this->Database
 			->prepare('SELECT * FROM ' . $GLOBALS['TL_DCA'][$dc->table]['config']['ptable'] . ' WHERE id = ?')
 			->limit(1)
-			->execute(CURRENT_ID);
+			->execute($dc->currentPid);
 
 		if ($sliderData->numRows && $sliderData->type !== 'content') {
-			$this->redirect('contao/main.php?do=rocksolid_slider&act=edit&id=' . CURRENT_ID . '&ref=' . \Input::get('ref') . '&rt=' . REQUEST_TOKEN);
+			$this->redirect('contao?do=rocksolid_slider&act=edit&id=' . $dc->currentPid . '&ref=' . Input::get('ref') . '&rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
 		}
 
 		return $headerFields;
@@ -158,7 +166,7 @@ class Slider extends \Backend
 	 * Redirects to the parent slide if type is not "content"
 	 *
 	 * @param  array          $headerFields label value pairs of header fields
-	 * @param  \DataContainer $dc           data container
+	 * @param  DataContainer  $dc           data container
 	 * @return array
 	 */
 	public function headerCallbackContent($headerFields, $dc)
@@ -166,10 +174,10 @@ class Slider extends \Backend
 		$slideData = $this->Database
 			->prepare('SELECT * FROM ' . $GLOBALS['TL_DCA'][$dc->table]['config']['ptable'] . ' WHERE id = ?')
 			->limit(1)
-			->execute(CURRENT_ID);
+			->execute($dc->currentPid);
 
 		if ($slideData->numRows && $slideData->type !== 'content') {
-			$this->redirect('contao/main.php?do=rocksolid_slider&table=tl_rocksolid_slide&act=edit&id=' . CURRENT_ID . '&ref=' . \Input::get('ref') . '&rt=' . REQUEST_TOKEN);
+			$this->redirect('contao?do=rocksolid_slider&table=tl_rocksolid_slide&act=edit&id=' . $dc->currentPid . '&ref=' . Input::get('ref') . '&rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
 		}
 
 		return $headerFields;
@@ -249,7 +257,7 @@ class Slider extends \Backend
 		$objModules = $this->Database->execute("SELECT id, pid, name FROM tl_module WHERE type = 'rocksolid_slider' ORDER BY name");
 
 		while ($objModules->next()) {
-			$objTheme = \ThemeModel::findById($objModules->pid);
+			$objTheme = ThemeModel::findById($objModules->pid);
 			$arrModules[$objTheme->name][$objModules->id] = $objModules->name;
 		}
 
@@ -280,7 +288,7 @@ class Slider extends \Backend
 	 */
 	protected function removeProFields($table, $fields = array(), $legends = array())
 	{
-		\System::loadLanguageFile('tl_rocksolid_slider');
+		System::loadLanguageFile('tl_rocksolid_slider');
 
 		foreach ($fields as $field) {
 			$GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['disabled'] = true;
@@ -292,7 +300,7 @@ class Slider extends \Backend
 			}
 			$GLOBALS['TL_DCA'][$table]['fields'][$field]['label'] = array(
 				$GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0],
-				sprintf($GLOBALS['TL_LANG']['tl_rocksolid_slider']['proFieldDescription'], 'contao/main.php?do=rocksolid_slider&amp;table=tl_rocksolid_slider_license&amp;ref=' . TL_REFERER_ID) . '<br>' . $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][1],
+				sprintf($GLOBALS['TL_LANG']['tl_rocksolid_slider']['proFieldDescription'], 'contao?do=rocksolid_slider&amp;table=tl_rocksolid_slider_license&amp;ref=' . System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id')) . '<br>' . $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][1],
 			);
 		}
 
@@ -303,7 +311,7 @@ class Slider extends \Backend
 			$GLOBALS['TL_DCA'][$table]['fields']['rsts_getPro'] = array(
 				'input_field_callback' => function() {
 					return '<div class="tl_message" style="padding: 15px">'
-						. sprintf($GLOBALS['TL_LANG']['tl_rocksolid_slider']['proLegendDescription'], 'contao/main.php?do=rocksolid_slider&amp;table=tl_rocksolid_slider_license&amp;ref=' . TL_REFERER_ID)
+						. sprintf($GLOBALS['TL_LANG']['tl_rocksolid_slider']['proLegendDescription'], 'contao?do=rocksolid_slider&amp;table=tl_rocksolid_slider_license&amp;ref=' . System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id'))
 						. '</div>';
 				},
 			);
@@ -313,7 +321,7 @@ class Slider extends \Backend
 	/**
 	 * On load callback for tl_rocksolid_slider
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 * @return void
 	 */
 	public function onloadCallback($dc)
@@ -394,7 +402,7 @@ class Slider extends \Backend
 	/**
 	 * On create callback for tl_rocksolid_slider
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 * @return void
 	 */
 	public function oncreateCallback($table, $insertId, $row, $dc)
@@ -466,7 +474,7 @@ class Slider extends \Backend
 	/**
 	 * On copy callback for tl_rocksolid_slider
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 * @return void
 	 */
 	public function oncopyCallback($insertId, $dc)
@@ -477,7 +485,7 @@ class Slider extends \Backend
 	/**
 	 * On load callback for tl_rocksolid_slider_license
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 * @return void
 	 */
 	public function licenseOnloadCallback($dc)
@@ -494,7 +502,7 @@ class Slider extends \Backend
 	/**
 	 * On load callback for tl_rocksolid_slide
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 * @return void
 	 */
 	public function slideOnloadCallback($dc)
@@ -516,14 +524,14 @@ class Slider extends \Backend
 			$root = $user->rsts_sliders;
 		}
 
-		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
 		switch (Input::get('act')) {
 			case 'paste':
 			case 'select':
 			case 'create':
-				if (!in_array(CURRENT_ID, $root)) {
+				if (!in_array($dc->currentPid, $root)) {
 					throw new AccessDeniedException('Not enough permissions to access slider ID ' . $id . '.');
 				}
 				break;
@@ -603,7 +611,7 @@ class Slider extends \Backend
 	/**
 	 * On load callback for tl_content
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 * @return void
 	 */
 	public function contentOnloadCallback($dc)
@@ -612,13 +620,13 @@ class Slider extends \Backend
 			$this->removeProFields($dc->table, array('rsts_content_type', 'rsts_direction', 'rsts_centerContent'), array('rsts_carousel_legend'));
 		}
 
-		$this->contentCheckPermission();
+		$this->contentCheckPermission($dc);
 
 		if (!$dc->id) {
 			return;
 		}
 
-		$contentElement = \ContentModel::findByPk($dc->id);
+		$contentElement = ContentModel::findByPk($dc->id);
 
 		if (!$contentElement || !isset($contentElement->type)) {
 			return;
@@ -626,11 +634,14 @@ class Slider extends \Backend
 
 		if ($contentElement->type === 'rocksolid_slider') {
 			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['isGallery'] = true;
-			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['extensions'] = \Config::get('validImageTypes');
+			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['extensions'] = implode(',', System::getContainer()->getParameter('contao.image.valid_extensions'));
 		}
 	}
 
-	private function contentCheckPermission()
+	/**
+	 * @param DataContainer $dc
+	 */
+	private function contentCheckPermission($dc)
 	{
 		if (Input::get('do') !== 'rocksolid_slider') {
 			return;
@@ -655,7 +666,7 @@ class Slider extends \Backend
 			case 'paste':
 			case 'create':
 			case 'select':
-				$this->checkAccessToContentElement(CURRENT_ID, $root, true);
+				$this->checkAccessToContentElement($dc->currentPid, $root, true);
 				break;
 
 			case 'editAll':
@@ -669,7 +680,7 @@ class Slider extends \Backend
 				}
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_rocksolid_slide' AND pid=?")
-					->execute(CURRENT_ID);
+					->execute($dc->currentPid);
 
 				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
@@ -695,7 +706,7 @@ class Slider extends \Backend
 	/**
 	 * On load callback for tl_module
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 * @return void
 	 */
 	public function moduleOnloadCallback($dc)
@@ -708,7 +719,7 @@ class Slider extends \Backend
 			return;
 		}
 
-		$module = \ModuleModel::findByPk($dc->id);
+		$module = ModuleModel::findByPk($dc->id);
 
 		if (!$module || !isset($module->type)) {
 			return;
@@ -716,14 +727,14 @@ class Slider extends \Backend
 
 		if ($module->type === 'rocksolid_slider') {
 			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['isGallery'] = true;
-			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['extensions'] = \Config::get('validImageTypes');
+			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['extensions'] = implode(',', System::getContainer()->getParameter('contao.image.valid_extensions'));
 		}
 	}
 
 	/**
 	 * On load callback for tl_user
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 * @return void
 	 */
 	public function userOnloadCallback($dc)
@@ -736,7 +747,7 @@ class Slider extends \Backend
 	/**
 	 * On load callback for tl_user_group
 	 *
-	 * @param \DataContainer $dc
+	 * @param DataContainer $dc
 	 * @return void
 	 */
 	public function userGroupOnloadCallback($dc)
@@ -767,7 +778,7 @@ class Slider extends \Backend
 	 * Check if the license key is valid
 	 *
 	 * @param  string         $value
-	 * @param  \DataContainer $dc
+	 * @param  DataContainer  $dc
 	 * @return string         value
 	 */
 	public function licenseSaveCallback($value, $dc)
@@ -795,7 +806,7 @@ class Slider extends \Backend
 	public static function checkLicense($license = null)
 	{
 		if ($license === null) {
-			$license = \Config::get('rocksolid_slider_license');
+			$license = Config::get('rocksolid_slider_license');
 		}
 
 		if (!$license) {

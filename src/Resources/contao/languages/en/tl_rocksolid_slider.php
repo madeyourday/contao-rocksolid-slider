@@ -36,8 +36,6 @@ $GLOBALS['TL_LANG']['tl_rocksolid_slider']['types']['content'] = 'Content Slider
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['types']['image'] = 'Image Slider';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][0] = 'Choose images';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['multiSRC'][1] = 'Choose images or folders to display them together in an image only slider.';
-$GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][0] = 'Image order';
-$GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'][1] = '';
 
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['proFieldDescription'] = 'This requires the pro version. <a href="%s"><b>Enter a license key</b></a>.';
 $GLOBALS['TL_LANG']['tl_rocksolid_slider']['proLegendDescription'] = 'This feature requires the pro version of the slider, <a class="tl_submit" href="%s">enter a license key</a> or <a class="tl_submit" target="_blank" href="http://rocksolidthemes.com/en/contao/plugins/responsive-slider">buy pro version now</a>.';

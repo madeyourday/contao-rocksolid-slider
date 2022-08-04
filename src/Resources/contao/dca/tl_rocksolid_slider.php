@@ -6,6 +6,11 @@
  * file that was distributed with this source code.
  */
 
+use Contao\Backend;
+use Contao\Config;
+use Contao\DC_Table;
+use Contao\System;
+
 /**
  * RockSolid Slider DCA
  *
@@ -14,7 +19,7 @@
 $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 
 	'config' => array(
-		'dataContainer' => 'Table',
+		'dataContainer' => DC_Table::class,
 		'ctable' => array('tl_rocksolid_slide'),
 		'switchToEdit' => true,
 		'enableVersioning' => true,
@@ -50,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['editLicense'],
 				'href' => 'table=tl_rocksolid_slider_license',
 				'class' => 'header_icon',
-				'icon' => 'system/themes/' . \Backend::getTheme() . '/images/settings.gif',
+				'icon' => 'system/themes/' . Backend::getTheme() . '/images/settings.gif',
 				'button_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'sliderLicenseButton'),
 			),
 			'all' => array(
@@ -145,16 +150,12 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'mandatory' => true,
 				'multiple' => true,
 				'fieldType' => 'checkbox',
-				'orderField' => 'orderSRC',
+				'isSortable' => true,
 				'files' => true,
 				'isGallery' => true,
-				'extensions' => \Config::get('validImageTypes'),
+				'extensions' => implode(',', System::getContainer()->getParameter('contao.image.valid_extensions')),
 				'tl_class' => 'clr',
 			),
-			'sql' => "blob NULL",
-		),
-		'orderSRC' => array(
-			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['orderSRC'],
 			'sql' => "blob NULL",
 		),
 	),

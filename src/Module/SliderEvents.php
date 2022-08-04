@@ -8,12 +8,15 @@
 
 namespace MadeYourDay\RockSolidSlider\Module;
 
+use Contao\ModuleEventlist;
+use Contao\StringUtil;
+
 /**
  * Slider Events Module
  *
  * @author Martin Auswöger <martin@madeyourday.net>
  */
-class SliderEvents extends \ModuleEventlist
+class SliderEvents extends ModuleEventlist
 {
 	const TEMPLATE_SEPARATOR = '<!-- %%%___||| RockSolid Slider Event |||___%%% -->';
 
@@ -24,7 +27,7 @@ class SliderEvents extends \ModuleEventlist
 	 */
 	public function getEventItems()
 	{
-		$this->cal_calendar = $this->sortOutProtected(deserialize($this->cal_calendar, true));
+		$this->cal_calendar = $this->sortOutProtected(StringUtil::deserialize($this->cal_calendar, true));
 
 		// Return if there are no calendars
 		if (!is_array($this->cal_calendar) || empty($this->cal_calendar))

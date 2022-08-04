@@ -12,7 +12,12 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
-if (TL_MODE === 'BE') {
+use Contao\BackendUser;
+use Contao\Input;
+use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
+
+if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create(''))) {
 
 	// Dynamically add the parent table
 	if (Input::get('do') == 'rocksolid_slider') {
@@ -440,7 +445,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_imgSize'] = array(
 	'exclude' => true,
 	'inputType' => 'imageSize',
 	'options_callback' => function() {
-		return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+		return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 	},
 	'reference' => &$GLOBALS['TL_LANG']['MSC'],
 	'eval' => array(

@@ -6,6 +6,11 @@
  * file that was distributed with this source code.
  */
 
+use Contao\Config;
+use Contao\BackendUser;
+use Contao\DC_Table;
+use Contao\System;
+
 /**
  * RockSolid Slide DCA
  *
@@ -14,7 +19,7 @@
 $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 
 	'config' => array(
-		'dataContainer' => 'Table',
+		'dataContainer' => DC_Table::class,
 		'ptable' => 'tl_rocksolid_slider',
 		'ctable' => array('tl_content'),
 		'switchToEdit' => true,
@@ -162,15 +167,11 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'eval' => array(
 				'multiple' => true,
 				'fieldType' => 'checkbox',
-				'orderField' => 'videosOrder',
+				'isSortable' => true,
 				'files' => true,
 				'filesOnly' => true,
 				'extensions' => 'mp4,m4v,mov,wmv,webm,ogv',
 			),
-			'sql' => "blob NULL",
-		),
-		'videosOrder' => array(
-			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['videosOrder'],
 			'sql' => "blob NULL",
 		),
 		'muteVideos' => array(
@@ -202,7 +203,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'fieldType' => 'radio',
 				'files' => true,
 				'filesOnly' => true,
-				'extensions' => \Config::get('validImageTypes'),
+				'extensions' => implode(',', System::getContainer()->getParameter('contao.image.valid_extensions')),
 				'tl_class' => 'clr',
 			),
 			'sql' => "binary(16) NULL",
@@ -215,7 +216,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'fieldType' => 'radio',
 				'files' => true,
 				'filesOnly' => true,
-				'extensions' => \Config::get('validImageTypes'),
+				'extensions' => implode(',', System::getContainer()->getParameter('contao.image.valid_extensions')),
 				'tl_class' => 'clr',
 			),
 			'sql' => "binary(16) NULL",
@@ -337,7 +338,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 				'fieldType' => 'radio',
 				'files' => true,
 				'filesOnly' => true,
-				'extensions' => \Config::get('validImageTypes'),
+				'extensions' => implode(',', System::getContainer()->getParameter('contao.image.valid_extensions')),
 			),
 			'sql' => "binary(16) NULL",
 		),
@@ -348,15 +349,11 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'eval' => array(
 				'multiple' => true,
 				'fieldType' => 'checkbox',
-				'orderField' => 'backgroundVideosOrder',
+				'isSortable' => true,
 				'files' => true,
 				'filesOnly' => true,
 				'extensions' => 'mp4,m4v,mov,wmv,webm,ogv,ogg',
 			),
-			'sql' => "blob NULL",
-		),
-		'backgroundVideosOrder' => array(
-			'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slide']['backgroundVideosOrder'],
 			'sql' => "blob NULL",
 		),
 		'backgroundImageSize' => array(
@@ -364,7 +361,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'exclude' => true,
 			'inputType' => 'imageSize',
 			'options_callback' => function() {
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'reference' => &$GLOBALS['TL_LANG']['MSC'],
 			'eval' => array(

@@ -8,12 +8,14 @@
 
 namespace MadeYourDay\RockSolidSlider\Model;
 
+use Contao\Model;
+
 /**
  * Slider Model
  *
  * @author Martin Auswöger <martin@madeyourday.net>
  */
-class SliderModel extends \Model
+class SliderModel extends Model
 {
 	/**
 	 * @var string Table name

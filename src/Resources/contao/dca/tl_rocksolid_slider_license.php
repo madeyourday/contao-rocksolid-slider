@@ -11,10 +11,13 @@
  *
  * @author Martin Auswöger <martin@madeyourday.net>
  */
+
+use Contao\DC_File;
+
 $GLOBALS['TL_DCA']['tl_rocksolid_slider_license'] = array(
 
 	'config' => array(
-		'dataContainer' => 'File',
+		'dataContainer' => DC_File::class,
 		'closed' => true,
 		'onload_callback' => array(
 			array('MadeYourDay\\RockSolidSlider\\Slider', 'licenseOnloadCallback'),

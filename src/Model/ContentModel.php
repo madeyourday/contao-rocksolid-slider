@@ -8,12 +8,16 @@
 
 namespace MadeYourDay\RockSolidSlider\Model;
 
+use Contao\ContentModel as ContaoContentModel;
+use Contao\Model\Collection;
+use Contao\System;
+
 /**
  * Content Model Extension
  *
  * @author Martin Auswöger <martin@madeyourday.net>
  */
-class ContentModel extends \ContentModel
+class ContentModel extends ContaoContentModel
 {
 	/**
 	 * Find all published content elements by their parent IDs and parent table
@@ -22,7 +26,7 @@ class ContentModel extends \ContentModel
 	 * @param string $parentTable The parent table name
 	 * @param array  $options     An optional options array
 	 *
-	 * @return \Model\Collection|null A collection of models or null if there are no content elements
+	 * @return Collection|null A collection of models or null if there are no content elements
 	 */
 	public static function findPublishedByPidsAndTable(array $parentIds, $parentTable, array $options = array())
 	{
@@ -30,7 +34,7 @@ class ContentModel extends \ContentModel
 
 		$columns = array("$table.pid IN(" . implode(',', array_map('intval', $parentIds)) . ") AND ptable=?");
 
-		if (!BE_USER_LOGGED_IN) {
+		if (!System::getContainer()->get('contao.security.token_checker')->isPreviewMode()) {
 			$columns[] = "$table.invisible=''";
 		}
 

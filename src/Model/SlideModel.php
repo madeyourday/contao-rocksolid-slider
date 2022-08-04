@@ -8,12 +8,16 @@
 
 namespace MadeYourDay\RockSolidSlider\Model;
 
+use Contao\Date;
+use Contao\Model;
+use Contao\System;
+
 /**
  * Slider Model
  *
  * @author Martin Auswöger <martin@madeyourday.net>
  */
-class SlideModel extends \Model
+class SlideModel extends Model
 {
 	/**
 	 * @var string Table name
@@ -34,8 +38,8 @@ class SlideModel extends \Model
 		$table = static::$strTable;
 		$columns = array("$table.pid=?");
 
-		if (!empty($options['ignoreFePreview']) || !BE_USER_LOGGED_IN) {
-			$time = \Date::floorToMinute();
+		if (!empty($options['ignoreFePreview']) || !System::getContainer()->get('contao.security.token_checker')->isPreviewMode()) {
+			$time = Date::floorToMinute();
 			$columns[] = "($table.start='' OR $table.start<$time) AND ($table.stop='' OR $table.stop>$time) AND $table.published=1";
 		}
 

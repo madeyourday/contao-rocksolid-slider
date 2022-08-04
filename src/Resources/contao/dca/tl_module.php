@@ -12,6 +12,9 @@
  * @author Martin Auswöger <martin@madeyourday.net>
  */
 
+use Contao\BackendUser;
+use Contao\System;
+
 $GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = array('MadeYourDay\\RockSolidSlider\\Slider', 'moduleOnloadCallback');
 
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'rsts_import_settings';
@@ -442,7 +445,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_imgSize'] = array(
 	'exclude' => true,
 	'inputType' => 'imageSize',
 	'options_callback' => function() {
-		return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+		return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 	},
 	'reference' => &$GLOBALS['TL_LANG']['MSC'],
 	'eval' => array(
