@@ -9,6 +9,8 @@
 namespace MadeYourDay\RockSolidSlider\Module;
 
 use Contao\BackendTemplate;
+use Contao\Config;
+use Contao\CoreBundle\File\Metadata;
 use Contao\File;
 use Contao\FilesModel;
 use Contao\Model\Collection;
@@ -206,11 +208,11 @@ class Slider extends Module
 			foreach ($images as $key => $image) {
 				$newImage = new \stdClass();
 				$image['size'] = isset($this->imgSize) ? $this->imgSize : $this->size;
-				$this->addImageToTemplate($newImage, $image, null, substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6), FilesModel::findByPk($image['id']));
+				$this->applyImageToTemplate($newImage, $image, null, substr(md5('mod_rocksolid_slider_' . $this->id), 0, 6), FilesModel::findByPk($image['id']));
 				if ($this->rsts_navType === 'thumbs') {
 					$newImage->thumb = new \stdClass;
 					$image['size'] = $this->rsts_thumbs_imgSize;
-					$this->addImageToTemplate($newImage->thumb, $image);
+					$this->applyImageToTemplate($newImage->thumb, $image);
 				}
 				$images[$key] = $newImage;
 			}
@@ -427,7 +429,7 @@ class Slider extends Module
 			) {
 				$meta = $this->getMetaData($file->meta, $objPage->language);
 				$slide['image'] = new \stdClass;
-				$this->addImageToTemplate($slide['image'], array(
+				$this->applyImageToTemplate($slide['image'], array(
 					'id' => $file->id,
 					'name' => $fileObject->basename,
 					'singleSRC' => $file->path,
@@ -495,7 +497,7 @@ class Slider extends Module
 			) {
 				$meta = $this->getMetaData($file->meta, $objPage->language);
 				$slide['backgroundImage'] = new \stdClass;
-				$this->addImageToTemplate($slide['backgroundImage'], array(
+				$this->applyImageToTemplate($slide['backgroundImage'], array(
 					'id' => $file->id,
 					'name' => $fileObject->basename,
 					'singleSRC' => $file->path,
@@ -528,7 +530,7 @@ class Slider extends Module
 					($fileObject = new File($file->path, true)) &&
 					($fileObject->isGdImage || $fileObject->isImage)
 				) {
-					$this->addImageToTemplate($slide['thumb'], array(
+					$this->applyImageToTemplate($slide['thumb'], array(
 						'id' => $file->id,
 						'name' => $fileObject->basename,
 						'singleSRC' => $file->path,
@@ -542,7 +544,7 @@ class Slider extends Module
 					($fileObject = new File($file->path, true)) &&
 					($fileObject->isGdImage || $fileObject->isImage)
 				) {
-					$this->addImageToTemplate($slide['thumb'], array(
+					$this->applyImageToTemplate($slide['thumb'], array(
 						'id' => $file->id,
 						'name' => $fileObject->basename,
 						'singleSRC' => $file->path,
@@ -571,5 +573,124 @@ class Slider extends Module
 		}
 
 		return $slides;
+	}
+
+	private function applyImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): void
+	{
+		// Helper: Create metadata from the specified row data
+		$createMetadataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
+		{
+			if ($interpretAsContentModel)
+			{
+				// This will be null if "overwriteMeta" is not set
+				return (new \Contao\ContentModel())->setRow($rowData)->getOverwriteMetadata();
+			}
+
+			// Manually create metadata that always contains certain properties (BC)
+			return new Metadata(array(
+				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
+				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
+				Metadata::VALUE_URL => System::getContainer()->get('contao.insert_tag.parser')->replaceInline($rowData['imageUrl'] ?? ''),
+				'linkTitle' => (string) ($rowData['linkTitle'] ?? ''),
+			));
+		};
+
+		// Helper: Create fallback template data with (mostly) empty fields (used if resource acquisition fails)
+		$createFallBackTemplateData = static function () use ($filesModel, $rowData)
+		{
+			$templateData = array(
+				'width' => null,
+				'height' => null,
+				'picture' => array(
+					'img' => array(
+						'src' => '',
+						'srcset' => '',
+					),
+					'sources' => array(),
+					'alt' => '',
+					'title' => '',
+				),
+				'singleSRC' => $rowData['singleSRC'],
+				'src' => '',
+				'linkTitle' => '',
+				'margin' => '',
+				'addImage' => true,
+				'addBefore' => true,
+				'fullsize' => false,
+			);
+
+			if (null !== $filesModel)
+			{
+				// Set empty metadata
+				$templateData = array_replace_recursive(
+					$templateData,
+					array(
+						'alt' => '',
+						'caption' => '',
+						'imageTitle' => '',
+						'imageUrl' => '',
+					)
+				);
+			}
+
+			return $templateData;
+		};
+
+		$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
+
+		// Set image resource
+		if (null !== $filesModel)
+		{
+			// Make sure model points to the same resource (BC)
+			$filesModel = clone $filesModel;
+			$filesModel->path = $rowData['singleSRC'];
+
+			// Use source + metadata from files model (if not overwritten)
+			$figureBuilder
+				->fromFilesModel($filesModel)
+				->setMetadata($createMetadataOverwriteFromRowData(true));
+
+			$includeFullMetadata = true;
+		}
+		else
+		{
+			// Always ignore file metadata when building from path (BC)
+			$figureBuilder
+				->fromPath($rowData['singleSRC'], false)
+				->setMetadata($createMetadataOverwriteFromRowData(false));
+
+			$includeFullMetadata = false;
+		}
+
+		// Set size and lightbox configuration
+		$size = $rowData['size'] ?? null;
+
+		$lightboxSize = StringUtil::deserialize($rowData['lightboxSize'] ?? null) ?: null;
+
+		$figure = $figureBuilder
+			->setSize($size)
+			->setLightboxGroupIdentifier($lightboxGroupIdentifier)
+			->setLightboxSize($lightboxSize)
+			->enableLightbox((bool) ($rowData['fullsize'] ?? false))
+			->buildIfResourceExists();
+
+		if (null === $figure)
+		{
+			System::getContainer()->get('monolog.logger.contao.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
+
+			// Fall back to apply a sparse data set instead of failing (BC)
+			foreach ($createFallBackTemplateData() as $key => $value)
+			{
+				$template->$key = $value;
+			}
+
+			return;
+		}
+
+		// Build result and apply it to the template
+		$figure->applyLegacyTemplateData($template, null, $rowData['floating'] ?? null, $includeFullMetadata);
+
+		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
+		$template->linkTitle ??= StringUtil::specialchars($rowData['title'] ?? '');
 	}
 }
