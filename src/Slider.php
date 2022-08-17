@@ -354,7 +354,7 @@ class Slider extends Backend
 		}
 
 		/** @var SessionInterface $objSession */
-		$objSession = System::getContainer()->get('session');
+		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Check current action
 		switch (Input::get('act')) {
@@ -426,7 +426,7 @@ class Slider extends Backend
 		}
 
 		/** @var AttributeBagInterface $objSessionBag */
-		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$arrNew = $objSessionBag->get('new_records');
 
@@ -589,7 +589,7 @@ class Slider extends Backend
 					->execute($id);
 
 				/** @var SessionInterface $objSession */
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objArchive->fetchEach('id'));
@@ -683,7 +683,7 @@ class Slider extends Backend
 					->execute($dc->currentPid);
 
 				/** @var SessionInterface $objSession */
-				$objSession = System::getContainer()->get('session');
+				$objSession = System::getContainer()->get('request_stack')->getSession();
 
 				$session = $objSession->all();
 				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objCes->fetchEach('id'));
