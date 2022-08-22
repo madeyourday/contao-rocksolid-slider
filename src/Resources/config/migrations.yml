@@ -6,3 +6,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+
+    MadeYourDay\RockSolidSlider\Migration\OrderFieldMigration:
+        arguments:
+            - '@database_connection'
