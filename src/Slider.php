@@ -635,6 +635,8 @@ class Slider extends Backend
 		if ($contentElement->type === 'rocksolid_slider') {
 			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['isGallery'] = true;
 			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['extensions'] = implode(',', System::getContainer()->getParameter('contao.image.valid_extensions'));
+			$GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['isSortable'] = true;
+			unset($GLOBALS['TL_DCA'][$dc->table]['fields']['multiSRC']['eval']['orderField']);
 		}
 	}
 
