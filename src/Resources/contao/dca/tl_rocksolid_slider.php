@@ -55,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['editLicense'],
 				'href' => 'table=tl_rocksolid_slider_license',
 				'class' => 'header_icon',
-				'icon' => 'system/themes/' . Backend::getTheme() . '/images/settings.gif',
+				'icon' => 'settings.gif',
 				'button_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'sliderLicenseButton'),
 			),
 			'all' => array(
