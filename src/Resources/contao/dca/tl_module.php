@@ -55,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_content_type'] = array(
 		'submitOnChange' => true,
 		'tl_class' => 'w50',
 	),
-	'sql' => "varchar(64) NOT NULL default 'rsts_default'",
+	'sql' => "varchar(16) COLLATE ascii_bin NOT NULL default 'rsts_default'",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_id'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_id'],
@@ -76,7 +76,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_import_settings'] = array(
 		'submitOnChange' => true,
 		'tl_class' => 'w50 m12',
 	),
-	'sql' => "char(1) NOT NULL default ''",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default ''",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_import_settings_from'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_import_settings_from'],
@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_template'] = array(
 	'inputType' => 'select',
 	'options_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'getSliderTemplates'),
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(32) NOT NULL default 'rsts_default'",
+	'sql' => "varchar(32) COLLATE ascii_bin NOT NULL default 'rsts_default'",
 );
 // slider type (slide, side-slide, fade or fade-in-out)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_type'] = array(
@@ -111,7 +111,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_type'] = array(
 		'fade-in-out' => 'fade-in-out',
 	),
 	'eval' => array('tl_class' => 'w50 clr'),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(16) COLLATE ascii_bin NOT NULL default ''",
 );
 // "x" for horizontal or "y" for vertical
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_direction'] = array(
@@ -124,7 +124,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_direction'] = array(
 	),
 	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_direction_options'],
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(1) COLLATE ascii_bin NOT NULL default ''",
 );
 // if true the slides get shuffled once on initialization
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_random'] = array(
@@ -132,7 +132,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_random'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "char(1) NOT NULL default ''",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default ''",
 );
 // if true the slider loops infinitely
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_loop'] = array(
@@ -140,7 +140,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_loop'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "char(1) NOT NULL default ''",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default ''",
 );
 // true, "x" or "y" to center the the slides content
 // use the attribute data-rsts-center to set the mode per slide
@@ -156,7 +156,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_centerContent'] = array(
 	),
 	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_centerContent_options'],
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(8) COLLATE ascii_bin NOT NULL default ''",
 );
 // slider skin (set this to "none" to disable the default skin)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_skin'] = array(
@@ -173,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_skin'] = array(
 	),
 	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_skin_options'],
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(16) COLLATE ascii_bin NOT NULL default ''",
 );
 // set width and height to one of the following values
 // - "css": get the size from the applied css (default)
@@ -191,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_width'] = array(
 		'tl_class' => 'w50',
 		'decodeEntities' => true,
 	),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(64) COLLATE ascii_bin NOT NULL default ''",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_height'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_height'],
@@ -201,7 +201,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_height'] = array(
 		'tl_class' => 'w50',
 		'decodeEntities' => true,
 	),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(64) COLLATE ascii_bin NOT NULL default ''",
 );
 // number of slides to preload (to the left/right or top/bottom)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_preloadSlides'] = array(
@@ -218,7 +218,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_gapSize'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(64) NOT NULL default '0%'",
+	'sql' => "varchar(32) COLLATE ascii_bin NOT NULL default '0%'",
 );
 // duration of the slide animation in milliseconds
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_duration'] = array(
@@ -242,7 +242,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_videoAutoplay'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "char(1) NOT NULL default ''",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default ''",
 );
 // false or the duration between user interaction and autoplay
 // (must be bigger than autoplay)
@@ -259,7 +259,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_autoplayProgress'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "char(1) NOT NULL default ''",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default ''",
 );
 // true to pause the autoplay on hover
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_pauseAutoplayOnHover'] = array(
@@ -267,7 +267,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_pauseAutoplayOnHover'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "char(1) NOT NULL default ''",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default ''",
 );
 // navigation type (bullets, numbers, tabs)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_navType'] = array(
@@ -283,7 +283,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_navType'] = array(
 	),
 	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_navType_options'],
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(8) COLLATE ascii_bin NOT NULL default ''",
 );
 // false to hide the prev and next controls
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_controls'] = array(
@@ -291,7 +291,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_controls'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "char(1) NOT NULL default '1'",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default '1'",
 );
 // true to show thumbnails inside the prev and next controls
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbControls'] = array(
@@ -299,7 +299,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbControls'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "char(1) NOT NULL default ''",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default ''",
 );
 // Adds data-rsts-class="rsts-invert-controls" to all slides
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_invertControls'] = array(
@@ -307,7 +307,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_invertControls'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "char(1) NOT NULL default ''",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default ''",
 );
 // image scale mode (fit, crop, scale)
 // only works if width and height are not set to "auto"
@@ -323,7 +323,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_scaleMode'] = array(
 	),
 	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_scaleMode_options'],
 	'eval' => array('tl_class' => 'w50 clr'),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(8) COLLATE ascii_bin NOT NULL default ''",
 );
 // image position (center, top, right, bottom, left, top-left, top-right, bottom-left, bottom-right)
 // use the attribute data-rsts-position to set it per slide
@@ -334,7 +334,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_imagePosition'] = array(
 	'options' => array('center', 'top', 'right', 'bottom', 'left', 'top-left', 'top-right', 'bottom-left', 'bottom-right'),
 	'reference' => &$GLOBALS['TL_LANG']['tl_module']['rsts_imagePositions'],
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(16) COLLATE ascii_bin NOT NULL default ''",
 );
 // URL hash prefix or false to disable deep linking, e.g. "slider-"
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_deepLinkPrefix'] = array(
@@ -350,7 +350,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_keyboard'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "char(1) NOT NULL default '1'",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default '1'",
 );
 // true to enable keyboard arrow navigation
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_captions'] = array(
@@ -358,7 +358,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_captions'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50 m12'),
-	'sql' => "char(1) NOT NULL default '1'",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default '1'",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_thumbs'],
@@ -368,7 +368,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs'] = array(
 		'submitOnChange' => true,
 		'tl_class' => 'w50 m12',
 	),
-	'sql' => "char(1) NOT NULL default ''",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default ''",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_width'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_width'],
@@ -378,7 +378,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_width'] = array(
 		'tl_class' => 'clr w50',
 		'decodeEntities' => true,
 	),
-	'sql' => "varchar(64) NOT NULL default '100%'",
+	'sql' => "varchar(64) COLLATE ascii_bin NOT NULL default '100%'",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_height'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_height'],
@@ -388,14 +388,14 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_height'] = array(
 		'tl_class' => 'w50',
 		'decodeEntities' => true,
 	),
-	'sql' => "varchar(64) NOT NULL default '1x1'",
+	'sql' => "varchar(64) COLLATE ascii_bin NOT NULL default '1x1'",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_gapSize'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_gapSize'],
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(32) COLLATE ascii_bin NOT NULL default ''",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_duration'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_duration'],
@@ -419,7 +419,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_scaleMode'] = array(
 		'tl_class' => 'w50 clr',
 		'includeBlankOption' => true,
 	),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(8) COLLATE ascii_bin NOT NULL default ''",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_imagePosition'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_imagePosition'],
@@ -431,14 +431,14 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_imagePosition'] = array(
 		'tl_class' => 'w50',
 		'includeBlankOption' => true,
 	),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(16) COLLATE ascii_bin NOT NULL default ''",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_controls'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_controls'],
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "char(1) NOT NULL default '1'",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default '1'",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_imgSize'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['imgSize'],
@@ -455,7 +455,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_imgSize'] = array(
 		'helpwizard' => true,
 		'tl_class' => 'w50',
 	),
-	'sql' => "varchar(64) NOT NULL default 'a:3:{i:0;s:2:\"50\";i:1;s:2:\"50\";i:2;s:4:\"crop\";}'",
+	'sql' => "varchar(64) COLLATE ascii_bin NOT NULL default 'a:3:{i:0;s:2:\"50\";i:1;s:2:\"50\";i:2;s:4:\"crop\";}'",
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_slideMaxCount'] = array(
 	'label' => &$GLOBALS['TL_LANG']['tl_module']['rsts_slideMaxCount'],
@@ -521,7 +521,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_thumbs_rowSlideRatio'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(255) NOT NULL default ''",
+	'sql' => "varchar(32) COLLATE ascii_bin NOT NULL default ''",
 );
 // maximum number of visible slides
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_slideMaxCount'] = array(
@@ -606,7 +606,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_rowSlideRatio'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(255) NOT NULL default ''",
+	'sql' => "varchar(32) COLLATE ascii_bin NOT NULL default ''",
 );
 // combine navigation items if multiple slides are visible (default true)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_combineNavItems'] = array(
@@ -614,7 +614,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_combineNavItems'] = array(
 	'exclude' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('tl_class' => 'w50 m12'),
-	'sql' => "char(1) NOT NULL default '1'",
+	'sql' => "char(1) COLLATE ascii_bin NOT NULL default '1'",
 );
 // custom slider skin (rsts_skin gets ignored if this is set)
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_customSkin'] = array(
@@ -622,7 +622,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_customSkin'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50 clr'),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(64) COLLATE ascii_bin NOT NULL default ''",
 );
 // prefix for all RockSolid Slider specific css class names
 $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_cssPrefix'] = array(
@@ -630,5 +630,5 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['rsts_cssPrefix'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => "varchar(64) NOT NULL default ''",
+	'sql' => "varchar(64) COLLATE ascii_bin NOT NULL default ''",
 );
