@@ -478,6 +478,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_visibleArea'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50 clr'),
+	'save_callback' => [function($value) { return (float) $value; }],
 	'sql' => "double unsigned NOT NULL default '0'",
 );
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_visibleAreaMax'] = array(
@@ -485,6 +486,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_visibleAreaMax'] = array
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50'),
+	'save_callback' => [function($value) { return (float) $value; }],
 	'sql' => "double unsigned NOT NULL default '0'",
 );
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_slideMinSize'] = array(
@@ -547,6 +549,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_visibleArea'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50 clr'),
+	'save_callback' => [function($value) { return (float) $value; }],
 	'sql' => "double unsigned NOT NULL default '0'",
 );
 // maximum size of the area for the visible slide in px
@@ -555,6 +558,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_visibleAreaMax'] = array(
 	'exclude' => true,
 	'inputType' => 'text',
 	'eval' => array('tl_class' => 'w50'),
+	'save_callback' => [function($value) { return (float) $value; }],
 	'sql' => "double unsigned NOT NULL default '0'",
 );
 // Alignment of the visible area (0 = start, 0.5 = center, 1 = end)
