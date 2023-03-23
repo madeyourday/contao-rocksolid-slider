@@ -39,43 +39,13 @@ class Slider extends Backend
 	 */
 	public function toggleSlideIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (strlen(Input::get('tid'))) {
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1));
-			if (Environment::get('isAjaxRequest')) {
-				exit;
-			}
-			$this->redirect($this->getReferer());
-		}
-
-		$href .= '&amp;id=' . Input::get('id') . '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
+		$href .= '&amp;id=' . $row['id'];
 
 		if (! $row['published']) {
 			$icon = 'invisible.gif';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
-	}
-
-	/**
-	 * Disable/enable a slide
-	 */
-	public function toggleVisibility($intId, $blnVisible)
-	{
-		$this->createInitialVersion('tl_rocksolid_slide', $intId);
-
-		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_rocksolid_slide']['fields']['published']['save_callback'] ?? null)) {
-			foreach ($GLOBALS['TL_DCA']['tl_rocksolid_slide']['fields']['published']['save_callback'] as $callback) {
-				$this->import($callback[0]);
-				$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $this);
-			}
-		}
-
-		$this->Database
-			->prepare("UPDATE tl_rocksolid_slide SET tstamp=". time() .", published='" . ($blnVisible ? 1 : '') . "' WHERE id=?")
-			->execute($intId);
-
-		$this->createNewVersion('tl_rocksolid_slide', $intId);
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	public function sliderLicenseButton($href, $label, $title, $class, $attributes)
