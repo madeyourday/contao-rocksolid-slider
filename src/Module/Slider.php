@@ -365,7 +365,7 @@ class Slider extends Module
 					$options[$key] = $this->arrData['rsts_' . $key];
 				}
 				else {
-					$options[$key] = $this->arrData['rsts_' . $key] * 1;
+					$options[$key] = intval($this->arrData['rsts_' . $key]);
 				}
 			}
 		}
