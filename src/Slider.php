@@ -124,7 +124,7 @@ class Slider extends Backend
 			->execute($dc->currentPid);
 
 		if ($sliderData->numRows && $sliderData->type !== 'content') {
-			$this->redirect('contao?do=rocksolid_slider&act=edit&id=' . $dc->currentPid . '&ref=' . Input::get('ref') . '&rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+			$this->redirect(System::getContainer()->get('router')->generate('contao_backend', ['do' => 'rocksolid_slider', 'act' => 'edit', 'id' => $dc->currentPid, 'ref' => Input::get('ref'), 'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()]));
 		}
 
 		return $headerFields;
@@ -147,7 +147,7 @@ class Slider extends Backend
 			->execute($dc->currentPid);
 
 		if ($slideData->numRows && $slideData->type !== 'content') {
-			$this->redirect('contao?do=rocksolid_slider&table=tl_rocksolid_slide&act=edit&id=' . $dc->currentPid . '&ref=' . Input::get('ref') . '&rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+			$this->redirect(System::getContainer()->get('router')->generate('contao_backend', ['do' => 'rocksolid_slider', 'table' => 'tl_rocksolid_slide', 'act' => 'edit', 'id' => $dc->currentPid, 'ref' => Input::get('ref'), 'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()]));
 		}
 
 		return $headerFields;
@@ -270,7 +270,10 @@ class Slider extends Backend
 			}
 			$GLOBALS['TL_DCA'][$table]['fields'][$field]['label'] = array(
 				$GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0],
-				sprintf($GLOBALS['TL_LANG']['tl_rocksolid_slider']['proFieldDescription'], 'contao?do=rocksolid_slider&amp;table=tl_rocksolid_slider_license&amp;ref=' . System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id')) . '<br>' . $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][1],
+				sprintf(
+					$GLOBALS['TL_LANG']['tl_rocksolid_slider']['proFieldDescription'],
+					StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', ['do' => 'rocksolid_slider', 'table' => 'tl_rocksolid_slider_license', 'ref' => System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id')]))
+				) . '<br>' . $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][1],
 			);
 		}
 
@@ -281,7 +284,10 @@ class Slider extends Backend
 			$GLOBALS['TL_DCA'][$table]['fields']['rsts_getPro'] = array(
 				'input_field_callback' => function() {
 					return '<div class="tl_message" style="padding: 15px">'
-						. sprintf($GLOBALS['TL_LANG']['tl_rocksolid_slider']['proLegendDescription'], 'contao?do=rocksolid_slider&amp;table=tl_rocksolid_slider_license&amp;ref=' . System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id'))
+						. sprintf(
+							$GLOBALS['TL_LANG']['tl_rocksolid_slider']['proLegendDescription'],
+							StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', ['do' => 'rocksolid_slider', 'table' => 'tl_rocksolid_slider_license', 'ref' => System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id')]))
+						)
 						. '</div>';
 				},
 			);
