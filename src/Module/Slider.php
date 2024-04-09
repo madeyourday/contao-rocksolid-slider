@@ -323,7 +323,7 @@ class Slider extends Module
 			'thumbs_visibleAreaMax',
 		) as $key) {
 			if (! empty($this->arrData['rsts_' . $key]) && $this->arrData['rsts_' . $key] > 0) {
-				$options[$key] = $this->arrData['rsts_' . $key] * 1;
+				$options[$key] = (float) $this->arrData['rsts_' . $key];
 			}
 		}
 
@@ -365,7 +365,7 @@ class Slider extends Module
 					$options[$key] = $this->arrData['rsts_' . $key];
 				}
 				else {
-					$options[$key] = $this->arrData['rsts_' . $key] * 1;
+					$options[$key] = (float) $this->arrData['rsts_' . $key];
 				}
 			}
 		}
