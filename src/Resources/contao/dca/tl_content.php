@@ -441,7 +441,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_controls'] = array(
 	'sql' => "char(1) COLLATE ascii_bin NOT NULL default '1'",
 );
 $GLOBALS['TL_DCA']['tl_content']['fields']['rsts_thumbs_imgSize'] = array(
-	'label' => &$GLOBALS['TL_LANG']['tl_module']['imgSize'],
+	'label' => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
 	'exclude' => true,
 	'inputType' => 'imageSize',
 	'options_callback' => function() {
