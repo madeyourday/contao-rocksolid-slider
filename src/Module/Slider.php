@@ -575,7 +575,7 @@ class Slider extends Module
 		return $slides;
 	}
 
-	private function applyImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): void
+	private function applyImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, ?FilesModel $filesModel = null): void
 	{
 		// Helper: Create metadata from the specified row data
 		$createMetadataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
