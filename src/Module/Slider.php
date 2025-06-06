@@ -478,7 +478,7 @@ class Slider extends Module
 
 			if ($slide['type'] === 'video' && $slide['videos']) {
 				$videoFiles = StringUtil::deserialize($slide['videos'], true);
-				$videoFiles = FilesModel::findMultipleByUuids($videoFiles);
+				$videoFiles = FilesModel::findMultipleByUuids($videoFiles) ?? [];
 				$videos = array();
 				foreach ($videoFiles as $file) {
 					$videos[] = $file;
@@ -514,7 +514,7 @@ class Slider extends Module
 
 			if ($slide['backgroundVideos']) {
 				$videoFiles = StringUtil::deserialize($slide['backgroundVideos'], true);
-				$videoFiles = FilesModel::findMultipleByUuids($videoFiles);
+				$videoFiles = FilesModel::findMultipleByUuids($videoFiles) ?? [];
 				$videos = array();
 				foreach ($videoFiles as $file) {
 					$videos[] = $file;
