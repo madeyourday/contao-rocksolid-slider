@@ -44,7 +44,7 @@ class OrderFieldMigration extends AbstractMigration
         $schemaManager = $this->connection->createSchemaManager();
 
         foreach (self::ORDER_FIELDS as $table => $fields) {
-            if (!$schemaManager->tablesExist($table)) {
+            if (!$schemaManager->tablesExist([$table])) {
                 continue;
             }
 
@@ -65,7 +65,7 @@ class OrderFieldMigration extends AbstractMigration
         $schemaManager = $this->connection->createSchemaManager();
 
         foreach (self::ORDER_FIELDS as $table => $fields) {
-            if (!$schemaManager->tablesExist($table)) {
+            if (!$schemaManager->tablesExist([$table])) {
                 continue;
             }
 

@@ -41,12 +41,12 @@ class SliderPermissionsMigration extends AbstractMigration
 
 	public function shouldRun(): bool
 	{
-		$schemaManager = $this->connection->getSchemaManager();
+		$schemaManager = $this->connection->createSchemaManager();
 
 		if (
-			!$schemaManager->tablesExist('tl_rocksolid_slider')
-			|| !$schemaManager->tablesExist('tl_user')
-			|| !$schemaManager->tablesExist('tl_user_group')
+			!$schemaManager->tablesExist(['tl_rocksolid_slider'])
+			|| !$schemaManager->tablesExist(['tl_user'])
+			|| !$schemaManager->tablesExist(['tl_user_group'])
 		) {
 			return false;
 		}
