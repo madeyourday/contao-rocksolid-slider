@@ -13,6 +13,7 @@ use Contao\Config;
 use Contao\CoreBundle\File\Metadata;
 use Contao\File;
 use Contao\FilesModel;
+use Contao\FrontendTemplate;
 use Contao\Model\Collection;
 use Contao\Module;
 use Contao\ModuleModel;
@@ -113,6 +114,32 @@ class Slider extends Module
 
 		$this->files = FilesModel::findMultipleByUuids($this->multiSRC);
 
+		$this->importSettings();
+
+		if ($this->rsts_template) {
+			$this->strTemplate = $this->rsts_template;
+		}
+
+		return parent::generate();
+	}
+
+	/**
+	 * @internal
+	 */
+	public function generateSliderConfig()
+	{
+		$this->importSettings();
+
+		$this->Template = new FrontendTemplate($this->strTemplate);
+		$this->Template->setData($this->arrData);
+
+		$this->compile();
+
+		return $this->Template->getData();
+	}
+
+	private function importSettings()
+	{
 		if (
 			$this->rsts_import_settings
 			&& $this->rsts_import_settings_from
@@ -135,12 +162,6 @@ class Slider extends Module
 				) . $settingsCssId[1];
 			}
 		}
-
-		if ($this->rsts_template) {
-			$this->strTemplate = $this->rsts_template;
-		}
-
-		return parent::generate();
 	}
 
 	/**
