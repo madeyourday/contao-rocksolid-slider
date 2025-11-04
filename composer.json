@@ -36,7 +36,10 @@
 		}
 	},
 	"extra": {
-		 "contao-manager-plugin": "MadeYourDay\\RockSolidSlider\\ContaoManagerPlugin"
+		"branch-alias": {
+			"dev-master": "2.3.x-dev"
+		},
+		"contao-manager-plugin": "MadeYourDay\\RockSolidSlider\\ContaoManagerPlugin"
 	},
 	"replace":{
 		"contao-legacy/rocksolid-slider":"self.version",
