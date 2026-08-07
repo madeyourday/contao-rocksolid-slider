@@ -66,17 +66,17 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 			),
 		),
 		'operations' => array(
-			'edit' => array(
+			'children' => array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['edit'],
 				'href' => 'table=tl_rocksolid_slide',
 				'icon' => version_compare(\Contao\CoreBundle\ContaoCoreBundle::getVersion(), '5.0', '<') ? 'edit.svg' : 'children.svg',
 				'attributes' => 'class="contextmenu"',
 				'button_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'editSliderIcon'),
 			),
-			'editheader' => array(
+			'edit' => array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['editheader'],
 				'href' => 'act=edit',
-                'icon' => version_compare(\Contao\CoreBundle\ContaoCoreBundle::getVersion(), '5.0', '<') ? 'header.svg' : 'edit.svg',
+				'icon' => version_compare(\Contao\CoreBundle\ContaoCoreBundle::getVersion(), '5.0', '<') ? 'header.svg' : 'edit.svg',
 				'attributes' => 'class="edit-header"',
 			),
 			'copy' => array(
