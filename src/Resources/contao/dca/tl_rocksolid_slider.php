@@ -55,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 				'label' => &$GLOBALS['TL_LANG']['tl_rocksolid_slider']['editLicense'],
 				'href' => 'table=tl_rocksolid_slider_license',
 				'class' => 'header_icon',
-				'icon' => 'modules_.svg',
+				'icon' => version_compare(\Contao\CoreBundle\ContaoCoreBundle::getVersion(), '5.7', '<') ? 'modules_.svg' : 'protected.svg',
 				'button_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'sliderLicenseButton'),
 			),
 			'all' => array(

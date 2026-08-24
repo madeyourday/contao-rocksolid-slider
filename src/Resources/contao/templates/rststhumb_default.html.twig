@@ -1,0 +1,11 @@
+<div class="{{ thumbClass|default }}">
+	{% if thumb.picture|default %}
+		{% include '@Contao/picture_default.html.twig' with thumb.picture only %}
+	{% endif %}
+	{% if thumbTitle|default %}
+		<h3>{{ thumbTitle }}</h3>
+	{% endif %}
+	{% if thumbText|default %}
+		<p>{{ thumbText }}</p>
+	{% endif %}
+</div>

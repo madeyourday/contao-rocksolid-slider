@@ -45,6 +45,10 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'child_record_callback' => array('MadeYourDay\\RockSolidSlider\\Slider', 'listSlides'),
 			'child_record_class' => 'no_padding',
 		),
+		'label' => array(
+			'fields' => array('title', 'type'),
+			'format' => '%s <span style="color:#999;padding-left:3px">%s</span>',
+		),
 		'global_operations' => array(
 			'all' => array(
 				'label' => &$GLOBALS['TL_LANG']['MSC']['all'],

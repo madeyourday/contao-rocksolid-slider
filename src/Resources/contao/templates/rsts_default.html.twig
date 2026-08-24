@@ -1,0 +1,302 @@
+<div{{ attrs()
+	.addClass(class|default)
+	.mergeWith(cssID|default)
+	.addClass('block')
+	.addStyle(style|default)
+}}>
+
+	{% block headline %}
+		{% if headline|default %}
+			<{{ hl|default('h1') }}>{{ headline }}</{{ hl|default('h1') }}>
+		{% endif %}
+	{% endblock %}
+
+	{% block slides %}
+
+		{% for key, image in images %}
+
+			{% set slideContent %}
+
+				<{{ tagName = image.href|default ? 'a' : 'div' }}{{ attrs()
+					.set('data-rsts-type', 'image')
+					.set('title', image.linkTitle|default ?: image.picture.alt|default, image.href|default or image.linkTitle|default)
+					.setIfExists('href', image.href|default)
+					.mergeWith(image.attributes|default, image.href|default)
+					.set('data-rsts-class', "#{options.cssPrefix|default('rsts-')}invert-controls", rsts_invertControls|default)
+					.setIfExists('data-rsts-thumb', image.thumb.src|default)
+				}}>
+					{% include '@Contao/picture_default.html.twig' with image.picture only %}
+					{% if image.caption|default %}
+						<p class="rsts-text">{{ image.caption }}</p>
+					{% endif %}
+				</{{ tagName }}>
+
+			{% endset %}
+
+			{% if
+				options.preloadSlides|default
+				and key > options.preloadSlides
+				and (not options.loop or key < images|length - options.preloadSlides)
+			%}
+				<script{{ attrs()
+					.set('type', 'text/html')
+					.setIfExists('data-rsts-name', image.linkTitle|default ?: image.picture.alt|default)
+					.setIfExists('data-rsts-thumb', image.thumb.src|default)
+				}}>
+					{{ slideContent|replace({'\\': '\\\\', '</': '<\\/'})|raw }}
+				</script>
+			{% else %}
+				{{ slideContent }}
+			{% endif %}
+
+		{% endfor %}
+
+		{% for key, slide in slides %}
+
+			{% set thumbHtml = (slide.thumbTitle|default or slide.thumbClass|default or slide.thumbText|default)
+				? include('@Contao/rststhumb_default.html.twig', slide, with_context: false)
+				: null
+			%}
+
+			{% set slideContent %}
+
+				{% set sliderClass = slide.sliderClass|default %}
+				{% if (slide.invertControls|default and not rsts_invertControls|default) or (not slide.invertControls|default and rsts_invertControls|default) %}
+					{% set sliderClass = "#{sliderClass} #{options.cssPrefix|default('rsts-')}invert-controls" %}
+				{% endif %}
+
+				{% set tagName = slide.linkUrl|default ? 'a' : 'div' %}
+
+				{% set attributes = attrs()
+					.setIfExists('href', slide.linkUrl|default)
+					.set('target', '_blank', slide.linkNewWindow|default and tagName === 'a')
+					.setIfExists('data-rsts-name', slide.title|default)
+					.set('data-rsts-center', slide.centerContent|default === 'false' ? '' : slide.centerContent|default, slide.centerContent|default)
+					.setIfExists('data-rsts-slide-class', slide.slideClass|default)
+					.setIfExists('data-rsts-class', sliderClass)
+					.setIfExists('data-rsts-autoplay', slide.autoplay|default)
+					.setIfExists('data-rsts-thumb', slide.thumb.src|default)
+					.setIfExists('data-rsts-thumb-html', thumbHtml)
+				%}
+
+				{% set imageAttributes = attrs()
+					.setIfExists('data-rsts-scale-mode', slide.scaleMode|default)
+					.setIfExists('data-rsts-position', slide.imagePosition|default)
+				%}
+
+				{% set backgroundAttributes = attrs()
+					.set('data-rsts-background', true)
+					.setIfExists('data-rsts-scale-mode', slide.backgroundScaleMode|default)
+					.setIfExists('data-rsts-position', slide.backgroundPosition|default)
+				%}
+
+				{% if slide.videoURL|default %}
+					<{{ tagName }}{{ attrs()
+						.set('data-rsts-type', 'video')
+						.set('data-rsts-video', slide.videoURL)
+						.mergeWith(attributes)
+					}}>
+						{% include '@Contao/picture_default.html.twig' with slide.image.picture|merge({ attributes: attrs(slide.image.picture.attributes|default).mergeWith(imageAttributes) }) only %}
+				{% elseif slide.videos|default %}
+					<{{ tagName }}{{ attrs()
+						.set('data-rsts-type', 'video')
+						.mergeWith(attributes)
+					}}>
+						<video{{ attrs()
+							.set('controls', slide.hideVideoControls|default ? false : true)
+							.setIfExists('poster', slide.image.src|default)
+							.set('muted', true, slide.muteVideos|default)
+							.set('playsinline', true, slide.videosPlayInline|default)
+							.set('webkit-playsinline', true, slide.videosPlayInline|default)
+						}}>
+							{% for video in slide.videos %}
+								<source{{ attrs()
+									.set('src', asset(video.path))
+									.set('type', "video/#{video.extension}")
+								}}>
+							{% endfor %}
+						</video>
+				{% elseif slide.image|default %}
+					{% if slide.image.href|default and tagName !== 'a' %}
+						{% set tagName = 'a' %}
+						{% do attributes
+							.set('href', slide.image.href)
+							.setIfExists('title', slide.image.linkTitle|default)
+						%}
+					{% endif %}
+					<{{ tagName }}{{ attrs()
+						.set('data-rsts-type', 'image')
+						.mergeWith(attributes)
+					}}>
+						{% include '@Contao/picture_default.html.twig' with slide.image.picture|merge({ attributes: attrs(slide.image.picture.attributes|default).mergeWith(imageAttributes) }) only %}
+						{% if slide.image.caption|default %}
+							<p class="rsts-text">{{ slide.image.caption }}</p>
+						{% endif %}
+				{% else %}
+					<{{ tagName }}{{ attributes }}>
+						{% if tagName === 'a' %}
+							{# Nested links aren't allowed in HTML #}
+							{{ slide.text|replace({ '<a ': '<span ', '</a>': '</span>' })|raw }}
+						{% else %}
+							{{ slide.text|raw }}
+						{% endif %}
+				{% endif %}
+
+					{% if slide.backgroundVideos|default %}
+						<video{{ attrs()
+							.setIfExists('poster', slide.backgroundImage.src|default)
+							.set('muted', true, slide.muteVideos|default)
+							.set('playsinline', true)
+							.set('webkit-playsinline', true)
+							.mergeWith(backgroundAttributes)
+						}}>
+							{% for video in slide.backgroundVideos %}
+								<source{{ attrs()
+									.set('src', asset(video.path))
+									.set('type', "video/#{video.extension}")
+								}}>
+							{% endfor %}
+						</video>
+					{% elseif slide.backgroundImage|default %}
+						{% include '@Contao/picture_default.html.twig' with slide.backgroundImage.picture|merge({ attributes: attrs(slide.backgroundImage.picture.attributes|default).mergeWith(backgroundAttributes) }) only %}
+					{% endif %}
+
+				</{{ tagName }}>
+
+
+			{% endset %}
+
+			{% if
+				options.preloadSlides|default
+				and key > options.preloadSlides
+				and (not options.loop or key < images|length - options.preloadSlides)
+			%}
+				<script{{ attrs()
+					.set('type', 'text/html')
+					.setIfExists('data-rsts-name', slide.title|default)
+					.setIfExists('data-rsts-thumb', slide.thumb.src|default)
+					.setIfExists('data-rsts-thumb-html', thumbHtml)
+				}}>
+					{{ slideContent|replace({ '\\': '\\\\', '</': '<\\/' })|raw }}
+				</script>
+			{% else %}
+				{{ slideContent }}
+			{% endif %}
+
+		{% endfor %}
+
+	{% endblock %}
+
+</div>
+
+{%- set lightboxUrls = [] -%}
+{%- set lightboxId = '' -%}
+
+{%- for image in images -%}
+	{%- if 'data-lightbox' in image.attributes|default -%}
+		{%- set lightboxUrls = lightboxUrls|merge([[ image.href, image.linkTitle|default ?: image.picture.alt|default(null) ]]) -%}
+		{%- set lightboxId = lightboxId ?: attrs(image.attributes)['data-lightbox']|default -%}
+	{%- endif -%}
+{%- endfor -%}
+
+{%- for slide in slides -%}
+	{%- if
+		not slide.videoURL|default
+		and not slide.videos|default
+		and not slide.linkUrl|default
+		and slide.image.href|default
+		and 'data-lightbox' in slide.image.attributes|default
+	-%}
+		{%- set lightboxUrls = lightboxUrls|merge([[ slide.image.href, slide.title|default ]]) -%}
+		{%- set lightboxId = lightboxId ?: attrs(slide.image.attributes)['data-lightbox']|default -%}
+	{%- endif -%}
+{%- endfor -%}
+
+<script>
+{% block script %}
+(function() {
+
+var sliderElement = [].slice.call(document.getElementsByClassName('mod_rocksolid_slider'), -1 )[0];
+
+if (window.jQuery && jQuery.fn.rstSlider) {
+	init();
+}
+else {
+	document.addEventListener('DOMContentLoaded', init);
+}
+
+function init() {
+
+	var $ = jQuery;
+	var slider = $(sliderElement);
+
+	{% block script_bgvideo %}
+	slider.find('video[data-rsts-background], [data-rsts-type=video] video').each(function() {
+		// Disable mejs for videos
+		this.player = true;
+	});
+	{% endblock %}
+
+	slider.rstSlider({{ options|json_encode|raw }});
+
+	{% block script_lightbox %}
+	// Fix missing lightbox links
+	$(function() {
+
+		if (!$.fn.colorbox) {
+			return;
+		}
+
+		var lightboxConfig = {
+			{% block script_lightbox_config %}
+			loop: false,
+			rel: function() {
+				return $(this).attr('data-lightbox');
+			},
+			maxWidth: '95%',
+			maxHeight: '95%'
+			{% endblock %}
+		};
+
+		{% if lightboxUrls %}
+			var lightboxUrls = {{ lightboxUrls|json_encode|raw }};
+			var lightboxId = {{ lightboxId|json_encode|raw }};
+			var dummyLinksWrap = $('<div>').css('display', 'none');
+			var dummyLinks = $([]);
+			dummyLinksWrap.insertAfter(slider);
+			$.each(lightboxUrls, function(index, url) {
+				$('<a>').attr('href', url[0]).attr('title', url[1]).attr('data-lightbox', lightboxId).appendTo(dummyLinksWrap);
+			});
+			dummyLinks = dummyLinksWrap.find('a');
+			dummyLinks.colorbox(lightboxConfig);
+		{% endif %}
+
+		var update = function(links) {
+			{% if lightboxUrls %}
+				dummyLinks.appendTo(dummyLinksWrap);
+				links.each(function() {
+					var href = $(this).attr('href');
+					dummyLinks.each(function() {
+						if (href === $(this).attr('href')) {
+							$(this).detach();
+						}
+					});
+				});
+			{% endif %}
+			links.colorbox(lightboxConfig);
+		};
+
+		slider.on('rsts-slidestart rsts-slidestop', function(event) {
+			update(slider.find('a[data-lightbox]'));
+		});
+
+		update(slider.find('a[data-lightbox]'));
+
+	});
+	{% endblock %}
+
+}
+
+})();
+{% endblock %}
+</script>
