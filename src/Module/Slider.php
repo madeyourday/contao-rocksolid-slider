@@ -436,6 +436,9 @@ class Slider extends Module
 
 			$slide = $objSlides->row();
 			$slide['text'] = '';
+			if (!empty($slide['linkUrl'])) {
+				$slide['linkUrl'] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($slide['linkUrl']);
+			}
 			if ($slide['type'] === 'content') {
 				$pids[] = $slide['id'];
 				$idIndexes[(int)$slide['id']] = count($slides);
