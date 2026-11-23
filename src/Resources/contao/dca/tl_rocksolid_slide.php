@@ -131,6 +131,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'flag' => 1,
 			'inputType' => 'text',
 			'eval' => array(
+				'basicEntities' => true,
 				'maxlength' => 255,
 				'tl_class' => 'w50',
 			),
@@ -230,6 +231,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'exclude' => true,
 			'inputType' => 'text',
 			'eval' => array(
+				'basicEntities' => true,
 				'tl_class' => 'w50',
 				'maxlength' => 255,
 			),
@@ -250,6 +252,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slide'] = array(
 			'exclude' => true,
 			'inputType' => 'textarea',
 			'eval' => array(
+				'basicEntities' => true,
 				'tl_class' => 'clr',
 			),
 			'sql' => "mediumtext NULL",

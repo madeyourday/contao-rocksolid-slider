@@ -119,6 +119,7 @@ $GLOBALS['TL_DCA']['tl_rocksolid_slider'] = array(
 			'search' => true,
 			'inputType' => 'text',
 			'eval' => array(
+				'basicEntities' => true,
 				'mandatory' => true,
 				'maxlength' => 255,
 				'tl_class' => 'w50',
